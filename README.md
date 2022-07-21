@@ -7,7 +7,7 @@ Hasn't been extensively tested but should be very useful at creating a low resol
 
 Usage: *python Image_previews_openCV.py*
 
-Dependancies :
+### Dependancies :
 
 numpy (*pip install numpy*) - array handling 
 
@@ -18,3 +18,9 @@ ncempy (*pip install ncempy*) - .dm3 parser
 matplotlib (*pip install matplotlib*) - Not needed unless you want to plot the images 
 
 os (*pip install os_sys*) - handling operating system functions (create directory to save files in, list files in the directory etc) 
+
+### Things to do :
+
+- Test with more files: including choosing color and different magnifications 
+- Implement with Dm4 files 
+- Use args-parser to change options without editing file
