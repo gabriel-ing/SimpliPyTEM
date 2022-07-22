@@ -11,7 +11,8 @@ The script can also handle micrograph stacks (assuming your computer has the mem
 I wrote this script for personal use as my previous method using imageJ gave inconsistent scalebars, was considerably slower, and often required manual repeating to get it looking good.
 
 
-Usage: 
+### Usage: 
+
 process all .dm3 files in directory:
 
  *python Image_previews_openCV.py*
