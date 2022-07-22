@@ -1,9 +1,15 @@
 # Create previews of digital micrograph images
 ### Image_previews_openCV.py
 
-This python script will open all the digital micrograph .dm3 files in a folder, median filter, gaussian blur, bin the image by 2 and add a scalebar of a suitable size and save the file as a .jpg in a separate folder. 
+This python script will open all the digital micrograph .dm3 files in a folder, median filter, bin the image by 2 and add a scalebar of a suitable size and save the file as a .jpg in a separate folder. 
 
-Hasn't been extensively tested but should be very useful at creating a low resolution, small size preview of the micrographs to examine, if you want higher resolution or no filtering, commands can be commented out. By using this script, all the scale bars should match on the images  
+The script should be very useful at creating a low resolution, small size preview of the micrographs to examine, if you want higher resolution or no filtering, commands can be commented out. By using this script, all the scale bars should match on the images (in height, position and labelling). It will also process images very quickly (my macbook pro 2017 can process an image in 0.5s)
+
+The script can also handle micrograph stacks (assuming your computer has the memory to do so). For image stacks it will save an average of all the individual images, again by default this is binned, median filtered and scalebar added, the same arguments should work with stacks. This method is significantly faster at processing image stacks than imageJ (for 25-frame, 1.5gb image stack it took less than 10 seconds to generate a preview on my workstation). 
+
+
+
+
 
 Usage: 
 process all .dm3 files in directory:
@@ -22,6 +28,9 @@ add additional flag arguments:
 *--textoff {}* - set this to anything other than 0 (easiest is 1) to remove the text from the scalebar, scale bar size can be seen in filename.
  
  
+ Before use, you need to download or locate a font .ttf file and add the path to this file on your computer to line 94:
+  
+  *font = ImageFont.truetype('/path/to/font.ttf', fontsize)*
 
 ### Dependancies :
 
@@ -42,7 +51,8 @@ argsparse - adding arguments, should be installed by default
 ### Things to do :
 
 - Test with more files: including choosing color and different magnifications (DONE) 
-- Implement with Dm4 files   (   ) 
+- Implement with Dm4 files   (DONE) 
 - Use args-parser to change options without editting file (DONE) 
-- Break up into different functions, allow some functions to be used on any images (e.g. add scalebar) (   ) 
+- Break up into different functions, allow some functions to be used on any images (e.g. add scalebar) (DONE) 
+- Implement with videos (i.e import image stack, save average of stack) (DONE)
 
