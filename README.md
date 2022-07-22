@@ -8,7 +8,7 @@ The script should be very useful at creating a low resolution, small size previe
 The script can also handle micrograph stacks (assuming your computer has the memory to do so). For image stacks it will save an average of all the individual images, again by default this is binned, median filtered and scalebar added, the same arguments should work with stacks. This method is significantly faster at processing image stacks than imageJ (for 25-frame, 1.5gb image stack it took less than 10 seconds to generate a preview on my workstation). 
 
 
-I wrote this script for personal use as my previous method using imageJ gave inconsistent scalebars, was considerably slower, and often required manual repeating to get it looking good.
+I wrote this script for personal use as my previous method using imageJ gave inconsistent scalebars, was considerably slower, and often required manual repeating to get it looking good. Feel free to use, adapt, ask questions if it would be useful to you. 
 
 
 ### Usage: 
