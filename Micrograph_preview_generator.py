@@ -78,12 +78,12 @@ def make_scalebar(new_arr, scalebar_x, scalebar_y, width, height, pixelUnit, n, 
     new_arr[scalebar_y:scalebar_y+height,scalebar_x:scalebar_x+width]=pixvalue
     textposition = ((scalebar_x+width/2),scalebar_y-5)
     
-    if pixelUnit!='nm':
-        Utext = str(n)+u'\u00b5'+ 'm'
-        text = str(n)+'microns'
-    else:
-        text = '{}{}'.format(n,pixelUnit) 
-        Utext=  text  
+    #if pixelUnit!='nm':
+    #    Utext = str(n)+u'\u00b5'+ 'm'
+    #    text = str(n)+'microns'
+    #else:
+    text = '{}{}'.format(n,pixelUnit) 
+    Utext=  text  
 
     pil_image = Image.fromarray(new_arr)
 
@@ -117,7 +117,8 @@ def image_conversion(image,xybin, med=True,medkernal=5,gauss =False, gauss_kerna
 
     
     #Bin image to reduce filesize, comment out if you want full image size
-    new_arr = cv.resize(new_arr, (int(new_arr.shape[0]/xybin), int(new_arr.shape[1]/xybin)), interpolation=cv.INTER_CUBIC) 
+    if xybin>1:
+        new_arr = cv.resize(new_arr, (int(new_arr.shape[0]/xybin), int(new_arr.shape[1]/xybin)), interpolation=cv.INTER_CUBIC) 
     return new_arr
    
 
@@ -142,7 +143,7 @@ def Generate_preview_dm(dmfile, color='', textoff=0, xybin=2, quality=80, folder
     x = image.shape[1]
     y = image.shape[0]
 
-    
+    #this is importing the final pixel size/pixelunit because the first one is blank for multi-frame files, hopefully there shouldnt be any more issues here     
     pixelSize=dm_input['pixelSize'][0]
     print(pixelSize,type(pixelSize))
     pixelUnit = dm_input['pixelUnit'][0]
@@ -174,7 +175,7 @@ else:
 #print(dm3_files)
 start_time = time.time()
 if args.file==None:
-    dm3_files = [x for x in os.listdir('.') if x[-3:]=='dm3']
+    #dm3_files = [x for x in os.listdir('.') if x[-3:]=='dm3']
     for file in dm3_files:
             # if you have a scalebar color preference (black, white or grey) add it here, also turn off text by replacing false with True or ''
     #    Generate_preview_dm3(file, color=args.color, textoff=args.textoff,xybin=args.xybin,quality=args.quality)
@@ -184,7 +185,7 @@ if args.file==None:
         
     print('---{} seconds per file ---'.format(str(running_time/len(dm3_files))))
 else:
-    Generate_preview_dm3(args.file, color=args.color, textoff=args.textoff,xybin=args.xybin,quality=args.quality)
+    Generate_preview_dm(args.file, color=args.color, textoff=args.textoff,xybin=args.xybin,quality=args.quality)
 
     running_time = (time.time() - start_time)
     print("--- {} seconds ---".format(running_time))
