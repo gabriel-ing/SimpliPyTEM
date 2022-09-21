@@ -91,13 +91,14 @@ def make_scalebar(new_arr, scalebar_x, scalebar_y, width, height, pixelUnit, n, 
         draw = ImageDraw.Draw(pil_image)        
         
         fontsize=int(scalebar_x/(34))
-        font = ImageFont.truetype("../helveticaneue.ttf", fontsize)
+        font = ImageFont.truetype("/Users/gabriel/helveticaneue.ttf", fontsize)
         draw.text(textposition, Utext, anchor ='mb', fill=textcolor, font=font, stroke_width=1)
         
     return pil_image, text
 
 def image_conversion(image,xybin, med=True,medkernal=5,gauss =False, gauss_kernal =3 ):
         #apply median filter and gaussian blur
+    image = image.astype('float32')
     if med==True:
         img_median = cv.medianBlur(image,medkernal)
     if gauss==True:
