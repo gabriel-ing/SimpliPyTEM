@@ -56,4 +56,6 @@ argsparse - adding arguments, should be installed by default
 - Use args-parser to change options without editting file (DONE) 
 - Break up into different functions, allow some functions to be used on any images (e.g. add scalebar) (DONE) 
 - Implement with videos (i.e import image stack, save average of stack) (DONE)
-
+- Implement motion correction of videos (DONE) 
+- Build simple GUI
+- Write images into an output HTML file 
