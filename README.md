@@ -58,4 +58,4 @@ argsparse - adding arguments, should be installed by default
 - Implement with videos (i.e import image stack, save average of stack) (DONE)
 - Implement motion correction of videos (DONE) 
 - Build simple GUI
-- Write images into an output HTML file 
+- Write images into an output HTML or pdf file (FPDF)  
