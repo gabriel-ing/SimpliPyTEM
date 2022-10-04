@@ -1,5 +1,12 @@
 # Create previews of digital micrograph images
+
+README out of date, sorry! Will update soon. 
+
+The Previews_app.py file now will open a GUI and allow generation of a pdf file with all the images.
+
 ### Image_previews_openCV.py
+
+
 
 This python script will open all the digital micrograph .dm3 files in a folder, median filter, bin the image by 2 and add a scalebar of a suitable size and save the file as a .jpg in a separate folder. 
 
@@ -57,5 +64,5 @@ argsparse - adding arguments, should be installed by default
 - Break up into different functions, allow some functions to be used on any images (e.g. add scalebar) (DONE) 
 - Implement with videos (i.e import image stack, save average of stack) (DONE)
 - Implement motion correction of videos (DONE) 
-- Build simple GUI
-- Write images into an output HTML or pdf file (FPDF)  
+- Build simple GUI (DONE)
+- Write images into an output HTML or pdf file (FPDF)  (DONE)
