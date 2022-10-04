@@ -66,3 +66,5 @@ argsparse - adding arguments, should be installed by default
 - Implement motion correction of videos (DONE) 
 - Build simple GUI (DONE)
 - Write images into an output HTML or pdf file (FPDF)  (DONE)
+- Make executable
+- Update README with images
