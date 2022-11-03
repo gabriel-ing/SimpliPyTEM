@@ -34,16 +34,11 @@ def group_images(images):
         tups.append(tup)
 
     organised_dict= {}
-<<<<<<< HEAD
     prefix_set = sorted(prefix_set)
     for prefix in prefix_set:
 
         #im_id, im_prefix = find_number(image)
-=======
-    for prefix in prefix_set:
 
-        im_id, im_prefix = find_number(image)
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
         images_per_prefix =[x[0] for x in tups if x[2]==prefix]
         organised_dict[prefix]=images_per_prefix
   
@@ -62,13 +57,11 @@ def return_coords(max_num):
         imy = [149, 475]
        
         capx = [123,431]
-<<<<<<< HEAD
         capy = [442,768]
         size = 280
-=======
         capy = [422,754]
         size = 284
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
+
     elif max_num==6:
         imx = [68,358]
         imy = [123,360, 598]
@@ -113,13 +106,9 @@ def pdf_generator(images, title, notes, max_num=9):
 	pdf.add_page()
 	pdf.set_font('Arial', 'B', 16)
 	pdf.cell(540, 10, title, align='C')
-<<<<<<< HEAD
 	pdf.set_font('Arial','', 10)
 	pdf.set_xy(20, 50 )
-=======
-	pdf.set_font('Arial','', 12)
-	pdf.set_xy(20, 60 )
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
+
 	pdf.multi_cell(0, 12,notes)
 
 
@@ -134,25 +123,22 @@ def pdf_generator(images, title, notes, max_num=9):
 		print(prefix)
 		if group_number !=0:
 			pdf.add_page()
-<<<<<<< HEAD
 
-=======
 		pdf.set_xy(10, 100)
 		pdf.set_font('Arial', 'B', 14)
 		sample_name = 'Sample name: {}'.format(' '.join(prefix.split('_')))
 		pdf.cell(540, 10, sample_name, align='C')
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
+
 	    
 
 
 		pagenum =0
 
 		group_size= len(group)
-<<<<<<< HEAD
+
 		
 		# this if group decides how many images to put per page based on the number of images total.
-=======
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
+
 		if group_size<2:
 			num = 1
 		elif group_size<5 or group_size==7 or group_size ==8:
@@ -161,7 +147,7 @@ def pdf_generator(images, title, notes, max_num=9):
 			num=6
 		else:
 			num=9   
-<<<<<<< HEAD
+
 		
 		if num==6:
 			pdf.set_xy(10, 100)
@@ -182,8 +168,7 @@ def pdf_generator(images, title, notes, max_num=9):
 	            #pdf.set_xy(coordinates[i])
 
 		
-			
-=======
+
 		image_coords, cap_coords, size = return_coords(num)
 		for i in range(len(group)):
 
@@ -197,7 +182,6 @@ def pdf_generator(images, title, notes, max_num=9):
 
 			#print('len:',len(group))
 
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
 			pdf.image(group[i],image_coords[j][0], image_coords[j][1], size )
 	               
 
@@ -207,11 +191,9 @@ def pdf_generator(images, title, notes, max_num=9):
 			#pdf.cell
 	            #i+=1
 	            #print(j)
-<<<<<<< HEAD
-			
+	
 			#this deals with making a new page when all the images are on the previous page.
-=======
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
+
 			if (i+1)%num==0 and num!=1 and i+1!=group_size:
 				print('yes')
 				pagenum+=1
@@ -221,10 +203,9 @@ def pdf_generator(images, title, notes, max_num=9):
 
 		group_number+=1
 	pdf.output(filename,'F')
-<<<<<<< HEAD
+
 	print('PDF generated!')
-=======
->>>>>>> 8ef173558e9eaa27aada35ec862c28923fa7a73e
+
 images = [x for x in os.listdir('.') if x[-3:]=='jpg']	    
 pdf_generator(images, 'New_attempt', 'Hello world')
 
