@@ -51,7 +51,7 @@ class MainApplication(tk.Tk):
 		self.textbutton.pack()
 
 		#choose median filter
-		self.medianchoice = 3
+		self.median = 3
 		ttk.Label(self,text='\nMEDIAN FILTER? 0 for no, otherwise enter an odd integer for filter kernal size (strength). default is 3 (leave blank for default)', wraplength=555).pack()
 		self.median_box = tk.Text(self, height =1, width =4)
 		self.median_box.pack()
@@ -220,30 +220,33 @@ class MainApplication(tk.Tk):
 		for file in dm_vids:
 			print('Runnning file: {}....'.format(file))
 			if self.motioncor=='on':
-					#These are here for debugging purposes, if you want to find the error uncomment:  
-					#micrograph.motioncorrect_video(file)
-					#default_pipeline(micrograph)
-				try:
+				#These are here for debugging purposes, if you want to find the error uncomment:  
+				micrograph.motioncorrect_video(file)
+				default_pipeline(micrograph)
+				#try:
 
-					micrograph.motioncorrect_video(file)
-					default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color, medfilter=self.median)
-				except:
-					print('There is an error with {}'.format(file) )
-					print('Skipping file and continuing. If this is a common occurance debug or contact Gabriel')
+				#	micrograph.motioncorrect_video(file)
+				#	default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color, medfilter=self.median)
+				#except:
+				#	print('There is an error with {}'.format(file) )
+				#	print('Skipping file and continuing. If this is a common occurance debug or contact Gabriel')
 
 
 		for file in dm_ims:
 			print('Runnning file: {}....'.format(file))
-			try:
-				micrograph.open_dm(file)
-				default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
-			except:
-					print('There is an error with {}'.format(file) )
-					print('Skipping file and continuing. If this is a common occurance debug or contact Gabriel')
+			#micrograph.motioncorrect_video(file)
+			micrograph.open_dm(file)
+			default_pipeline(micrograph)
+			#try:
+			#	micrograph.open_dm(file)
+			#	default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+			#except:
+			#		print('There is an error with {}'.format(file) )
+			#		print('Skipping file and continuing. If this is a common occurance debug or contact Gabriel')
 
 			
 
-		dm_frames = group_frames(dm_frames)
+		#dm_frames = group_frames(dm_frames)
 
 		if self.motioncor=='Off':
 			for vid in dm_frames: 

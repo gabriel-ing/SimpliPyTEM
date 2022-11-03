@@ -46,7 +46,7 @@ class Micrograph:
             if video_average==True:
 
                 images = dm_input['data']
-                image = np.average(images, axis=0)
+                image= np.sum(images, axis=0)
             else:
                 image=dm_input['data'][0]
                 
@@ -62,6 +62,9 @@ class Micrograph:
         self.y = y
         self.pixelSize= pixelSize
         self.pixelUnit = pixelUnit
+        
+        #this line removes dead pixels which are super bright (any pixel which is more than mean+25*stddeviation
+        self.image[self.image>self.image.mean()+self.image.std()*25]=image.mean()
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
 #       #return image, x, y, pixelSize, pixelUnit
@@ -120,7 +123,8 @@ class Micrograph:
         '''
     def convert_to_8bit(self):
         #  this will scale the pixels to between 0 and 255, this will automatically scale the image to its max and min
-        self.image = ((self.image - self.image.min()) * (1/(self.image.max() - self.image.min()) * 255)).astype('uint8')
+        self.image = ((self.image - self.image.min()) * (1/(self.image.max() - self.image.min()) * 255))
+        self.image = self.image.astype('uint8')
 
     def bin_image(self, value=2):
             self.image = cv.resize(self.image, (int(self.image.shape[0]/value), int(self.image.shape[1]/value)), interpolation=cv.INTER_CUBIC) 
@@ -132,9 +136,10 @@ class Micrograph:
             self.image = self.image + next_frame['data']
 
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
-    def enhance_contrast(self, alpha=1.3, beta=1.1):
+    def enhance_contrast(self, alpha=1.5, beta=2):
         enhanced_image = cv.convertScaleAbs(self.image, alpha=alpha, beta=beta)
-        enhanced_image = cv.equalizeHist(enhanced_image)
+        #print(self.image.dtype)
+        #enhanced_image = cv.equalizeHist(enhanced_image)
         enhanced_object = deepcopy(self)
         enhanced_object.image = enhanced_image
         return enhanced_object

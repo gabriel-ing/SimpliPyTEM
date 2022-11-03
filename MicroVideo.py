@@ -11,6 +11,7 @@ import mrcfile
 import subprocess as sb
 import tifffile
 from copy import deepcopy
+from moviepy.editor import ImageSequenceClip
 plt.gray()
 
 class MicroVideo: 
@@ -64,7 +65,7 @@ class MicroVideo:
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         #This line removes any giant outliers (bright pixels) from the images
         #print(self.frames[self.frames>self.frames.mean()+self.frames.std()*50])
-        self.frames[self.frames>self.frames.mean()+self.frames.std()*50]=0
+        self.frames[self.frames>self.frames.mean()+self.frames.std()*25]=0
         
         self.frames=  self.frames.astype('float32')
         #for frame in self.frames:
@@ -163,7 +164,7 @@ class MicroVideo:
             if name[-4:]=='.tif':
                 name= name.strip('.tif')
         else: 
-            name = '.'.join(self.filename.split('.')[:1])+'.tif' 
+            name = '.'.join(self.filename.split('.')[:1]) 
 
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
@@ -178,11 +179,51 @@ class MicroVideo:
             savename = name+'_{}'.format(count)+'.tif'
             tifffile.imsave(savename, self.frames[i],imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit, 'Labels':'{}/{} -{}'.format(i, len(self.frames),self.filename)})
 
+    def save_gif(self, fps=5,**kwargs ):
 
+        if 'name' in kwargs:
+            name = kwargs['name']
+            if name[-4:]!='.gif':
+                name= name+'.gif'
+        else: 
+            name = '.'.join(self.filename.split('.')[:1])+'.gif' 
 
+        if 'outdir' in kwargs:
+            outdir = str(kwargs['outdir'])
+            if outdir not in os.listdir('.') and outdir!='.':
+                os.mkdir(outdir)
+            name = outdir+'/'+name
+
+        from moviepy.editor import ImageSequenceClip
+        arr = video.frames    
+        arr = np.expand_dims(arr, 3)
+        clip = ImageSequenceClip(list(arrex), fps=fps)
+        clip.to_videofile(name, fps)
     
+    def write_video(self, fps=5, **kwargs):
+        if 'name' in kwargs:
+            name = kwargs['name']
+            if name[-4:]!='.mp4':
+                name= name+'.mp4'
+        else: 
+            name = '.'.join(self.filename.split('.')[:1])+'.mp4' 
+
+        if 'outdir' in kwargs:
+            outdir = str(kwargs['outdir'])
+            if outdir not in os.listdir('.') and outdir!='.':
+                os.mkdir(outdir)
+            name = outdir+'/'+name
 
         
+
+        vid = []
+        for frame in self.frames:
+            frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+            vid.append(frame)
+        vid = np.array(vid)
+        clip = ImageSequenceClip(list(vid), fps=fps)
+        clip.write_videofile(name, fps=fps)
+
         '''-----------------------------------------------------------------------------------------------------------------------
         SECTION: BASIC FUNCTIONS
 
