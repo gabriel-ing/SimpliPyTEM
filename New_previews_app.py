@@ -11,11 +11,11 @@ class MainApplication(tk.Tk):
 		super().__init__()
 		#self.parent = parent
 		#self.label
-		self.geometry('600x600')
+		self.geometry('600x700')
 		self.title('Micrograph Previews App')
 		ttk.Label(self,text='\nProgram for generating small filesize previews of micrographs', wraplength=550).pack()
 		ttk.Label(self,text='Choose whether to process a file, a folder, or live during an imaging session', wraplength=550).pack()
-		#self.label = ttk.Label(self, text ='Hello').pack()
+		#self.label = ttk.Label(sel, text ='Hello').pack()
 		#self.geometry('400x300')
 
 		self.live='Folder'
@@ -24,7 +24,7 @@ class MainApplication(tk.Tk):
 
 		ttk.Label(self, text='\nChoose folder or file:').pack()
 		
-		self.folder = ''
+		self.folder = 'Images'
 		self.browsebutton=ttk.Button(self, text='Browse', command=self.BrowseCommand)
 		self.browsebutton.pack()
 
@@ -175,7 +175,7 @@ class MainApplication(tk.Tk):
 		self.output_folder_name = self.outfolder_box.get('1.0', tk.END)
 		self.output_folder_name=self.output_folder_name.strip('\n')
 		if self.output_folder_name == '':
-			self.output_folder_name='Previews'
+			self.output_folder_name='Images'
 		print(self.output_folder_name)
 
 	def Retrive_title(self):
