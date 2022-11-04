@@ -18,10 +18,10 @@ class Micrograph:
         self.filename = ''
         self.image='Undefined'
         self.pixel_size= 'Undefined'
-        self.foldername='.'
+        self.foldername='Images'
 
 
-    def set_foldername(self, foldername='Previews'):
+    def set_foldername(self, foldername='Images'):
         self.foldername = foldername
 
 
@@ -438,7 +438,7 @@ def default_pipeline(Micrograph_object,  medfilter=3, gaussfilter=0, scalebar=Tr
 
 
 
-def group_frames(self, frames):
+def group_frames(frames):
     prefixes = []
     prefix_set=set()
     frames.sort()

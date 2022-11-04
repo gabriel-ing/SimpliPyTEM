@@ -65,7 +65,7 @@ class MicroVideo:
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         #This line removes any giant outliers (bright pixels) from the images
         #print(self.frames[self.frames>self.frames.mean()+self.frames.std()*50])
-        self.frames[self.frames>self.frames.mean()+self.frames.std()*25]=0
+        self.frames[self.frames>self.frames.mean()+self.frames.std()*8]=0
         
         self.frames=  self.frames.astype('float32')
         #for frame in self.frames:
@@ -210,7 +210,7 @@ class MicroVideo:
 
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
-            if outdir not in os.listdir('.') and outdir!='.':
+            if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])) and outdir!='.':
                 os.mkdir(outdir)
             name = outdir+'/'+name
 
@@ -270,7 +270,7 @@ class MicroVideo:
             #print(enhanced_object.frames.dtype)
             if enhanced_object.frames[i].dtype=='uint8':
                 enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
-                #print('Histogram equalised...')
+                print('Histogram equalised...')
         #print(enhanced_object.frames[0].dtype)
         if enhanced_object.frames[i].dtype=='uint8' and gamma!=1:
             LUT =np.empty((1,256), np.uint8)
@@ -500,9 +500,9 @@ class MicroVideo:
         for x in range(0, len(self.frames), groupsize):
             if x+groupsize>len(self.frames):
 
-                frame = np.average(self.frames[x:len(self.frames)],axis=0)
+                frame = np.sum(self.frames[x:len(self.frames)],axis=0)
             else:
-                frame = np.average(self.frames[x:x+groupsize],axis=0)    
+                frame = np.sum(self.frames[x:x+groupsize],axis=0)    
             newframes.append(frame)
         averaged_object=deepcopy(self)    
         averaged_object.frames=np.array(newframes)
@@ -622,7 +622,7 @@ class MicroVideo:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_video_pipeline(MicroVideo_object, medfilter=0, gaussfilter=5, scalebar=True, texton = True, xybin=2, color='Auto', **kwargs):
+def default_video_pipeline(MicroVideo_object, medfilter=0, gaussfilter=3, scalebar=True, texton = True, xybin=2, color='Auto',Average_frames=5, **kwargs):
     
     if Average_frames!= 0 and Average_frames!=1:
         MicroVideo_object=MicroVideo_object.Average_frames(Average_frames)
@@ -638,16 +638,22 @@ def default_video_pipeline(MicroVideo_object, medfilter=0, gaussfilter=5, scaleb
 
     if 'name' in kwargs:
         name=kwargs['name']
-
-    MicroVideo_object.bin(xybin)
-    MicroVideo_object = MicroVideo_object.enhance_contrast()
+    else:
+        name = '.'.join(MicroVideo_object.filename.split('.')[:1])+'.mp4' 
+	
+    #MicroVideo_object.bin(xybin)
+    
     
     MicroVideo_object.convert_to_8bit()
-
+    MicroVideo_object = MicroVideo_object.enhance_contrast(alpha=1.3, beta=5)
     if scalebar==True:
         MicroVideo_object.make_scalebar(texton=texton, color=color)
 
-    MicroVideo_object.save_video(name=name)
+    if 'outdir' in kwargs:
+        MicroVideo_object.write_video(name=name,outdir=kwargs['outdir'])
+    else:
+        MicroVideo_object.write_video(name=name)     
+        
 
 
 

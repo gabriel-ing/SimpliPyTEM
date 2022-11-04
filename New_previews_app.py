@@ -219,7 +219,7 @@ class MainApplication(tk.Tk):
 
 		for file in dm_vids:
 			print('Runnning file: {}....'.format(file))
-			if self.motioncor=='on':
+			if self.motioncor=='On':
 				#These are here for debugging purposes, if you want to find the error uncomment:  
 				micrograph.motioncorrect_video(file)
 				default_pipeline(micrograph)
@@ -231,7 +231,9 @@ class MainApplication(tk.Tk):
 				#	print('There is an error with {}'.format(file) )
 				#	print('Skipping file and continuing. If this is a common occurance debug or contact Gabriel')
 
-
+			else: 
+				micrograph.open_dm(file)
+				default_pipeline(micrograph)
 		for file in dm_ims:
 			print('Runnning file: {}....'.format(file))
 			#micrograph.motioncorrect_video(file)
@@ -246,19 +248,19 @@ class MainApplication(tk.Tk):
 
 			
 
-		#dm_frames = group_frames(dm_frames)
-
-		if self.motioncor=='Off':
-			for vid in dm_frames: 
-			    print(dm_frames[vid])
-			    frames = dm_frames[vid]
-			    micrograph.open_dm(frames[0])
-			    micrograph.add_frames(frames[1:])
-			    default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
-		else:
-			print('Motion correcting frames!')
-			micrograph.motioncor_frames(dm_frames)
-			default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+		dm_frames = group_frames(dm_frames)
+		for vid in dm_frames:
+			if self.motioncor=='Off':
+				 
+				    print(dm_frames[vid])
+				    frames = dm_frames[vid]
+				    micrograph.open_dm(frames[0])
+				    micrograph.add_frames(frames[1:])
+				    default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+			else:
+				print('Motion correcting frames!')
+				micrograph.motioncor_frames(dm_frames)
+				default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
 		print('All files in folder complete!')	
 
 
