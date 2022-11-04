@@ -126,4 +126,11 @@ video{
     width:97%
 })
 ''')
-        
+
+
+
+if __name__=='__main__':
+    directory = os.getcwd()
+    images, videos = get_files(directory, Images, Videos)
+    write_html(images, videos, title='RNAP in Graphene liquid cell')
+    write_css()
