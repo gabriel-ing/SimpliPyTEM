@@ -56,3 +56,74 @@ if __name__=='__main__':
     images, videos = get_files('.', 'Images', 'Videos')
     write_html(images,videos)    
 
+
+def write_css(directory):
+    with open('style.css', 'w') as f:
+        f.write('''
+* {
+    font-family: Helvetica;
+}
+html{
+    background-color: black;
+}
+h1{
+    font-size: 80px;
+    font-weight:bold;
+    text-justify: center;
+}
+.banner{
+    background-color:#D8BBEA;
+    width:100%;
+    top:0px;
+    left:0px;
+    height:200px;
+
+
+}
+h2{
+    text-align:center;
+    padding: 10px 10px;
+    font-size:40px;
+    width: 150px;
+    margin:20px auto 20px auto;
+    background-color: #95A9C1;
+}
+
+img{
+    border:black 3px solid;
+    display:inline-block;
+    /*flex: 0 1 auto;*/
+    justify-content: center;
+    width:97%;
+    margin:10px 10px 10px 10px;
+
+
+}
+h3{
+    text-align:center;
+}
+.Image_group{
+    background-color: rgb(200, 200, 200);
+    padding:10px 10px 10px 10px;
+    margin: 0px 0px 10px 0px;
+    width:97%;
+    display:inline-block;
+    align-items: center;
+}
+video{
+    margin:auto;
+    width:90%;
+    align-items: center;
+    justify-content: center;
+}
+.Video_group{
+    margin:auto;
+    background-color:rgb(200, 200, 200) ;
+    display: inline-block;
+    align-items: center;
+    padding:10px 10px 10px 10px;
+    margin: 0px 0px 10px 0px;
+    width:97%
+})
+''')
+        
