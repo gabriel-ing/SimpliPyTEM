@@ -1,4 +1,7 @@
 
+import cv2 as cv
+import numpy as np 
+
 def find_shift(frame1, frame2, crop=3700):
     if len(frame1.shape)==3:
         #print(frame1, frame2)

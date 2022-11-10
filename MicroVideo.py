@@ -513,7 +513,7 @@ class MicroVideo:
         averaged_video = []
         for i in range(0, len(self.frames)-groupsize):
             frame_group = self.frames[i:i+groupsize]
-            av_frame_group = np.average(frame_group, axis=0)
+            av_frame_group = np.sum(frame_group, axis=0)
             averaged_video.append(av_frame_group)
         averaged_object = deepcopy(self)
         averaged_object.frames=np.array(averaged_video)    
@@ -645,7 +645,7 @@ def default_video_pipeline(MicroVideo_object, medfilter=0, gaussfilter=3, scaleb
     
     
     MicroVideo_object.convert_to_8bit()
-    MicroVideo_object = MicroVideo_object.enhance_contrast(alpha=1.3, beta=5)
+    #MicroVideo_object = MicroVideo_object.enhance_contrast(alpha=1.3, beta=5)
     if scalebar==True:
         MicroVideo_object.make_scalebar(texton=texton, color=color)
 

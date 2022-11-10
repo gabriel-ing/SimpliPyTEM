@@ -52,12 +52,10 @@ def get_files(directory, imagedir, videodir, image_pattern='', video_pattern='')
     os.chdir(current_dir)
     return image_files, video_files
 
-if __name__=='__main__':
-    images, videos = get_files('.', 'Images', 'Videos')
-    write_html(images,videos)    
 
 
-def write_css(directory):
+
+def write_css():
     with open('style.css', 'w') as f:
         f.write('''
 * {
@@ -131,6 +129,8 @@ video{
 
 if __name__=='__main__':
     directory = os.getcwd()
-    images, videos = get_files(directory, Images, Videos)
-    write_html(images, videos, title='RNAP in Graphene liquid cell')
+    title = input('Give a title for the experiment: ')
+    title=title.replace(' ', '_')
+    images, videos = get_files(directory, 'Images', 'Videos')
+    write_html(images, videos, title=title)
     write_css()

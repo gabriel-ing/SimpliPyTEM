@@ -89,15 +89,15 @@ class Micrograph:
 
         
     def save_image(self, **kwargs):#use name='outname' to give a filename   
-        if self.foldername not in os.listdir('.') :
+        if self.foldername not in os.listdir('.') and self.foldername.split('/')[-1] not in os.listdir('/'.join(self.foldername.split('/')[:-1])):
             os.mkdir(self.foldername)        
-        if kwargs:
+        if 'name' in kwargs:
                 name = kwargs['name']
         else:
-                name = '.'.join(self.filename.split('.')[:1])
+                name = '.'.join(self.filename.split('.')[:-1])
         name += '_'+self.text+'scale.jpg'
         if self.foldername!='':
-                name = self.foldername.strip('/n') + '/' + name
+                name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
         #if self.foldername=='':
         #    newname = self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
         #else:
@@ -417,7 +417,7 @@ class Micrograph:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_pipeline(Micrograph_object,  medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto'):
+def default_pipeline(Micrograph_object,  medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
@@ -427,13 +427,24 @@ def default_pipeline(Micrograph_object,  medfilter=3, gaussfilter=0, scalebar=Tr
     if xybin!= 0 and xybin!=1:
         Micrograph_object.bin_image(xybin)
 
+    if 'name' in kwargs:
+        name = kwargs['name']
+    else:
+        name = '.'.join(Micrograph_object.filename.split('.')[:-1])
+    
+    #if 'outdir' in kwargs:
+        
     Micrograph_object = Micrograph_object.enhance_contrast()
     Micrograph_object.convert_to_8bit()
 
     if scalebar==True:
         Micrograph_object.make_scalebar(texton=texton, color=color)
 
-    Micrograph_object.save_image()
+    if 'outdir' in kwargs:
+        Micrograph_object.save_image(name=name,outdir=kwargs['outdir'])
+    else:
+        Micrograph_object.save_image(name=name) 
+    #Micrograph_object.save_image(outname=name)
 
 
 
