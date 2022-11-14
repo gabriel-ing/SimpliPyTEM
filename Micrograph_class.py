@@ -262,9 +262,11 @@ class Micrograph:
     def low_pass_filter(self, radius):
     # This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
     # If pixelsize is undefined the radius will refer to pixels only
+        
+        N=self.image.shape[0]
         if type(self.pixelSize)==int or type(self.pixelSize)==float and self.pixelSize!=0:
             radius=int((N*self.pixelSize)/radius)
-        N=self.image.shape[0]
+        
             
         fft = np.fft.fft2(self.image)
         fshift = np.fft.fftshift(fft)

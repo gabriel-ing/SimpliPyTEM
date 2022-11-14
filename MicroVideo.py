@@ -80,9 +80,9 @@ class MicroVideo:
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
         self.pixelSize = float(str(voxel_size).split(',')[0].strip('('))
-        self.image = mrc.data
-        self.x = self.image.shape[1]
-        self.y = self.image.shape[0]
+        self.frames = mrc.data
+        self.x = self.frames.shape[1]
+        self.y = self.frames.shape[0]
         self.pixelUnit='nm'
         self.filename = file
 
@@ -90,6 +90,22 @@ class MicroVideo:
         for frame in self.frames:
             frame = frame.astype('float32')
 
+
+    def open_array(self, arr, pixelsize='',pixelunit='nm', filename='Loaded_array'):
+        print(arr.shape)
+        if len(arr.shape)!=3:
+            print('Error, this doesnt appear to be an image stack, please double check!')
+            return 1 
+
+        self.frames = arr 
+        self.pixelSize=pixelsize
+        self.pixelUnit=pixelunit
+        self.filename=filename
+        self.reset_xy()
+
+    def reset_xy(self):
+        self.x = self.frames[0].shape[1]
+        self.y = self.frames[0].shape[0]
 
 
     '''-----------------------------------------------------------
@@ -168,7 +184,8 @@ class MicroVideo:
 
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
-            if outdir not in os.listdir('.') and outdir!='.':
+            if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])) and outdir!='.':
+                
                 os.mkdir(outdir)
             name = outdir+'/'+name
 
@@ -270,7 +287,8 @@ class MicroVideo:
             #print(enhanced_object.frames.dtype)
             if enhanced_object.frames[i].dtype=='uint8':
                 enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
-                print('Histogram equalised...')
+                if i==0:
+                    print('Histogram equalised...')
         #print(enhanced_object.frames[0].dtype)
         if enhanced_object.frames[i].dtype=='uint8' and gamma!=1:
             LUT =np.empty((1,256), np.uint8)
