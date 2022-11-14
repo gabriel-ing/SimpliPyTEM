@@ -50,7 +50,10 @@ class MicroVideo:
             dm='_Video_'
         else:
             print('Error, {} is not a video, please use Micrograph() class')
-
+        dmfile = nci.dm.fileDM(file)
+        self.metadata_tags =dmfile.allTags
+        if '.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Frame Exposure' in self.metadata_tags:
+            self.fps = 1/float(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Frame Exposure']) 
         #extract x and y shapes
         self.x = self.frames[0].shape[1]
         self.y = self.frames[0].shape[0]
@@ -217,13 +220,22 @@ class MicroVideo:
         clip = ImageSequenceClip(list(arrex), fps=fps)
         clip.to_videofile(name, fps)
     
-    def write_video(self, fps=5, **kwargs):
-        if 'name' in kwargs:
-            name = kwargs['name']
-            if name[-4:]!='.mp4':
+    def write_video(self, name='', **kwargs):
+        '''
+        This allows saving as an mp4 or a raw avi file (imageJ compatible)
+        '''    
+        if name!='':
+            #name = kwargs['name']
+            if name[-4:]!='.mp4' and name[-4:]!='.avi':
                 name= name+'.mp4'
+                outformat='mp4'
+            elif name[-4:]=='.avi':
+                outformat = 'avi'   
+            else:
+                outformat='.mp4'    
         else: 
-            name = '.'.join(self.filename.split('.')[:1])+'.mp4' 
+            name = '.'.join(self.filename.split('.')[:-1])+'.mp4' 
+            outformat='mp4'
 
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
@@ -231,15 +243,27 @@ class MicroVideo:
                 os.mkdir(outdir)
             name = outdir+'/'+name
 
-        
+        if 'fps' in kwargs:
+            fps= kwargs['fps']
+        else:
+            fps = 10    
 
-        vid = []
+        outvid = []
         for frame in self.frames:
             frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
-            vid.append(frame)
-        vid = np.array(vid)
-        clip = ImageSequenceClip(list(vid), fps=fps)
-        clip.write_videofile(name, fps=fps)
+            outvid.append(frame)
+        outvid = np.array(outvid)
+        
+        clip = ImageSequenceClip(list(outvid), fps=fps)
+        #print(clip)
+        if outformat=='avi':
+            clip.write_videofile(name,codec='rawvideo', fps=fps)
+        else:
+            clip.write_videofile(name, fps=fps)
+                
+
+
+
 
         '''-----------------------------------------------------------------------------------------------------------------------
         SECTION: BASIC FUNCTIONS
@@ -283,12 +307,7 @@ class MicroVideo:
         for i in range(len(enhanced_object.frames)):
             #print(enhanced_object.frames.dtype)
             enhanced_object.frames[i] = cv.convertScaleAbs(enhanced_object.frames[i], alpha=alpha, beta=beta)
-            #print(enhanced_object.frames[i].dtype)
-            #print(enhanced_object.frames.dtype)
-            if enhanced_object.frames[i].dtype=='uint8':
-                enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
-                if i==0:
-                    print('Histogram equalised...')
+
         #print(enhanced_object.frames[0].dtype)
         if enhanced_object.frames[i].dtype=='uint8' and gamma!=1:
             LUT =np.empty((1,256), np.uint8)
@@ -300,7 +319,12 @@ class MicroVideo:
         #enhanced_object.image = enhanced_image
         return enhanced_object
 
-
+    def eqHist(self):
+        enhanced_object=deepcopy(self)
+        enhanced_object.convert_to_8bit()
+        for i in range(len(enhanced_object.frames)):
+            enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
+        return enhanced_object
     '''-----------------------------------------------------------------------------------------------------------------------
     SECTION: SCALEBAR
 
