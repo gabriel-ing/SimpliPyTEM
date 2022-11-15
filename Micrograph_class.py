@@ -49,7 +49,9 @@ class Micrograph:
                 image= np.sum(images, axis=0)
             else:
                 image=dm_input['data'][0]
-                
+        
+        dmfile = nci.dm.fileDM(file)
+        self.metadata_tags =dmfile.allTags        
         #extract x and y shapes
         x = image.shape[1]
         y = image.shape[0]
@@ -334,6 +336,45 @@ class Micrograph:
         ax[1].imshow(other_image)
         plt.show()
 
+
+    '''--------------------------------------------------------------------------------
+    SECTION: METADATA
+
+        If a dm file has been opened, the metadata is saved in MicroVideo.metadata_tags, this is unformatted and awkward to use
+        but all the raw data can be found. These methods allow easy extraction of some key metadata items: mag, voltage,
+        exposure and aquisition date/time. 
+    '''
+    def show_metadata(self):
+        for tag in self.metadata_tags:
+            print('{} : {}\n'.format(tag, self.metadata_tags[tag]))
+
+
+    def get_mag(self):
+        indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Indicated Mag']
+        actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Actual Mag']
+
+        print('Indicated mag: {}'.format(indicated_mag))
+        print('Actual mag: {}'.format(actual_mag))
+        self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
+        self.actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Actual Magnification']
+        return self.indicated_mag, self.actual_mag
+
+    def get_voltage(self):
+        self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
+        return self.voltage
+
+    def get_exposure(self):
+        #print('Frame rate : {}fps'.format(self.fps))
+        #print('Exposure time per frame: {}s '.format(1/self.fps))
+        print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
+        return self.fps, self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']
+
+    def get_date_time(self): 
+        self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
+        self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
+        print('Date: {} '.format(self.AqDate))
+        print('Time {} '.format(self.AqTime))
+        return self.AqDate, self.AqTime
 
     '''---------------------------------
     SECTION MOTION CORRECTION
