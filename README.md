@@ -1,44 +1,10 @@
-# Create previews of digital micrograph images
+# SimpliPyTEM: an open source project to simplify python-based analysis of electron microscopy data with added focus on in situ videos 
 
-README out of date, sorry! Will update soon. 
+SimpliPyTEM introduces the Micrograph and MicroVideo classes to process images and videos respectively. These aim to make many basic functions incredibly simple, without the need for knowledge of more complex libraries which are performing the functions. Functions included are adding scalebar, enhancing contrast and equalising histogram, converting to 8bit images, binning, filtering with many common filters (Median, gaussian, low-pass, weiner and non-local means). Video frames can easily be averaged together in both simple averaging and running averging ways. 
 
-The Previews_app.py file now will open a GUI and allow generation of a pdf file with all the images.
+The image data within these classes are kept in numpy arrays, which is the most common format for using images in other applications, which makes it easy to use the files for downstream processes like thresholding and particle analysis. 
 
-### Image_previews_openCV.py
-
-
-
-This python script will open all the digital micrograph .dm3 files in a folder, median filter, bin the image by 2 and add a scalebar of a suitable size and save the file as a .jpg in a separate folder. 
-
-The script should be very useful at creating a low resolution, small size preview of the micrographs to examine, if you want higher resolution or no filtering, commands can be commented out. By using this script, all the scale bars should match on the images (in height, position and labelling). It will also process images very quickly (my macbook pro 2017 can process an image in 0.5s)
-
-The script can also handle micrograph stacks (assuming your computer has the memory to do so). For image stacks it will save an average of all the individual images, again by default this is binned, median filtered and scalebar added, the same arguments should work with stacks. This method is significantly faster at processing image stacks than imageJ (for 25-frame, 1.5gb image stack it took less than 10 seconds to generate a preview on my workstation). 
-
-
-I wrote this script for personal use as my previous method using imageJ gave inconsistent scalebars, was considerably slower, and often required manual repeating to get it looking good. Feel free to use, adapt, ask questions if it would be useful to you. 
-
-
-### Usage: 
-
-process all .dm3 files in directory:
-
- *python Image_previews_openCV.py*
-
-process a single file 
-
-*python Image_previews_OpenCV.py --file filename*
-
-add additional flag arguments: 
-
-*--color {white, black or  grey}* -override default scale bar color choosing to make scale bar this color
-*--quality {int}* -choose quality of jpg image when saving from 1-95 (default 80), lower reduces filesize
-*--xybin {int}* - choose level of xybinning, this is 2 by default (output image size = x/2 y/2), put 1 for no binning, more for more binning (smaller file) 
-*--textoff {}* - set this to anything other than 0 (easiest is 1) to remove the text from the scalebar, scale bar size can be seen in filename.
- 
- 
- Before use, you need to download or locate a font .ttf file and add the path to this file on your computer to line 94:
-  
-  *font = ImageFont.truetype('/path/to/font.ttf', fontsize)*
+On top of the simplified python functions, I have also implemented an app to automate the image analysis - this allows all the files in a directory to be processed (eg. filtered, contrast enhanced, add scalebar, save as jpg) to make looking at, presenting and downloaded images much faster and the filesizes much smaller. This is also combined with outputting the images onto a pdf document or an html file which then allows for viewing images and videos as a webpage. This type of automation is designed to make viewing the results of an experiment a rapid and straightforward process 
 
 ### Dependancies :
 
@@ -56,15 +22,14 @@ pillow (pip install Pillow) - adding text, image handling
 
 argsparse - adding arguments, should be installed by default
 
-### Things to do :
+mrcfile - parsing mrc files 
 
-- Test with more files: including choosing color and different magnifications (DONE) 
-- Implement with Dm4 files   (DONE) 
-- Use args-parser to change options without editting file (DONE) 
-- Break up into different functions, allow some functions to be used on any images (e.g. add scalebar) (DONE) 
-- Implement with videos (i.e import image stack, save average of stack) (DONE)
-- Implement motion correction of videos (DONE) 
-- Build simple GUI (DONE)
-- Write images into an output HTML or pdf file (FPDF)  (DONE)
-- Make executable
-- Update README with images
+copy - copying objects effectively 
+
+moviepy - saving movie files 
+
+airium - html file writing 
+
+(skimage, imutils - not currently implemented here but for thresholding 
+
+
