@@ -74,7 +74,7 @@ class MicroVideo:
         #for frame in self.frames:
         #    frame = frame.astype('float32')
         self.shape = self.frames.shape
-
+        print(file + ' opened as a MicroVideo object')
 
 #       #return image, x, y, pixelSize, pixelUnit
 
@@ -111,6 +111,7 @@ class MicroVideo:
     def reset_xy(self):
         self.x = self.frames[0].shape[1]
         self.y = self.frames[0].shape[0]
+        self.shape = self.frames.shape
 
 
     '''-----------------------------------------------------------
@@ -124,40 +125,7 @@ class MicroVideo:
 
 
 
-    def save_video(self, framerate=5, **kwargs):
-        if 'name' in kwargs:
-            name = kwargs['name']
-        else:
-            name =   '.'.join(self.filename.split('.')[:1])+'.avi'
 
-        if self.foldername!='':
-            name = self.foldername.strip('/n') + '/' + name    
-            #print(name)
-            if self.foldername not in os.listdir('.') and self.foldername!='.':
-                os.mkdir(self.foldername.strip('/n'))
-
-        if 'compression' in kwargs:
-            if kwargs['compression']==0:
-                fourcc = cv.VideoWriter_fourcc(*'DIB ')
-
-
-                print('Written?')
-            else:
-                fourcc = cv.VideoWriter_fourcc(*'DIVX')    
-        else:
-            fourcc = cv.VideoWriter_fourcc(*'DIVX') 
-
-        if 'mp4' in kwargs:
-            if kwargs['mp4']==True:
-                fourcc=cv.VideoWriter_fourcc(*'X264')
-
-        out = cv.VideoWriter(name, fourcc,5, (self.x, self.y))
-        for frame in self.frames:
-            frame = ((frame - self.frames.min()) * (1/(self.frames.max() - self.frames.min()) * 255)).astype('uint8')
-            frame = cv.cvtColor(frame,cv.COLOR_GRAY2BGR)
-            #print(frame.shape)
-            out.write(frame)
-        out.release()    
 
     
 
@@ -168,7 +136,7 @@ class MicroVideo:
             if name[-4:]!='.tif':
                 name+='.tif'        
         else:
-            name = '.'.join(self.filename.split('.')[:1])+'.tif'    
+            name = '.'.join(self.filename.split('.')[:-1])+'.tif'    
         
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
@@ -343,14 +311,25 @@ class MicroVideo:
 
 
     def get_mag(self):
-        indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Indicated Mag']
-        actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Actual Mag']
-
-        print('Indicated mag: {}'.format(indicated_mag))
-        print('Actual mag: {}'.format(actual_mag))
-        self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
-        self.actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Actual Magnification']
-        return self.indicated_mag, self.actual_mag
+        try:
+            self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
+        except KeyError:
+            try:    
+                self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Indicated Mag']
+            except KeyError:
+                print('Sorry, indicated mag could not be found, try searching for it manually with the show_metadata method')
+        try:   
+            self.actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Actual Magnification']
+        except KeyError:
+                try:
+                    actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Actual Mag']
+                except:
+                    print('Sorry, indicated mag could not be found, try searching for it manually with the show_metadata method')
+        
+        if hasattr(self, actual_mag) and hasattr(self, indicated_mag):
+            print('Indicated mag: {}'.format(self.indicated_mag))
+            print('Actual mag: {}'.format(self.actual_mag))
+            return self.indicated_mag, self.actual_mag
 
     def get_voltage(self):
         self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
@@ -563,8 +542,8 @@ class MicroVideo:
     used for plotting images using matplotlib. Functions very basic so only meant for rapid use, for better figures write own function or use save command
 
     '''
-    def show_im(self):
-        plt.subplots(figsize=(50,40))
+    def imshow(self):
+        plt.subplots(figsize=(30,20))
         plt.imshow(self.frames[0])
         plt.show()
 
@@ -574,7 +553,10 @@ class MicroVideo:
         ax[1].imshow(other_image)
         plt.show()
 
-
+    def imshow_average(self):
+        plt.subplots(figsize=(30,20))
+        plt.imshow(np.sum(self.frames, axis=0))
+        plt.show()
     '''------------------------------------------
     SECTION: VIDEO SPECIFIC METHODS
 
@@ -617,6 +599,32 @@ class MicroVideo:
 
 
     '''        
+
+    def motioncorrect_vid(self):
+        original_cwd = os.getcwd()
+        tifname = 'OutIntermediateTiff.tif'
+        outname= '.'.join(self.filename.split('.')[:-1])+'Motion_corrected.mrc'
+        print('outname = ', outname)
+        outname = outname.split('/')[-1]
+
+        if '/' in self.filename:
+            directory='/'.join(self.filename.split('/')[:-1])
+        else:
+            directory=os.getcwd() 
+        os.chdir(directory)   
+        print('cwd = ', os.getcwd())
+        command = '/home/bat_workstation/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda112-08-11-2021 -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(tifname, outname, self.pixelSize*10)
+        print(command)
+        print('dir = ',directory)
+        self.save_tif_stack(name=tifname)
+
+        sb.call(command, shell=True)
+        MC_vid = deepcopy(self)
+        inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
+        MC_vid.open_mrc(inname)
+        os.chdir(original_cwd)
+        return MC_vid
+
     def motioncor_frames(self, frames_dict):
         for vid in frames_dict:
             frames = frames_dict[vid]
@@ -705,6 +713,7 @@ class MicroVideo:
         cv.imwrite(name,self.image)
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')
+
 
 
 

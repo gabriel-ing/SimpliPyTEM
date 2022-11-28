@@ -222,7 +222,7 @@ class MainApplication(tk.Tk):
 			if self.motioncor=='On':
 				#These are here for debugging purposes, if you want to find the error uncomment:  
 				micrograph.motioncorrect_video(file)
-				default_pipeline(micrograph)
+				default_pipeline_class(micrograph)
 				#try:
 
 				#	micrograph.motioncorrect_video(file)
@@ -233,12 +233,12 @@ class MainApplication(tk.Tk):
 
 			else: 
 				micrograph.open_dm(file)
-				default_pipeline(micrograph)
+				default_pipeline_class(micrograph)
 		for file in dm_ims:
 			print('Runnning file: {}....'.format(file))
 			#micrograph.motioncorrect_video(file)
 			micrograph.open_dm(file)
-			default_pipeline(micrograph)
+			default_image_pipeline(micrograph)
 			#try:
 			#	micrograph.open_dm(file)
 			#	default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
@@ -256,11 +256,11 @@ class MainApplication(tk.Tk):
 				    frames = dm_frames[vid]
 				    micrograph.open_dm(frames[0])
 				    micrograph.add_frames(frames[1:])
-				    default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+				    default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
 			else:
 				print('Motion correcting frames!')
 				micrograph.motioncor_frames(dm_frames)
-				default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+				default_image_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
 		print('All files in folder complete!')	
 
 
@@ -271,7 +271,7 @@ class MainApplication(tk.Tk):
 		micrograph.set_foldername(self.output_folder_name)
 		if file[-4:-1]=='.dm':
 			micrograph.open_dm(file)
-			default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+			default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
 
 		
 
@@ -295,7 +295,7 @@ class MainApplication(tk.Tk):
 						if os.path.getsize(file)>230165776 and file[-3:]=='dm4' and self.motioncor=='On':
 							
 							micrograph.motioncorrect_video(file)
-							default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+							default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
 
 						elif x[-9]=='-' and file[-13:-9].isdigit() and file[-8:-4].isdigit():
 							
@@ -307,7 +307,7 @@ class MainApplication(tk.Tk):
 
 						else:
 							micrograph.open_dm(file)
-							default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+							default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
 
 					print(file)
 					file_set.add(file)

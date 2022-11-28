@@ -9,7 +9,7 @@ setup(
 	author_email='ucbtgrb@ucl.ac.uk',
 	license = 'BSD 2-clause',
 	packages =['SimpliPyTEM'],
-	install_requires=['numpy', 'ncempy', 'pillow', 'mrcfile', 'moviepy', 'airium', 'matplotlib', 'opencv-python', 'pillow'	],
+	install_requires=['numpy', 'ncempy', 'pillow', 'mrcfile', 'moviepy', 'airium', 'matplotlib', 'opencv-python', 'pillow', 'tifffile'	],
 	classifiers=[
 		'Development Status :: 1 - Planning',
         'Intended Audience :: Science/Research',

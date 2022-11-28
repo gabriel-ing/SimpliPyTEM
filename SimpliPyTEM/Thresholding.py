@@ -1,5 +1,5 @@
-from Downloads.Micrograph_analysis_scripts_master.Micrograph_class import *
-from Downloads.Micrograph_analysis_scripts_master.MicroVideo import *
+from SimpliPyTEM.Micrograph_class import *
+from SimpliPyTEM.MicroVideo import *
 from ipyfilechooser import FileChooser
 from moviepy.editor import ImageSequenceClip
 from skimage import measure
@@ -95,6 +95,7 @@ def Collect_particle_data(contours_im, pixelSize):
     height_particle = []
     radius_particle= []
     #meanradius_particle=np.zeros([num_particle, 1],dtype = float)
+    MajorMinorRatio = []
 
     for (i, c) in enumerate(contours_im):
         #print(i,c)
@@ -119,6 +120,8 @@ def Collect_particle_data(contours_im, pixelSize):
         width = min(width_height)
         width_particle.append(width*pixelSize)
         height_particle.append(height*pixelSize)
+        MajMinRat = height/width
+        MajorMinorRatio.append(MajMinRat)
         ((cx, cy), radius) = cv.minEnclosingCircle(c)
         radius_particle.append(radius*pixelSize)
         #circularity_particle.append(area/(np.pi*radius*radius))
@@ -128,7 +131,7 @@ def Collect_particle_data(contours_im, pixelSize):
 
     particle_data = {'Max_length':max_length_particle, 'Area':area_particle, 'Centroid':centroid_particle, 
                      'Aspect_ratio':aspect_ratio_particle, 'Perimeter':perimeter_particle, 'Circularity':circularity_particle, 
-                     'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle}    
+                     'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle, 'Major-Minor Ratio':MajorMinorRatio}    
     #print(particle_data)
     return particle_data
 
@@ -136,31 +139,7 @@ def Collect_particle_data(contours_im, pixelSize):
 #print(particle_data['Height'])
 #print(np.mean(particle_data['Height']))
 
-'''-------------------------------------------
-EXTRACT DATA FROM VIDEO 
 
-'''
-
-widths = []
-heights = []
-masks = []
-circularity=[]
-radius=[]
-vid.convert_to_8bit()
-for frame in vid.frames:
-    thresh= Threshold(frame, 90)
-    contours_im, mask= Find_contours(thresh)
-    particle_data=Collect_particle_data(contours_im, 0.112)
-    widths.append(particle_data['Width'])
-    heights.append(particle_data['Height'])
-    masks.append(mask)
-    circularity.append(particle_data['Circularity'])
-    radius.append(particle_data['Radius'])
-                       
-        
-
-'''
-----------------------------------------------------
 PLOT RADIUS DATA
 '''
 #print(np.array(widths))
@@ -176,108 +155,18 @@ def plot_histogram(data):
     plt.ylabel('Frequency')
     plt.show()
     
-print(particle_data['Radius'])    
-height_data= flatten_list(heights)
-width_data= flatten_list(widths)
-#circularity_data = flatten_list(circularity)
-radius_data = flatten_list(radius)
-colors = [(0.9,0.9,1), (1,0.9,0.9), (0.9,1,0.9)]
 
-fig, ax = plt.subplots(1,3,figsize=(40,10))
-print(ax)
-ax[0].hist(height_data, color =colors[0], edgecolor='black', bins=50)
-ax[0].set_xlabel('Major axis size (nm)', fontsize=20)
-ax[0].set_xticks(list(range(0,int(max(height_data)+2),2)))
-ax[0].set_xticklabels(list(range(0,int(max(height_data)+2),2)),fontsize=15)
-ax[0].set_title('Major axis size',fontsize=25)
-ax[1].set_ylabel('Frequency')
+def save_videos_sidebyside(Video1, Video2):
+    #Videos need to be the same shape. Add video as numpy stack (Z,Y,X ) 
+    print(Video1.shape)
+    z1,y1,x1 = Video1.shape
+    z2, y2, x2=Video2.shape
+    sidebyside = np.zeros((z, y, x*2),dtype='uint8')
+    # this was put here to invert the masked video, DO this BEFORE calling function. 
+    #masksinv=cv.bitwise_not(np.array(masks))
+    sidebyside[:, :, :x] =Video1
 
-ax[1].hist(width_data, color = colors[1], edgecolor='black', bins=50)
-ax[1].set_xlabel('Minor axis size (nm)', fontsize=20)
-ax[1].set_xticks(list(range(0,int(max(height_data)+2),2)))
-ax[1].set_xticklabels(list(range(0,int(max(height_data)+2),2)),fontsize=15)
-ax[1].set_ylabel('Frequency')
-ax[1].set_title('Minor axis size',fontsize=25)
-
-ax[2].hist(radius_data, color = colors[2], edgecolor='black', bins=50)
-ax[2].set_xlabel('Bounding circle radius', fontsize=20)
-ax[2].set_xticks(list(range(0,int(max(height_data)+2),2)))
-ax[2].set_xticklabels(list(range(0,int(max(height_data)+2),2)),fontsize=15)
-ax[2].set_title('Bounding circle radius',fontsize=25)
-ax[1].set_ylabel('Frequency')
-#ax[1,1].hist(circularity_data, color = (0.9,0.9,1), edgecolor='black', bins=50)
-#ax[1,1].set_xlabel('Circularity', fontsize=20)
-
-#ax[1].set_xticks(list(range(0,int(max(height_data)+2),2)))
-#ax[1].set_xticklabels(list(range(0,int(max(height_data)+2),2)),fontsize=15)
-
-plt.savefig('Top_fibrils_80thresh.jpg'))
-
-
-
-
-'''
-----------------------------------------------
-SAVE VIDEOS SIDE BY SIDE
-this is the bit to save the video side by side
-
-'''
-print(vid.frames.shape)
-z,y,x = vid.frames.shape
-
-sidebyside = np.zeros((z, y, x*2),dtype='uint8')
-masksinv=cv.bitwise_not(np.array(masks))
-#print(sidebyside.shape)
-vid.convert_to_8bit()
-vid.make_scalebar()
-sidebyside[:, :, :x] =vid.frames
-
-sidebyside[:, :, x:] =masksinv[:,:,:]
-#print(vid)
-
-#sidebyside = np.hstack((vid.frames,masksinv))
-plt.imshow(sidebyside[0], cmap='magma')
-print(sidebyside.shape)
-
-video = []
-for frame in sidebyside:
-        
-        frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
-        video.append(frame)
-video = np.array(video)
-
-clip = ImageSequenceClip(list(video), fps=5)
-clip.write_videofile('Top_crop_Horsidebyside80thresh_inv_.mp4')
-
-
-
-'''
---------------------------------------------
-Frame by frame analysis (widths and radius)
-'''
-
-num_particles= [len(x) for x in widths]
-mean_radius = [np.mean(x) for x in radius]
-
-fig, ax=plt.subplots(1,2, figsize=(20,10))
-xticks = list(range(0,90,10))
-
-
-ax[0].plot(range(len(num_particles)),num_particles )
-ax[0].set_xlim(0,80)
-ax[0].set_title('Number of particles by frame', fontsize=25)
-ax[0].set_ylabel('Number of particles', fontsize=20)
-ax[0].set_xlabel('Frame number', fontsize=20)
-ax[0].set_xticks(xticks)
-ax[0].set_xticklabels(xticks, fontsize=15)
-#plt.show()
-
-#print(mean_radius)
-ax[1].plot(range(len(mean_radius)), mean_radius)
-ax[1].set_xlim(0,80)
-ax[1].set_title('Mean radius by frame', fontsize=25)
-ax[1].set_ylabel('Mean particle radius', fontsize=20)
-ax[1].set_xlabel('Frame number', fontsize=20)
-ax[1].set_xticks(xticks)
-ax[1].set_xticklabels(xticks, fontsize=15)
-plt.savefig('Top_fibrils_number_of_particles_and_radius.png')
+    sidebyside[:, :, x:] =Video2[:,:,:]
+    plt.imshow(sidebyside[0], cmap='magma')
+    plt.show()
+    return sidebyside

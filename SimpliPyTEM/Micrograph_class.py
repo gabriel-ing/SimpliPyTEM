@@ -11,6 +11,7 @@ import mrcfile
 import subprocess as sb
 from copy import deepcopy
 from scipy.signal import wiener
+import tifffile
 plt.gray()
 
 class Micrograph: 
@@ -94,27 +95,61 @@ class Micrograph:
 
 
         
-    def save_image(self, **kwargs):#use name='outname' to give a filename   
-        if self.foldername not in os.listdir('.') and self.foldername.split('/')[-1] not in os.listdir('/'.join(self.foldername.split('/')[:-1])):
-            os.mkdir(self.foldername)        
-        if 'name' in kwargs:
-                name = kwargs['name']
+    def write_image(self, name='', ftype='jpg', **kwargs):#use name='outname' to give a filename   
+        #if self.foldername!='':
+        
+        #if self.foldername not in os.listdir('.') and self.foldername.split('/')[-1] not in os.listdir('/'.join(self.foldername.split('/')[:-1])):
+        #    print(self.foldername)
+        #    os.mkdir(self.foldername)        
+        if 'outdir' in kwargs:
+            outdir = str(kwargs['outdir'])
+            if '/' in outdir:
+                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
+                    os.mkdir(outdir)
+            elif outdir not in os.listdir('.'):
+                os.mkdir(outdir)
+            name=outdir+'/'+name    
+
+        if name!='':
+                if name[-3:]=='jpg':
+                    ftype='jpg'
+                elif name[-3:]=='tif':
+                    ftype='tif'    
+                if len(name.split('.'))>1:
+                    name='.'.join(name.split('.')[:-1])
+
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
-        name += '_'+self.text+'scale.jpg'
-        if self.foldername!='':
-                name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
+
+        try:
+            name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
+        except AttributeError:
+            name+='.'+ftype
+        #if self.foldername!='':
+        #        name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
         #if self.foldername=='':
         #    newname = self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
         #else:
         #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
-        cv.imwrite(name,self.image)
+        
+        if ftype=='jpg':
+            if self.image.max()!=255 or self.image.min()!=0:
+                print(self.image.max(), self.image.min())
+                self = self.convert_to_8bit()
+                print('converting to 8bit')
+            cv.imwrite(name,self.image)
+        elif ftype=='tif':
+            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
+
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')
 
         #    def average_video(self):
         #       self.image = np.average(image, axis=0)
     
+    def reset_xy(self):
+            self.x = self.image.shape[1]
+            self.y = self.image.shape[0]
 
     
 
@@ -136,8 +171,8 @@ class Micrograph:
 
     def bin_image(self, value=2):
             binned_image = deepcopy(self)
-            binned_image.image = cv.resize(self.image, (int(self.image.shape[0]/value), int(self.image.shape[1]/value)), interpolation=cv.INTER_CUBIC) 
-            #self.pixelSize= self.pixelSize*value
+            binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
+            self.pixelSize= self.pixelSize*value
             binned_image.reset_xy()
             return binned_image
 
@@ -251,7 +286,7 @@ class Micrograph:
          #   Utext = str(n)+u'\u00b5'+ 'm'
           #  text = str(n)+'microns'
         #else:
-        self.text = '{}{}'.format(self.n,self.pixelUnit) 
+        self.scalebar_size = '{}{}'.format(self.n,self.pixelUnit) 
          
 
         pil_image = Image.fromarray(self.image)
@@ -262,7 +297,7 @@ class Micrograph:
             
             fontsize=int(self.scalebar_x/(25))
             font = ImageFont.truetype("/home/bat_workstation/helveticaneue.ttf", fontsize)
-            draw.text(textposition, self.text, anchor ='mb', fill=self.textcolor, font=font, stroke_width=1)
+            draw.text(textposition, self.scalebar_size, anchor ='mb', fill=self.textcolor, font=font, stroke_width=1)
             self.image = np.array(pil_image)    
 
 
@@ -382,14 +417,29 @@ class Micrograph:
 
 
     def get_mag(self):
-        indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Indicated Mag']
-        actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Actual Mag']
+        try:
+            self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
+        except KeyError:
+            try:
+                self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Indicated Mag']
+                  
+            except KeyError:
+                print('Sorry, indicated mag cannot be located in tags, please find manually using .show_metadata()')
+        
+        try:
+            self.actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Actual Magnification']
+        except KeyError:
+            try:
+                self.actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Formatted Actual Mag']
+            except KeyError:
+                print('Sorry, actual mag cannot be located in tags, please find manually using .show_metadata()')
 
-        print('Indicated mag: {}'.format(indicated_mag))
-        print('Actual mag: {}'.format(actual_mag))
-        self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
-        self.actual_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Actual Magnification']
-        return self.indicated_mag, self.actual_mag
+
+        #self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
+        if hasattr(self, 'indicated_mag') and hasattr(self, 'actual_mag'):
+            print('Indicated mag: {}'.format(self.indicated_mag))
+            print('Actual mag: {}'.format(self.actual_mag))
+            return self.indicated_mag, self.actual_mag
 
     def get_voltage(self):
         self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
@@ -493,7 +543,13 @@ class Micrograph:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_pipeline(Micrograph_object,  medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+    
+    Micrograph_object = Micrograph()
+    if filename[-3:-1]=='dm':
+        Micrograph_object.open_dm(filename)
+    else:
+        print('Sorry only dm files  are currently supported here.')
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
@@ -503,27 +559,53 @@ def default_pipeline(Micrograph_object,  medfilter=3, gaussfilter=0, scalebar=Tr
     if xybin!= 0 and xybin!=1:
         Micrograph_object.bin_image(xybin)
 
-    if 'name' in kwargs:
-        name = kwargs['name']
+    if name !='':
+        name = name
     else:
         name = '.'.join(Micrograph_object.filename.split('.')[:-1])
-    
+        #print(filename)
     #if 'outdir' in kwargs:
-        
-    Micrograph_object = Micrograph_object.enhance_contrast()
-    Micrograph_object.convert_to_8bit()
+    #print('name=',name)
+    #Micrograph_object = Micrograph_object.enhance_contrast()
+    Micrograph_object=Micrograph_object.convert_to_8bit()
 
     if scalebar==True:
         Micrograph_object.make_scalebar(texton=texton, color=color)
 
     if 'outdir' in kwargs:
-        Micrograph_object.save_image(name=name,outdir=kwargs['outdir'])
+        Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])
     else:
-        Micrograph_object.save_image(name=name) 
+        Micrograph_object.write_image(name=name) 
     #Micrograph_object.save_image(outname=name)
 
+def default_pipeline_class(Micrograph_object ,name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+    if type(medfilter)==int and medfilter!=0: 
+        Micrograph_object = Micrograph_object.median_filter(medfilter)
+    
+    if type(gaussfilter)==int and gaussfilter!=0:  
+        Micrograph_object = Micrograph_object.gaussian_filter(medfilter)
 
+    if xybin!= 0 and xybin!=1:
+        Micrograph_object.bin_image(xybin)
 
+    if name !='':
+        name = name
+    else:
+        name = '.'.join(Micrograph_object.filename.split('.')[:-1])
+        #print(filename)
+    #if 'outdir' in kwargs:
+    #print('name=',name)
+    #Micrograph_object = Micrograph_object.enhance_contrast()
+    Micrograph_object=Micrograph_object.convert_to_8bit()
+
+    if scalebar==True:
+        Micrograph_object.make_scalebar(texton=texton, color=color)
+
+    if 'outdir' in kwargs:
+        Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])
+    else:
+        Micrograph_object.write_image(name=name) 
+    #Micrograph_object.save_image(outname=name)
 
 def group_frames(frames):
     prefixes = []
