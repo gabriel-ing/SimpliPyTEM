@@ -15,16 +15,77 @@ import tifffile
 plt.gray()
 
 class Micrograph: 
+    '''
+    A class holding the micrograph image data along with associated parameters and methods.
+    ... 
+    Attributes
+    ----------
+    filename:str
+        The file name opened (blank if not opened in object)
+    pixelSize:float
+        The pixel size in the image, should be initialised when opening data assuming the pixel size is included, if not can easily be altered
+    pixelUnit:str
+        The unit of the pixel size
+    metadata_tags:dict
+        The metadata of the file should be stored in this dictionary (works with digital micrograph files)
+    shape:tuple
+        The shape of the image 
+    x:int
+        The size of the x axis in the image
+    y:int    
+        The size of the y axis in the image
 
+    Methods
+    -------
+    Filehandling: 
+
+    open_dm(filename, video_average=True):
+        Opens Digital Micrograph (dm3 or dm4) files
+    open_mrc(filename):
+        opens .mrc files
+    write_image(name='', ftype='jpg', **kwargs)    
+        Writes image files, filetype jpg or tif can be assigned with the suffix of the name or the ftype option. 
+    
+
+    Basic image functions: 
+
+    bin_image(value=2):
+        Bins the image on the x and y axis by the value given (default 2), returns a new object. 
+    convert_to_8bit():
+        Scales the data between 0 and 255 and makes the datatype 8-bit, returns a new object.
+    enhance_contrast(alpha, beta, gamma):
+        enhances contrast
+    equalizeHist():
+        converts to 8 bit and equalises the histogram, returns a new object.
+    reset_xy():
+        resets the image shape, x and y properties (if its cropped or changed image or similar)
+    
+
+    Fetching Metadata:
+    
+    get_exposure():
+        Prints and returns the exposure time metadata
+    get_voltage():
+        Prints and returns the voltage metadata
+    get_mag():
+        Prints and returns the image magnification
+    get_date_time():
+        prints and returns the image aquisition date and time
+    show_metadata()
+        prints all the metadata tags and associated values
+    
+
+
+
+
+    '''
     def __init__(self):
         self.filename = ''
         self.image='Undefined'
         self.pixel_size= 'Undefined'
-        self.foldername='Images'
 
 
-    def set_foldername(self, foldername='Images'):
-        self.foldername = foldername
+
 
 
         '''-------------------------------------------------------------------------------------------------------------------------------------------
@@ -351,26 +412,79 @@ class Micrograph:
         filtered_object.image = filtered_image
         return filtered_object
 
-    def median_filter(self, kernal=3):
+    def median_filter(self, n=3):
+        '''
+        Returns a median filtered copy of the micrograph object, kernal size defined in the call (default is 3)
+
+            Parameters
+            ----------
+                n:int
+                    The n x n kernal for median filter is defined here, must be an odd integer
+
+            Returns
+            -------
+                Median_filtered_object :Micrograph
+                    Median filtered copy of micrograph object with median filtered image
+        '''
         filtered_image = cv.medianBlur(self.image,kernal)
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
         return filtered_object
 
     def weiner_filter(self, kernal=5):
-        
+        '''
+        Returns a Weiner filtered copy of the micrograph object, kernal size defined in the call (default is 3)
+
+            Parameters
+            ----------
+
+                n :int
+                    The n x n kernal for Weiner filter is defined here, must be an odd integer
+
+            Returns
+            -------
+
+                Weiner_filtered_object : Micrograph
+                    Weiner filtered copy of micrograph object 
+        '''
         filtered_image = wiener(self.image, (kernal, kernal))
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
         return filtered_object
 
-    def NLM_filter(self, h=5):
+    def nlm_filter(self, h=5):
+        '''
+        Returns a non-local means filtered copy of the micrograph, filter strength is defined in the call. 
+        More information on non-local means filtering can be found here: https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
+
+            Parameters
+            ----------
+                h:int
+                    Defines the strength of the Non-local means filter, default is 5
+            Returns
+            -------
+                nlm_filtered_object : Micrograph
+                    Non-local means filtered copy of the micrograph object
+        '''
         filtered_image = cv.fastNlMeansDenoising(np.uint8(self.image), h)
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
         return filtered_object
 
     def gaussian_filter(self, kernal=3):
+        '''
+        Returns a Gaussian filtered copy of the micrograph object, kernal size defined in the call (default is 3)
+
+            Parameters
+            ----------
+                n:int
+                    The n x n kernal for median filter is defined here, must be an odd integer
+
+            Returns
+            -------
+                Gaussian_filtered_object :Micrograph
+                    Gaussian filtered copy of micrograph object with gaussian filtered image
+        '''
         filtered_image = cv.GaussianBlur(self.image, (kernal,kernal),0)
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
@@ -386,6 +500,16 @@ class Micrograph:
 
     '''
     def imshow(self, title=''):
+        '''
+        Basic function for plotting the micrograph image
+
+        Parameters
+        ----------
+
+            title:str
+                Optional title to be added to the plot 
+
+        '''
         plt.subplots(figsize=(30,20))
         plt.imshow(self.image)
         if title!='':
@@ -393,6 +517,19 @@ class Micrograph:
         plt.show()
 
     def show_pair(self,other_image, title1='', title2=''):
+        '''
+        Basic function for plotting pairs of images for comparison 
+
+        Parameters
+        ----------
+            other_image : 2D Numpy array
+                Second image of the plot - if using Micrograph object remember to use micrograph.image
+            title1 : str
+                Title for the first image (the object being used to plot the images) - Optional
+            title2 : str
+                Title for the second image - Optional 
+
+        '''
         fig, ax = plt.subplots(1,2, figsize=(30,20))
         ax[0].imshow(self.image)
         if title1!='':
@@ -442,10 +579,28 @@ class Micrograph:
             return self.indicated_mag, self.actual_mag
 
     def get_voltage(self):
+        '''
+        Returns voltage and saves is as micrograph attribute
+
+        Returns
+        -------
+
+            Voltage:int
+                Microscope voltage for the image
+        '''
         self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
         return self.voltage
 
     def get_exposure(self):
+        '''
+        Prints and returns the exposure time for the image. 
+
+        Returns
+        -------
+
+            exposure:int
+                Capture time for the image
+        '''
         #print('Frame rate : {}fps'.format(self.fps))
         #print('Exposure time per frame: {}s '.format(1/self.fps))
         print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
@@ -453,6 +608,18 @@ class Micrograph:
         return self.exposure
 
     def get_date_time(self): 
+        '''
+        Prints and returns the exposure time for the image. 
+
+        Returns
+        -------
+
+            AqDate:str
+                Date on which the micrograph was captured
+            AqTime:str
+                Time at which the micrograph was captured
+        '''
+
         self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
         self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
         print('Date: {} '.format(self.AqDate))
@@ -468,6 +635,17 @@ class Micrograph:
 
     '''        
     def motioncor_frames(self, frames_dict):
+    '''
+    Advanced method which requires editing the code to use. Uses Motioncor2 to motion correct a series of frames and output a number of motion corrected images as a micrograph object
+    
+    Parameters
+    ----------
+        frames_dict:dict
+            A dictionary of videos and frames in the directory which will be motion corrected, this is created by the 'group_frames()' function
+    
+    This actually wont work well (will only open the final vid in the frames dictionary). Depreciated function.
+    '''
+
         for vid in frames_dict:
             frames = frames_dict[vid]
             outfile = '_'.join(frames[0].split('-')[:-1])+'.mrc'
@@ -480,6 +658,20 @@ class Micrograph:
             self.open_mrc(outfile_aligned)  
 
     def motioncorrect_video(self, file):
+    ''' 
+    Advanced method which requires editing the source code to use. Uses Motioncor2 to motion correct a video and output a motion corrected image as a micrograph object
+    
+    This function first converts the dm3 to an mrc file, followed by using motioncor by the exectuable defined in motion_cor_command - change this executible to use. 
+    
+    An aligned mrc file should be saved in the directory and automatically opened in this Micrograph object.
+    Parameters
+    ----------
+        filename:str
+            The filename to motion correct
+
+
+
+    '''
         outfile = '_'.join(file.split('.')[:-1])+'.mrc'
         outfile_aligned = '_'.join(file.split('.')[:-1])+'_aligned.mrc'
         pixelsize = nci.dm.fileDM(file).scale[2]
@@ -493,50 +685,7 @@ class Micrograph:
      
 
 
-    '''-----------------------------------------------------------------------------
-    SECTION: DEPRECIATED FUNCTIONS
 
-
-    '''
-
-
-
-    # this is depreciated as functions within it have become standalone methods. 
-    def image_conversion(self):
-        #apply median filter and gaussian blur
-        
-        #print(self.image)
-        print(self.image.dtype)
-        self.image = self.image.astype('float32')
-        if self.med==True:
-            try:
-                img_median = cv.medianBlur(self.image,self.medkernal)
-            except Exception:
-                print('median filter failed')
-                img_median=self.image
-        if self.gauss==True:
-            img_gauss = cv.GaussianBlur(img_median, (self.gauss_kernal,self.gauss_kernal),0)
-        
-        #Scale image between 0-255 (turn it into an 8bit greyscale image)
-        
-        self.image = ((img_median - img_median.min()) * (1/(img_median.max() - img_median.min()) * 255)).astype('uint8')
-       
-        #these commands can increase contrast, by default the contrast is stretched to limits in previous line though
-        #new_image = cv.convertScaleAbs(img_gauss, alpha=alpha, beta=beta)
-        #new_image = cv.equalizeHist(new_arr)
-
-        if self.xybin>1:
-            self.image = cv.resize(self.image, (int(self.image.shape[0]/self.xybin), int(self.image.shape[1]/self.xybin)), interpolation=cv.INTER_CUBIC) 
-            self.pixelSize= self.pixelSize*self.xybin
-
-    def default_pipeline(self, medianfilter=3, gaussian_filter=0, scalebar=True, texton = True, bin=2):
-        if self.image.shape == 3:
-            self.average_video()
-        #self.image_conversion()
-        self.make_scalebar()
-        
-        
-        self.save_image()
 
 
 
