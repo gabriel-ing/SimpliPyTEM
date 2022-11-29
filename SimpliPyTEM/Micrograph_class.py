@@ -172,7 +172,7 @@ class Micrograph:
     def bin_image(self, value=2):
             binned_image = deepcopy(self)
             binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
-            self.pixelSize= self.pixelSize*value
+            binned_image.pixelSize= binned_image.pixelSize*value
             binned_image.reset_xy()
             return binned_image
 
@@ -557,7 +557,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         Micrograph_object = Micrograph_object.gaussian_filter(medfilter)
 
     if xybin!= 0 and xybin!=1:
-        Micrograph_object.bin_image(xybin)
+        Micrograph_object = Micrograph_object.bin_image(xybin)
 
     if name !='':
         name = name
@@ -586,7 +586,7 @@ def default_pipeline_class(Micrograph_object ,name='', medfilter=3, gaussfilter=
         Micrograph_object = Micrograph_object.gaussian_filter(medfilter)
 
     if xybin!= 0 and xybin!=1:
-        Micrograph_object.bin_image(xybin)
+        Micrograph_object = Micrograph_object.bin_image(xybin)
 
     if name !='':
         name = name

@@ -215,14 +215,14 @@ class MainApplication(tk.Tk):
 		dm_ims = [x for x in dm_files if x not in dm_vids and x not in dm_frames]	
 
 		micrograph = Micrograph()
-		micrograph.set_foldername(self.output_folder_name)
+		#micrograph.set_foldername(self.output_folder_name)
 
 		for file in dm_vids:
 			print('Runnning file: {}....'.format(file))
 			if self.motioncor=='On':
 				#These are here for debugging purposes, if you want to find the error uncomment:  
 				micrograph.motioncorrect_video(file)
-				default_pipeline_class(micrograph)
+				default_pipeline_class(micrograph, outdir=self.output_folder_name)
 				#try:
 
 				#	micrograph.motioncorrect_video(file)
@@ -233,12 +233,12 @@ class MainApplication(tk.Tk):
 
 			else: 
 				micrograph.open_dm(file)
-				default_pipeline_class(micrograph)
+				default_pipeline_class(micrograph, outdir=self.output_folder_name)
 		for file in dm_ims:
 			print('Runnning file: {}....'.format(file))
 			#micrograph.motioncorrect_video(file)
 			micrograph.open_dm(file)
-			default_image_pipeline(micrograph)
+			default_pipeline_class(micrograph, outdir=self.output_folder_name)
 			#try:
 			#	micrograph.open_dm(file)
 			#	default_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
@@ -247,20 +247,20 @@ class MainApplication(tk.Tk):
 			#		print('Skipping file and continuing. If this is a common occurance debug or contact Gabriel')
 
 			
-
-		dm_frames = group_frames(dm_frames)
-		for vid in dm_frames:
-			if self.motioncor=='Off':
-				 
-				    print(dm_frames[vid])
-				    frames = dm_frames[vid]
-				    micrograph.open_dm(frames[0])
-				    micrograph.add_frames(frames[1:])
-				    default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
-			else:
-				print('Motion correcting frames!')
-				micrograph.motioncor_frames(dm_frames)
-				default_image_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+		if dm_frames:
+			dm_frames = group_frames(dm_frames)
+			for vid in dm_frames:
+				if self.motioncor=='Off':
+					 
+					    print(dm_frames[vid])
+					    frames = dm_frames[vid]
+					    micrograph.open_dm(frames[0])
+					    micrograph.add_frames(frames[1:])
+					    default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median, outdir=self.output_folder_name)
+				else:
+					print('Motion correcting frames!')
+					micrograph.motioncor_frames(dm_frames)
+					default_image_pipeline(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median, outdir=self.output_folder_name)
 		print('All files in folder complete!')	
 
 

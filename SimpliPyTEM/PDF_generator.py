@@ -124,8 +124,8 @@ def pdf_generator(images, title, notes, max_num=9):
 		if group_number !=0:
 			pdf.add_page()
 
-		pdf.set_xy(10, 100)
-		pdf.set_font('Arial', 'B', 14)
+		#pdf.set_xy(10, 100)
+		#pdf.set_font('Arial', 'B', 14)
 		sample_name = 'Sample name: {}'.format(' '.join(prefix.split('_')))
 		pdf.cell(540, 10, sample_name, align='C')
 

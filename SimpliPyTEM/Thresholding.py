@@ -41,7 +41,8 @@ def Find_contours(thresh, min_size=200):
         cv.drawContours(thresh, [cnt], 0,255,-1)
     #plt.imshow(thresh)
     #plt.show()
-    labels =measure.label(thresh, neighbors=8, background=0)
+    #labels =measure.label(thresh, neighbors=8, background=0)
+    labels =measure.label(thresh,background=0)
     mask = np.zeros(thresh.shape, dtype='uint8')
     
     
@@ -139,12 +140,12 @@ def Collect_particle_data(contours_im, pixelSize):
 #print(particle_data['Height'])
 #print(np.mean(particle_data['Height']))
 
-
+'''
 PLOT RADIUS DATA
 '''
 #print(np.array(widths))
 #widths_list = [x for i in widths for x in i]
-def flatten_list(l):
+def Flatten_list(l):
     return [x for i in l for x in i]
     
 def plot_histogram(data):
@@ -156,17 +157,38 @@ def plot_histogram(data):
     plt.show()
     
 
-def save_videos_sidebyside(Video1, Video2):
+def Sidebyside(Video1, Video2):
     #Videos need to be the same shape. Add video as numpy stack (Z,Y,X ) 
     print(Video1.shape)
     z1,y1,x1 = Video1.shape
     z2, y2, x2=Video2.shape
-    sidebyside = np.zeros((z, y, x*2),dtype='uint8')
+    sidebyside = np.zeros((max(z1,z2), max(y1,y2), x1+x2),dtype='uint8')
+
     # this was put here to invert the masked video, DO this BEFORE calling function. 
     #masksinv=cv.bitwise_not(np.array(masks))
-    sidebyside[:, :, :x] =Video1
+    sidebyside[:, :, :x1] =Video1
 
-    sidebyside[:, :, x:] =Video2[:,:,:]
-    plt.imshow(sidebyside[0], cmap='magma')
-    plt.show()
+    sidebyside[:, :, x1:] =Video2[:,:,:]
+    #plt.imshow(sidebyside[0], cmap='magma')
+    #plt.show()
     return sidebyside
+
+def Particle_analysis(image, threshold, min_size, pixelSize):
+    thresh = Threshold(image, threshold)
+    contours_im, mask = Find_contours(thresh, min_size)
+    particle_data = Collect_particle_data(contours_im, pixelSize)
+    return mask, particle_data
+
+def Particle_analysis_video(video,threshold, min_size,pixelSize):
+    masks =[]
+    video_data ={'Max_length':[], 'Area':[], 'Centroid':[], 
+                     'Aspect_ratio':[], 'Perimeter':[], 'Circularity':[], 
+                     'Width':[], 'Height':[], 'Radius':[], 'Major-Minor Ratio':[]}  
+    
+    for frame in video:
+        mask, data =Particle_analysis(frame, threshold, min_size,pixelSize)
+        masks.append(mask)
+        for key in data:
+            video_data[key].append(data[key])
+    masks = np.array(masks)
+    return masks, video_data    

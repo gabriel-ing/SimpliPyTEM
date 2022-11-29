@@ -542,21 +542,47 @@ class MicroVideo:
     used for plotting images using matplotlib. Functions very basic so only meant for rapid use, for better figures write own function or use save command
 
     '''
-    def imshow(self):
+    def imshow(self, title=''):
+
         plt.subplots(figsize=(30,20))
+        if title!='':
+            plt.title(title, fontsize=30)
         plt.imshow(self.frames[0])
         plt.show()
 
-    def show_pair(self,other_image):
+    def imshow_pair(self,other_image, title1='', title2=''):
         fig, ax = plt.subplots(1,2, figsize=(50,30))
         ax[0].imshow(self.frames[0])
+        if title1!='':
+            ax[0].set_title(title1, fontsize=30)
+        
         ax[1].imshow(other_image)
+        if title2!='':
+            ax[1].set_title(title2, fontsize=30)
         plt.show()
 
     def imshow_average(self):
         plt.subplots(figsize=(30,20))
         plt.imshow(np.sum(self.frames, axis=0))
         plt.show()
+
+    def Sidebyside(self, Video2):
+    #Add video as numpy stack (Z,Y,X ) 
+        print(Video1.shape)
+        z1,y1,x1 = self.frames.shape
+        z2, y2, x2=Video2.shape
+        sidebyside = np.zeros((max(z1,z2), max(y1,y2), x1+x2),dtype='uint8')
+
+        # this was put here to invert the masked video, DO this BEFORE calling function. 
+        #masksinv=cv.bitwise_not(np.array(masks))
+        sidebyside[:, :, :x1] =Video1
+
+        sidebyside[:, :, x1:] =Video2[:,:,:]
+        #plt.imshow(sidebyside[0], cmap='magma')
+        #plt.show()
+        sidebyside_object =deep_copy(self)
+        sidebyside_object.frames = sidebyside
+        return sidebyside    
     '''------------------------------------------
     SECTION: VIDEO SPECIFIC METHODS
 
@@ -616,9 +642,9 @@ class MicroVideo:
         command = '/home/bat_workstation/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda112-08-11-2021 -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(tifname, outname, self.pixelSize*10)
         print(command)
         print('dir = ',directory)
-        self.save_tif_stack(name=tifname)
+        self.save_tif_stack(name=tifname)+66 
 
-        sb.call(command, shell=True)
+        sb.call(command, shell=True, cwd=os.getcwd())
         MC_vid = deepcopy(self)
         inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
         MC_vid.open_mrc(inname)
