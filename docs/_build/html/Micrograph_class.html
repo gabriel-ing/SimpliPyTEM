@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micrograph Class &mdash; SimpliPyTEM 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to SimpliPyTEM’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> SimpliPyTEM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Micrograph Class</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimpliPyTEM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Micrograph Class</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Micrograph_class.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-Micrograph_class">
+<span id="micrograph-class"></span><h1>Micrograph Class<a class="headerlink" href="#module-Micrograph_class" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">Micrograph</span></span><a class="headerlink" href="#Micrograph_class.Micrograph" title="Permalink to this definition"></a></dt>
+<dd><p>A class holding the micrograph image data along with associated parameters and methods. This makes processing microscope images easier as it collects data and methods into a single place. 
+The majority of image handling methods here comes from OpenCV, the functions often have more options/parameters, as a result making them both more powerful and more complicated. 
+This package aims to simplify and automate these functions, however if more functionality is required, I recommend using OpenCV (<a class="reference external" href="https://docs.opencv.org/4.x/">https://docs.opencv.org/4.x/</a>) as a starting point for your image analysis. 
+… 
+Attributes
+———-
+filename:str</p>
+<blockquote>
+<div><p>The file name opened (blank if not opened in object)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>pixelSize:float</dt><dd><p>The pixel size in the image, should be initialised when opening data assuming the pixel size is included, if not can easily be altered</p>
+</dd>
+<dt>pixelUnit:str</dt><dd><p>The unit of the pixel size</p>
+</dd>
+<dt>metadata_tags:dict</dt><dd><p>The metadata of the file should be stored in this dictionary (works with digital micrograph files)</p>
+</dd>
+<dt>shape:tuple</dt><dd><p>The shape of the image</p>
+</dd>
+<dt>x:int</dt><dd><p>The size of the x axis in the image</p>
+</dd>
+<dt>y:int    </dt><dd><p>The size of the y axis in the image</p>
+</dd>
+</dl>
+<p>Filehandling:</p>
+<dl class="simple">
+<dt>open_dm(filename, video_average=True):</dt><dd><p>Opens Digital Micrograph (dm3 or dm4) files</p>
+</dd>
+<dt>open_mrc(filename):</dt><dd><p>opens .mrc files</p>
+</dd>
+<dt>write_image(name=’’, ftype=’jpg’, <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs)    </dt><dd><p>Writes image files, filetype jpg or tif can be assigned with the suffix of the name or the ftype option.</p>
+</dd>
+</dl>
+<p>Basic image functions:</p>
+<dl class="simple">
+<dt>bin_image(value=2):</dt><dd><p>Bins the image on the x and y axis by the value given (default 2), returns a new object.</p>
+</dd>
+<dt>convert_to_8bit():</dt><dd><p>Scales the data between 0 and 255 and makes the datatype 8-bit, returns a new object.</p>
+</dd>
+<dt>enhance_contrast(alpha, beta, gamma):</dt><dd><p>enhances contrast</p>
+</dd>
+<dt>equalizeHist():</dt><dd><p>converts to 8 bit and equalises the histogram, returns a new object.</p>
+</dd>
+<dt>reset_xy():</dt><dd><p>resets the image shape, x and y properties (if its cropped or changed image or similar)</p>
+</dd>
+</dl>
+<p>Fetching Metadata:</p>
+<dl class="simple">
+<dt>get_exposure():</dt><dd><p>Prints and returns the exposure time metadata</p>
+</dd>
+<dt>get_voltage():</dt><dd><p>Prints and returns the voltage metadata</p>
+</dd>
+<dt>get_mag():</dt><dd><p>Prints and returns the image magnification</p>
+</dd>
+<dt>get_date_time():</dt><dd><p>prints and returns the image aquisition date and time</p>
+</dd>
+<dt>show_metadata():</dt><dd><p>prints all the metadata tags and associated values</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.choose_scalebar_color">
+<span class="sig-name descname"><span class="pre">choose_scalebar_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.choose_scalebar_color" title="Permalink to this definition"></a></dt>
+<dd><p>Chooses the scalebar color and returns the pixelvalue and text color for the annotation. parameters are most of the outputs from choose_scalebar_size()</p>
+<blockquote>
+<div><dl class="simple">
+<dt>scalebar_x: int</dt><dd><p>x coordinate for the scalebar</p>
+</dd>
+<dt>scalebar_y: int</dt><dd><p>y coordinate for the scalebar</p>
+</dd>
+<dt>width:int</dt><dd><p>width of scalebar</p>
+</dd>
+<dt>height:int</dt><dd><p>height of the scalebar</p>
+</dd>
+<dt>scalebar_size:int (or float)</dt><dd><p>Size of the scalebar in scaled units (pixelUnit)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.choose_scalebar_size">
+<span class="sig-name descname"><span class="pre">choose_scalebar_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.choose_scalebar_size" title="Permalink to this definition"></a></dt>
+<dd><p>Function for choosing scalebar size, called through make_scalebar(), not a standalone function.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>scalebar_x: int</dt><dd><p>x coordinate for the scalebar</p>
+</dd>
+<dt>scalebar_y: int</dt><dd><p>y coordinate for the scalebar</p>
+</dd>
+<dt>width:int</dt><dd><p>width of scalebar</p>
+</dd>
+<dt>height:int</dt><dd><p>height of the scalebar</p>
+</dd>
+<dt>scalebar_size:int (or float)</dt><dd><p>Size of the scalebar in scaled units (pixelUnit)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.convert_to_8bit">
+<span class="sig-name descname"><span class="pre">convert_to_8bit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.convert_to_8bit" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a micrograph object with the image scaled between 0 and 255 (an 8-bit image). Improves contrast and is a more usable image format than higher bits.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Micrograph8bit<span class="classifier">Micrograph</span></dt><dd><p>A copy of the micrograph object with the image scaled between 0 and 255</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.enhance_contrast">
+<span class="sig-name descname"><span class="pre">enhance_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.enhance_contrast" title="Permalink to this definition"></a></dt>
+<dd><p>Function for enhancing contrast. This uses the OpenCV methods detailed here: <a class="reference external" href="https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html">https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html</a>. 
+There are 3 input values which define contast controls: alpha, beta and gamma, the gamma value is optional.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>alpha:float</dt><dd><p>Basic contrast control, usually in the range of 1-3. The histogram is streched.</p>
+</dd>
+<dt>beta: int (or float)</dt><dd><p>Brightness control, this will add the value to every pixel in the image, only really has an effect with 8-bit images (and any pixels above 255 will be clipped to this)</p>
+</dd>
+<dt>gamma:float</dt><dd><p>Non-linear contrast control, values between 0-1 makes images brighter (particularly the dark areas), while values &gt;1 darken the image(particularly the bright areas)
+Optional, if included image will be converted to 8 bit.</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Contrast_enhanced_micrograph<span class="classifier">Micrograph</span></dt><dd><p>Return a copy of the object with the contrast enhanced.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.equalizeHist">
+<span class="sig-name descname"><span class="pre">equalizeHist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.equalizeHist" title="Permalink to this definition"></a></dt>
+<dd><p>Spreads the contrast across a range of values, leading to an evened, flattened histogram. This can be very effective at enhancing midtones in images with very bright or very dark patches.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Contrast_enhanced_micrograph<span class="classifier">Micrograph</span></dt><dd><p>Return a copy of the object with the contrast enhanced.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.gaussian_filter">
+<span class="sig-name descname"><span class="pre">gaussian_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.gaussian_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a Gaussian filtered copy of the micrograph object, kernal size defined in the call (default is 3)</p>
+<blockquote>
+<div><blockquote>
+<div><dl class="simple">
+<dt>n:int</dt><dd><p>The n x n kernal for median filter is defined here, must be an odd integer</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Gaussian_filtered_object :Micrograph</dt><dd><p>Gaussian filtered copy of micrograph object with gaussian filtered image</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_date_time">
+<span class="sig-name descname"><span class="pre">get_date_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_date_time" title="Permalink to this definition"></a></dt>
+<dd><p>Prints and returns the exposure time for the image.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>AqDate:str</dt><dd><p>Date on which the micrograph was captured</p>
+</dd>
+<dt>AqTime:str</dt><dd><p>Time at which the micrograph was captured</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_exposure">
+<span class="sig-name descname"><span class="pre">get_exposure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_exposure" title="Permalink to this definition"></a></dt>
+<dd><p>Prints and returns the exposure time for the image.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>exposure:int</dt><dd><p>Capture time for the image</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_mag">
+<span class="sig-name descname"><span class="pre">get_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_mag" title="Permalink to this definition"></a></dt>
+<dd><p>Returns Micrograph magnifications (indicated and actual) and saves them as micrograph attributes (microscope.indicated_mag, microscope.actual_mag)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>indicated_mag:float</dt><dd><p>Indicated magnification (i.e. what the microscope tells you the mag is) for the image</p>
+</dd>
+<dt>actual_mag: float</dt><dd><p>Actual magnification of the image at the camera.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_voltage">
+<span class="sig-name descname"><span class="pre">get_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_voltage" title="Permalink to this definition"></a></dt>
+<dd><p>Returns voltage and saves is as micrograph attribute</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Voltage:int</dt><dd><p>Microscope voltage for the image</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.imshow">
+<span class="sig-name descname"><span class="pre">imshow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.imshow" title="Permalink to this definition"></a></dt>
+<dd><p>Basic function for plotting the micrograph image</p>
+<blockquote>
+<div><dl class="simple">
+<dt>title:str</dt><dd><p>Optional title to be added to the plot</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.low_pass_filter">
+<span class="sig-name descname"><span class="pre">low_pass_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.low_pass_filter" title="Permalink to this definition"></a></dt>
+<dd><p>This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
+If pixelsize is undefined the radius will refer to pixels only</p>
+<blockquote>
+<div><dl>
+<dt>radius<span class="classifier">int (or potentially float)</span></dt><dd><dl>
+<dt>The effects of this vary depending on if the pixelsize is defined in self.pixelSize.: </dt><dd><blockquote>
+<div><ul class="simple">
+<li><p>Assuming your micrograph object has a pixel size defined, the filter works by removing any features smaller than the size you input as a parameter (the unit is the same as the pixelsize), A larger number yields a stronger filter, if it is too large, you won’t see any features.</p></li>
+</ul>
+</div></blockquote>
+<p>Effective filter sizes depends on features and magnification, so with something between 1-5 and tune it to your needs.
+- If your micrograph is missing a pixelsize the size input will be the radius of a circle kept in the power spectrum. Here the input number does the inverse - a smaller number leads to stronger filter. In this case, much larger numbers will be needed, 50 is a good starting value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Low_pass_filtered_object :Micrograph</dt><dd><p>Low pass filtered copy of micrograph object.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.make_scalebar">
+<span class="sig-name descname"><span class="pre">make_scalebar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.make_scalebar" title="Permalink to this definition"></a></dt>
+<dd><p>Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
+The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
+This will work best for 8-bit images, as the scalebar will be given values of 0 or 255.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>color<span class="classifier">str</span></dt><dd><p>The color of the scalebar, the options are ‘white’. ‘black’ or ‘grey’</p>
+</dd>
+<dt>texton<span class="classifier">bool</span></dt><dd><p>Text can be turned off using texton=False, the selected size of the scalebar can be accessed using micrograph.scalebar_size</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Micrograph_object_with_scalebar: Micrograph</dt><dd><p>Copy of the micrograph object with a scale bar.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.median_filter">
+<span class="sig-name descname"><span class="pre">median_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.median_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a median filtered copy of the micrograph object, kernal size defined in the call (default is 3)</p>
+<blockquote>
+<div><blockquote>
+<div><dl class="simple">
+<dt>kernal:int</dt><dd><p>The n x n kernal for median filter is defined here, must be an odd integer</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Median_filtered_object :Micrograph</dt><dd><p>Median filtered copy of micrograph object with median filtered image</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.motioncor_frames">
+<span class="sig-name descname"><span class="pre">motioncor_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.motioncor_frames" title="Permalink to this definition"></a></dt>
+<dd><p>Advanced method which requires editing the code to use. Uses Motioncor2 to motion correct a series of frames and output a number of motion corrected images as a micrograph object</p>
+<blockquote>
+<div><dl class="simple">
+<dt>frames_dict:dict</dt><dd><p>A dictionary of videos and frames in the directory which will be motion corrected, this is created by the ‘group_frames()’ function</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This actually wont work well (will only open the final vid in the frames dictionary). Depreciated function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.motioncorrect_video">
+<span class="sig-name descname"><span class="pre">motioncorrect_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.motioncorrect_video" title="Permalink to this definition"></a></dt>
+<dd><p>Advanced method which requires editing the source code to use. Uses Motioncor2 to motion correct a video and output a motion corrected image as a micrograph object</p>
+<p>This function first converts the dm3 to an mrc file, followed by using motioncor by the exectuable defined in motion_cor_command - change this executible to use.</p>
+<p>An aligned mrc file should be saved in the directory and automatically opened in this Micrograph object.
+Parameters
+———-</p>
+<blockquote>
+<div><dl class="simple">
+<dt>filename:str</dt><dd><p>The filename to motion correct</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.nlm_filter">
+<span class="sig-name descname"><span class="pre">nlm_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.nlm_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a non-local means filtered copy of the micrograph, filter strength is defined in the call. 
+More information on non-local means filtering can be found here: <a class="reference external" href="https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html">https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html</a></p>
+<blockquote>
+<div><blockquote>
+<div><dl class="simple">
+<dt>h:int</dt><dd><p>Defines the strength of the Non-local means filter, default is 5</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>nlm_filtered_object<span class="classifier">Micrograph</span></dt><dd><p>Non-local means filtered copy of the micrograph object</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.open_dm">
+<span class="sig-name descname"><span class="pre">open_dm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.open_dm" title="Permalink to this definition"></a></dt>
+<dd><p>Imports digital micrograph files into the micrograph object, initialising all the default attributes required, including saving the metadata into self.metadata_tags. 
+By default, video dm files (dose fractionations) will be summed to create a single image file, there is also an option (video_average) to use the first frame only.</p>
+<p>Some DM files have ‘hot pixels’ which have anomalously high signal due to detector malfunction, these often lead to contrast issues.
+To correct for this any pixel which has a higher value than the mean value + (20 x standard deviation) is set to the mean pixel value, this is on by default but can be turned off using pixel_correction=False</p>
+<p>This uses the ncempy.io.dm package to read DM files, more information can be found here: <a class="reference external" href="https://openncem.readthedocs.io/en/latest/ncempy.io.html">https://openncem.readthedocs.io/en/latest/ncempy.io.html</a></p>
+<blockquote>
+<div><dl class="simple">
+<dt>file<span class="classifier">str</span></dt><dd><p>The name of the dm file to open. The path to the file can also be included if it is not in the same directory.</p>
+</dd>
+<dt>video_average<span class="classifier">bool</span></dt><dd><p>If file is a video, this controls whether to output an average (sum) of all the frames or the first frame. Default is to average the video (True), change to False to output a single frame</p>
+</dd>
+<dt>pixel_correction: bool </dt><dd><p>Set anomalous ‘hot’ pixels to the image mean, anomalous pixels defined as image_mean + 20*image_standard_deviation. Default is on (True).</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.open_mrc">
+<span class="sig-name descname"><span class="pre">open_mrc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.open_mrc" title="Permalink to this definition"></a></dt>
+<dd><p>Imports MRC image files into the Micrograph object.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>file<span class="classifier">str</span></dt><dd><p>The name of an MRC file to open, the path to the file can also be included.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.pixel_size">
+<span class="sig-name descname"><span class="pre">pixel_size</span></span><a class="headerlink" href="#Micrograph_class.Micrograph.pixel_size" title="Permalink to this definition"></a></dt>
+<dd><p>SECTION: IMPORT IMAGES</p>
+<blockquote>
+<div><p>can be imported as dm3, dm4, mrc, <a href="#id3"><span class="problematic" id="id4">**</span></a>numpy array or tifs ** add the tifs 
+need to add numpy and tif functionality</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.reset_xy">
+<span class="sig-name descname"><span class="pre">reset_xy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.reset_xy" title="Permalink to this definition"></a></dt>
+<dd><p>Resets the image attributes for the x, y and shape of the image. Used by the binning method and is also useful following cropping of the micrograph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.show_metadata">
+<span class="sig-name descname"><span class="pre">show_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.show_metadata" title="Permalink to this definition"></a></dt>
+<dd><p>prints the metadata tags, this can be useful for finding the names of metadata features within the metadata.tags file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.show_pair">
+<span class="sig-name descname"><span class="pre">show_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.show_pair" title="Permalink to this definition"></a></dt>
+<dd><p>Basic function for plotting pairs of images for comparison</p>
+<blockquote>
+<div><dl class="simple">
+<dt>other_image<span class="classifier">2D Numpy array</span></dt><dd><p>Second image of the plot - if using Micrograph object remember to use micrograph.image</p>
+</dd>
+<dt>title1<span class="classifier">str</span></dt><dd><p>Title for the first image (the object being used to plot the images) - Optional</p>
+</dd>
+<dt>title2<span class="classifier">str</span></dt><dd><p>Title for the second image - Optional</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.weiner_filter">
+<span class="sig-name descname"><span class="pre">weiner_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.weiner_filter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a Weiner filtered copy of the micrograph object, kernal size defined in the call (default is 3)</p>
+<blockquote>
+<div><blockquote>
+<div><dl class="simple">
+<dt>n :int</dt><dd><p>The n x n kernal for Weiner filter is defined here, must be an odd integer</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Weiner_filtered_object<span class="classifier">Micrograph</span></dt><dd><p>Weiner filtered copy of micrograph object</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.write_image">
+<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.write_image" title="Permalink to this definition"></a></dt>
+<dd><p>Saves the image in a .jpg or .tif file for display or use with other programs.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>name: str</dt><dd><p>Filename for saved image. Ending with either .jpg or .tif will define the format of the image, alternatively ftype argument can be used. 
+This is optional, without including a name the name of the original file opened will be used.</p>
+</dd>
+<dt>ftype: str</dt><dd><p>Optional. Filetype of output image, either ‘jpg’ or ‘tif’ (default jpg), this is better defined using the suffix of the name. 
+Saving as a tif will save in whatever format it is currently in - this can be a 32-bit or 8-bit image, using convert_to_8bit() will ensure that latter.</p>
+</dd>
+<dt>outdir: str</dt><dd><p>Keyword argument (usage: outdir=’/path/to/directory’). This defines the output location of the saved image, use a path relative to the current directory or an absolute path.
+The final directory in the path will be made if it does not already exist.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Micrograph_class.default_image_pipeline">
+<span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">default_image_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xybin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.default_image_pipeline" title="Permalink to this definition"></a></dt>
+<dd><p>Default pipeline to process image, add scalebar, filter, bin and save the image, speeding up automation.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Filename:str</dt><dd><p>Filename of image to process</p>
+</dd>
+<dt>name:str</dt><dd><p>Name of the saved image</p>
+</dd>
+<dt>medfilter:int </dt><dd><p>The kernal size for a median filter on the image, default is 3, use 0 for no median filter, otherwise must be odd.</p>
+</dd>
+<dt>gaussfilter:int</dt><dd><p>The kernal size for a gaussian filter on the image, default is off (0), must be odd.</p>
+</dd>
+<dt>scalebar:bool</dt><dd><p>Turns the scale bar on/off (default is on), use scalebar=False to turn off.</p>
+</dd>
+<dt>texton:bool</dt><dd><p>Turns the text on the scalebar on or off (default is on)</p>
+</dd>
+<dt>xybin:int</dt><dd><p>Bins the image (x/y) axis</p>
+</dd>
+<dt>color:str</dt><dd><p>Chooses scalebar color ‘black’, ‘white’ or ‘grey’</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Micrograph_class.default_pipeline_class">
+<span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">default_pipeline_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Micrograph_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xybin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.default_pipeline_class" title="Permalink to this definition"></a></dt>
+<dd><p>Default pipeline to process from a Micrograph_object, add scalebar, filter, bin and save the image, speeding up automation.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Filename:str</dt><dd><p>Filename of image to process</p>
+</dd>
+<dt>name:str</dt><dd><p>Name of the saved image</p>
+</dd>
+<dt>medfilter:int </dt><dd><p>The kernal size for a median filter on the image, default is 3, use 0 for no median filter, otherwise must be odd.</p>
+</dd>
+<dt>gaussfilter:int</dt><dd><p>The kernal size for a gaussian filter on the image, default is off (0), must be odd.</p>
+</dd>
+<dt>scalebar:bool</dt><dd><p>Turns the scale bar on/off (default is on), use scalebar=False to turn off.</p>
+</dd>
+<dt>texton:bool</dt><dd><p>Turns the text on the scalebar on or off (default is on)</p>
+</dd>
+<dt>xybin:int</dt><dd><p>Bins the image (x/y) axis</p>
+</dd>
+<dt>color:str</dt><dd><p>Chooses scalebar color ‘black’, ‘white’ or ‘grey’</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to SimpliPyTEM’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gabriel Ing.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
