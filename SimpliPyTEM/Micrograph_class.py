@@ -16,7 +16,9 @@ plt.gray()
 
 class Micrograph: 
     '''
-    A class holding the micrograph image data along with associated parameters and methods.
+    A class holding the micrograph image data along with associated parameters and methods. This makes processing microscope images easier as it collects data and methods into a single place. 
+    The majority of image handling methods here comes from OpenCV, the functions often have more options/parameters, as a result making them both more powerful and more complicated. 
+    This package aims to simplify and automate these functions, however if more functionality is required, I recommend using OpenCV (https://docs.opencv.org/4.x/) as a starting point for your image analysis. 
     ... 
     Attributes
     ----------
@@ -71,7 +73,7 @@ class Micrograph:
         Prints and returns the image magnification
     get_date_time():
         prints and returns the image aquisition date and time
-    show_metadata()
+    show_metadata():
         prints all the metadata tags and associated values
     
 
@@ -98,7 +100,29 @@ class Micrograph:
         '''
     
 
-    def open_dm(self, file, video_average=True):
+    def open_dm(self, file, video_average=True, pixel_correction=True):
+        '''
+        Imports digital micrograph files into the micrograph object, initialising all the default attributes required, including saving the metadata into self.metadata_tags. 
+        By default, video dm files (dose fractionations) will be summed to create a single image file, there is also an option (video_average) to use the first frame only. 
+        
+        Some DM files have 'hot pixels' which have anomalously high signal due to detector malfunction, these often lead to contrast issues.
+        To correct for this any pixel which has a higher value than the mean value + (20 x standard deviation) is set to the mean pixel value, this is on by default but can be turned off using pixel_correction=False
+        
+        This uses the ncempy.io.dm package to read DM files, more information can be found here: https://openncem.readthedocs.io/en/latest/ncempy.io.html
+
+
+        Parameters
+        ----------
+            file : str
+                The name of the dm file to open. The path to the file can also be included if it is not in the same directory. 
+
+            video_average : bool
+                If file is a video, this controls whether to output an average (sum) of all the frames or the first frame. Default is to average the video (True), change to False to output a single frame
+
+            pixel_correction: bool 
+                Set anomalous 'hot' pixels to the image mean, anomalous pixels defined as image_mean + 20*image_standard_deviation. Default is on (True). 
+
+        '''
         dm_input = nci.dm.dmReader(file)
         if len(dm_input['data'].shape)==2:
             image = dm_input['data']
@@ -107,7 +131,7 @@ class Micrograph:
         # at the moment it automatically averages a video into a single image. This will be changed soon to allow for video analysis.
         elif len(dm_input['data'].shape)==3:
             print('File is an image stack, averaging frames together, if you would open as a video, please us MicroVideo object')
-            if video_average==True:
+            if video_average:
 
                 images = dm_input['data']
                 image= np.sum(images, axis=0)
@@ -130,14 +154,24 @@ class Micrograph:
         self.pixelUnit = pixelUnit
         
         #this line removes dead pixels which are super bright (any pixel which is more than mean+25*stddeviation
-        self.image[self.image>self.image.mean()+self.image.std()*25]=image.mean()
+        if pixel_correction:
+            self.image[self.image>self.image.mean()+self.image.std()*20]=image.mean()
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
         #       #return image, x, y, pixelSize, pixelUnit
         self.shape=self.image.shape
         print('{} opened as a Micrograph object'.format(file))
 
-    def open_mrc(self, file):
+    def open_mrc(self, file, pixel_correction=True):
+        '''
+        Imports MRC image files into the Micrograph object. 
+
+        Parameters
+        ----------
+            file : str
+                The name of an MRC file to open, the path to the file can also be included. 
+        '''
+
         mrc= mrcfile.open(file)
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
@@ -147,7 +181,8 @@ class Micrograph:
         self.y = self.image.shape[0]
         self.pixelUnit='nm'
         self.filename = file
-
+        if pixel_correction:
+            self.image[self.image>self.image.mean()+self.image.std()*20]=image.mean()
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
         self.shape=self.image.shape
@@ -156,12 +191,26 @@ class Micrograph:
 
 
         
-    def write_image(self, name='', ftype='jpg', **kwargs):#use name='outname' to give a filename   
-        #if self.foldername!='':
-        
-        #if self.foldername not in os.listdir('.') and self.foldername.split('/')[-1] not in os.listdir('/'.join(self.foldername.split('/')[:-1])):
-        #    print(self.foldername)
-        #    os.mkdir(self.foldername)        
+    def write_image(self, name='', ftype='jpg', **kwargs):
+        '''
+        Saves the image in a .jpg or .tif file for display or use with other programs. 
+
+        Parameters
+        ----------
+            name: str
+                Filename for saved image. Ending with either .jpg or .tif will define the format of the image, alternatively ftype argument can be used. 
+                This is optional, without including a name the name of the original file opened will be used. 
+
+            ftype: str
+                Optional. Filetype of output image, either 'jpg' or 'tif' (default jpg), this is better defined using the suffix of the name. 
+                Saving as a tif will save in whatever format it is currently in - this can be a 32-bit or 8-bit image, using convert_to_8bit() will ensure that latter.
+
+            outdir: str
+                Keyword argument (usage: outdir='/path/to/directory'). This defines the output location of the saved image, use a path relative to the current directory or an absolute path.
+                The final directory in the path will be made if it does not already exist.
+        '''
+
+
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
             if '/' in outdir:
@@ -209,8 +258,13 @@ class Micrograph:
         #       self.image = np.average(image, axis=0)
     
     def reset_xy(self):
-            self.x = self.image.shape[1]
-            self.y = self.image.shape[0]
+        '''
+        Resets the image attributes for the x, y and shape of the image. Used by the binning method and is also useful following cropping of the micrograph
+
+        '''
+        self.x = self.image.shape[1]
+        self.y = self.image.shape[0]
+        self.shape = self.image.shape
 
     
 
@@ -224,13 +278,22 @@ class Micrograph:
 
     '''
     def convert_to_8bit(self):
-        #  this will scale the pixels to between 0 and 255, this will automatically scale the image to its max and min
+        ''' 
+        Returns a micrograph object with the image scaled between 0 and 255 (an 8-bit image). Improves contrast and is a more usable image format than higher bits. 
+        
+        Returns
+        -------
+            Micrograph8bit : Micrograph
+                A copy of the micrograph object with the image scaled between 0 and 255
+
+        '''
         image8bit = deepcopy(self)
         image8bit.image = ((self.image - self.image.min()) * (1/(self.image.max() - self.image.min()) * 255))
         image8bit.image = image8bit.image.astype('uint8')
         return image8bit
 
     def bin_image(self, value=2):
+
             binned_image = deepcopy(self)
             binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
             binned_image.pixelSize= binned_image.pixelSize*value
@@ -244,8 +307,32 @@ class Micrograph:
 
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
     def enhance_contrast(self, alpha=1.5, beta=0, gamma=''):
+        '''
+        Function for enhancing contrast. This uses the OpenCV methods detailed here: https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html. 
+        There are 3 input values which define contast controls: alpha, beta and gamma, the gamma value is optional. 
+        
+        Parameters
+        ----------
+
+            alpha:float
+                Basic contrast control, usually in the range of 1-3. The histogram is streched. 
+
+            beta: int (or float)
+                Brightness control, this will add the value to every pixel in the image, only really has an effect with 8-bit images (and any pixels above 255 will be clipped to this)
+            
+            gamma:float
+                Non-linear contrast control, values between 0-1 makes images brighter (particularly the dark areas), while values >1 darken the image(particularly the bright areas)
+                Optional, if included image will be converted to 8 bit. 
+
+        Returns 
+        -------
+
+            Contrast_enhanced_micrograph : Micrograph
+                Return a copy of the object with the contrast enhanced.
+        '''
         enhanced_image = cv.convertScaleAbs(self.image, alpha=alpha, beta=beta)
         #print(self.image.dtype)
+        
         #enhanced_image = cv.equalizeHist(enhanced_image)
         enhanced_object = deepcopy(self)
         enhanced_object.image = enhanced_image
@@ -257,10 +344,20 @@ class Micrograph:
                 LUT[0, i]=np.clip(pow(i/255.0,gamma)*255.0, 0, 255)
             res =cv.LUT(enhanced_object.image, LUT) 
             print('Gamma adjusted...')
-
+        if self.image.dtype=='uint8':
+            enhanced_image[enhanced_image>255]=255
         return enhanced_object
 
     def equalizeHist(self):
+        '''
+        Spreads the contrast across a range of values, leading to an evened, flattened histogram. This can be very effective at enhancing midtones in images with very bright or very dark patches. 
+        
+        Returns
+        -------
+            Contrast_enhanced_micrograph : Micrograph
+                Return a copy of the object with the contrast enhanced.
+
+        '''
         enhanced_object = deepcopy(self)
         enhanced_object = enhanced_object.convert_to_8bit()
         enhanced_object.image = cv.equalizeHist(enhanced_object.image)
@@ -276,7 +373,22 @@ class Micrograph:
 
     '''
     def choose_scalebar_size(self):
-        
+        '''
+        Function for choosing scalebar size, called through make_scalebar(), not a standalone function.
+
+        Returns
+        -------
+            scalebar_x: int
+                x coordinate for the scalebar 
+            scalebar_y: int
+                y coordinate for the scalebar 
+            width:int
+                width of scalebar
+            height:int
+                height of the scalebar
+            scalebar_size:int (or float)
+                Size of the scalebar in scaled units (pixelUnit)
+        '''
         y,x = self.image.shape
         
         #make coordinates for the scalebar, currently set to y-12.5%,x-5% of image size from the bottom right corner 
@@ -301,66 +413,103 @@ class Micrograph:
         #choose height of scalebar (default is scalebar width/6), convert width into an integer
         height = int(y/60)
         width = int(width)   
-        self.scalebar_x = int(scalebar_x)
-        self.scalebar_y = int(scalebar_y)
-        self.height = int(height)
-        self.width = int(width)
-        self.n = n
-    #return int(scalebar_x/xybin), int(scalebar_y/xybin), int(height/xybin), int(width/xybin), n
+        scalebar_x = int(scalebar_x)
+        scalebar_y = int(scalebar_y)
+        height = int(height)
+        width = int(width)
+        scalebar_size = n
+        #return int(scalebar_x/xybin), int(scalebar_y/xybin), int(height/xybin), int(width/xybin), n
+        return scalebar_x, scalebar_y, width, height, scalebar_size
 
 
+    def choose_scalebar_color(self,color, scalebar_x, scalebar_y, width, height):
+        '''
+        Chooses the scalebar color and returns the pixelvalue and text color for the annotation. parameters are most of the outputs from choose_scalebar_size()
 
-    def choose_scalebar_color(self,color):
-    #choose color - this can be given as black, white or grey in the function
-        if color=='black':
-            self.pixvalue = 0
-            self.textcolor = 'black'
+
+        Parameters
+        ----------
+
+            scalebar_x: int
+                x coordinate for the scalebar 
+            scalebar_y: int
+                y coordinate for the scalebar 
+            width:int
+                width of scalebar
+            height:int
+                height of the scalebar
+            scalebar_size:int (or float)
+                Size of the scalebar in scaled units (pixelUnit)
+        '''
+        if color=='black' or self.image.dtype!='uint8':
+            pixvalue = 0
+            textcolor = 'black'
         elif color=='white':
-            self.pixvalue = 255
-            self.textcolor='white'
+            pixvalue = 255
+            textcolor='white'
         elif color=='grey':
-            self.pixvalue = 150
-            self.textcolor='grey'
+            pixvalue = 150
+            textcolor='grey'
         else: #default is black, unless it is a particularly dark area - if the mean pixvalue of the scale bar region is significantly less than the overall image mean, the scalebar will be white
             
-            if np.mean(self.image[self.scalebar_y:self.scalebar_y+self.height,self.scalebar_x:self.scalebar_x+self.width])<np.mean(self.image)/1.5:
-                self.pixvalue = 255
-                self.textcolor='white'
+            if np.mean(self.image[scalebar_y:scalebar_y+height,scalebar_x:scalebar_x+width])<np.mean(self.image)/1.5:
+                pixvalue = 255
+                textcolor='white'
             else:
-                self.pixvalue = 0
-                self.textcolor = 'black'
+                pixvalue = 0
+                textcolor = 'black'
         #add scalebar (set pixels to color) 
 
-        #return pixvalue, textcolor        
+        return pixvalue, textcolor        
 
 
     def make_scalebar(self, texton = True, color='Auto'):
-        #print(pixvalue, textcolor)
-        self.choose_scalebar_size()
-        self.choose_scalebar_color(color)
+        '''
+        Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
+        The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
+        This will work best for 8-bit images, as the scalebar will be given values of 0 or 255. 
         
-        self.image[self.scalebar_y:self.scalebar_y+self.height,self.scalebar_x:self.scalebar_x+self.width]=self.pixvalue
+        Parameters
+        ----------
+
+            color : str
+                The color of the scalebar, the options are 'white'. 'black' or 'grey'
+            texton : bool
+                Text can be turned off using texton=False, the selected size of the scalebar can be accessed using micrograph.scalebar_size
+
+        Returns
+        -------
+            Micrograph_object_with_scalebar: Micrograph
+                Copy of the micrograph object with a scale bar.
+        '''
+        micrograph_SB = deepcopy(self)
+        scalebar_x, scalebar_y , width, height, scalebar_size = self.choose_scalebar_size()
         
-        textposition = ((self.scalebar_x+self.width/2),self.scalebar_y-5)
+        pixvalue, textcolor = self.choose_scalebar_color(color,scalebar_x, scalebar_y , width, height)
+
+        micrograph_SB.image[scalebar_y:scalebar_y+height,scalebar_x:scalebar_x+width]=pixvalue
+        
+        textposition = ((scalebar_x+width/2),scalebar_y-5)
         
         #if pixelUnit!='nm':
          #   Utext = str(n)+u'\u00b5'+ 'm'
           #  text = str(n)+'microns'
         #else:
-        self.scalebar_size = '{}{}'.format(self.n,self.pixelUnit) 
+        micrograph_SB.scalebar_size = '{}{}'.format(scalebar_size,self.pixelUnit) 
          
 
-        pil_image = Image.fromarray(self.image)
+        pil_image = Image.fromarray(micrograph_SB.image)
 
         if texton==True:
             #print('textoff')
             draw = ImageDraw.Draw(pil_image)        
             
-            fontsize=int(self.scalebar_x/(25))
+            fontsize=int(scalebar_x/(25))
             font = ImageFont.truetype("/home/bat_workstation/helveticaneue.ttf", fontsize)
-            draw.text(textposition, self.scalebar_size, anchor ='mb', fill=self.textcolor, font=font, stroke_width=1)
-            self.image = np.array(pil_image)    
+            draw.text(textposition, micrograph_SB.scalebar_size, anchor ='mb', fill=textcolor, font=font, stroke_width=1)
+            micrograph_SB.image = np.array(pil_image)    
 
+        return micrograph_SB
 
 
     '''------------------------------------------------------------------------------------------------------------------------
@@ -370,7 +519,7 @@ class Micrograph:
             - Median filter: performs a median filter with kernal size defined in the call (default is 3)
             - Gaussian filter: performs a Gaussian filter with kernal size defined in the call (default is 3)
             - Weiner filter: performs a Weiner filter with kernal size defined in the call (default is 5)
-            - Low pass filter: performs a 2D fourier transform of the image and removes the  
+            - Low pass filter: performs a 2D fourier transform of the image and removes the  features at higher resolutions than the radius 
             - Non-local means filter: this compares similar regions of the image and denoises by averaging across them. This is performed by openCV, and more info can be found here: https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
 
     These filters return an object with the same properties and methods (a copied instance of the class)
@@ -383,9 +532,25 @@ class Micrograph:
 
     '''
     def low_pass_filter(self, radius):
-    # This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
-    # If pixelsize is undefined the radius will refer to pixels only
+        '''
+        This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
+        If pixelsize is undefined the radius will refer to pixels only
         
+        Parameters
+        ----------
+
+            radius : int (or potentially float)
+                The effects of this vary depending on if the pixelsize is defined in self.pixelSize.: 
+                     - Assuming your micrograph object has a pixel size defined, the filter works by removing any features smaller than the size you input as a parameter (the unit is the same as the pixelsize), A larger number yields a stronger filter, if it is too large, you won't see any features. 
+                    Effective filter sizes depends on features and magnification, so with something between 1-5 and tune it to your needs.
+                    - If your micrograph is missing a pixelsize the size input will be the radius of a circle kept in the power spectrum. Here the input number does the inverse - a smaller number leads to stronger filter. In this case, much larger numbers will be needed, 50 is a good starting value.
+        
+        Returns
+        -------
+                Low_pass_filtered_object :Micrograph
+                    Low pass filtered copy of micrograph object.          
+
+        '''    
         N=self.image.shape[0]
         if type(self.pixelSize)==int or type(self.pixelSize)==float and self.pixelSize!=0:
             radius=int((N*self.pixelSize)/radius)
@@ -412,13 +577,13 @@ class Micrograph:
         filtered_object.image = filtered_image
         return filtered_object
 
-    def median_filter(self, n=3):
+    def median_filter(self, kernal=3):
         '''
         Returns a median filtered copy of the micrograph object, kernal size defined in the call (default is 3)
 
             Parameters
             ----------
-                n:int
+                kernal:int
                     The n x n kernal for median filter is defined here, must be an odd integer
 
             Returns
@@ -549,11 +714,29 @@ class Micrograph:
         exposure and aquisition date/time. 
     '''
     def show_metadata(self):
+        '''
+        prints the metadata tags, this can be useful for finding the names of metadata features within the metadata.tags file. 
+
+        '''
         for tag in self.metadata_tags:
             print('{} : {}\n'.format(tag, self.metadata_tags[tag]))
 
 
     def get_mag(self):
+        '''
+                
+        Returns Micrograph magnifications (indicated and actual) and saves them as micrograph attributes (microscope.indicated_mag, microscope.actual_mag)
+
+        Returns
+        -------
+
+            indicated_mag:float
+                Indicated magnification (i.e. what the microscope tells you the mag is) for the image
+            actual_mag: float
+                Actual magnification of the image at the camera. 
+        
+        '''
+
         try:
             self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
         except KeyError:
@@ -635,16 +818,16 @@ class Micrograph:
 
     '''        
     def motioncor_frames(self, frames_dict):
-    '''
-    Advanced method which requires editing the code to use. Uses Motioncor2 to motion correct a series of frames and output a number of motion corrected images as a micrograph object
-    
-    Parameters
-    ----------
-        frames_dict:dict
-            A dictionary of videos and frames in the directory which will be motion corrected, this is created by the 'group_frames()' function
-    
-    This actually wont work well (will only open the final vid in the frames dictionary). Depreciated function.
-    '''
+        '''
+        Advanced method which requires editing the code to use. Uses Motioncor2 to motion correct a series of frames and output a number of motion corrected images as a micrograph object
+        
+        Parameters
+        ----------
+            frames_dict:dict
+                A dictionary of videos and frames in the directory which will be motion corrected, this is created by the 'group_frames()' function
+        
+        This actually wont work well (will only open the final vid in the frames dictionary). Depreciated function.
+        '''
 
         for vid in frames_dict:
             frames = frames_dict[vid]
@@ -658,20 +841,20 @@ class Micrograph:
             self.open_mrc(outfile_aligned)  
 
     def motioncorrect_video(self, file):
-    ''' 
-    Advanced method which requires editing the source code to use. Uses Motioncor2 to motion correct a video and output a motion corrected image as a micrograph object
-    
-    This function first converts the dm3 to an mrc file, followed by using motioncor by the exectuable defined in motion_cor_command - change this executible to use. 
-    
-    An aligned mrc file should be saved in the directory and automatically opened in this Micrograph object.
-    Parameters
-    ----------
-        filename:str
-            The filename to motion correct
+        ''' 
+        Advanced method which requires editing the source code to use. Uses Motioncor2 to motion correct a video and output a motion corrected image as a micrograph object
+        
+        This function first converts the dm3 to an mrc file, followed by using motioncor by the exectuable defined in motion_cor_command - change this executible to use. 
+        
+        An aligned mrc file should be saved in the directory and automatically opened in this Micrograph object.
+        Parameters
+        ----------
+            filename:str
+                The filename to motion correct
 
 
 
-    '''
+        '''
         outfile = '_'.join(file.split('.')[:-1])+'.mrc'
         outfile_aligned = '_'.join(file.split('.')[:-1])+'_aligned.mrc'
         pixelsize = nci.dm.fileDM(file).scale[2]
@@ -693,7 +876,37 @@ class Micrograph:
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
 def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+    '''
+    Default pipeline to process image, add scalebar, filter, bin and save the image, speeding up automation.
     
+    Parameters
+    ----------
+        Filename:str
+            Filename of image to process
+
+        name:str
+            Name of the saved image
+
+        medfilter:int 
+            The kernal size for a median filter on the image, default is 3, use 0 for no median filter, otherwise must be odd. 
+
+        gaussfilter:int
+            The kernal size for a gaussian filter on the image, default is off (0), must be odd. 
+
+        scalebar:bool
+            Turns the scale bar on/off (default is on), use scalebar=False to turn off. 
+
+
+        texton:bool
+            Turns the text on the scalebar on or off (default is on)
+         
+        xybin:int
+            Bins the image (x/y) axis
+
+        color:str
+            Chooses scalebar color 'black', 'white' or 'grey'
+
+    '''
     Micrograph_object = Micrograph()
     if filename[-3:-1]=='dm':
         Micrograph_object.open_dm(filename)
@@ -719,7 +932,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
     Micrograph_object=Micrograph_object.convert_to_8bit()
 
     if scalebar==True:
-        Micrograph_object.make_scalebar(texton=texton, color=color)
+        Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
     if 'outdir' in kwargs:
         Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])
@@ -728,6 +941,38 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
     #Micrograph_object.save_image(outname=name)
 
 def default_pipeline_class(Micrograph_object ,name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+
+    '''
+    Default pipeline to process from a Micrograph_object, add scalebar, filter, bin and save the image, speeding up automation.
+    
+    Parameters
+    ----------
+        Filename:str
+            Filename of image to process
+
+        name:str
+            Name of the saved image
+
+        medfilter:int 
+            The kernal size for a median filter on the image, default is 3, use 0 for no median filter, otherwise must be odd. 
+
+        gaussfilter:int
+            The kernal size for a gaussian filter on the image, default is off (0), must be odd. 
+
+        scalebar:bool
+            Turns the scale bar on/off (default is on), use scalebar=False to turn off. 
+
+
+        texton:bool
+            Turns the text on the scalebar on or off (default is on)
+         
+        xybin:int
+            Bins the image (x/y) axis
+
+        color:str
+            Chooses scalebar color 'black', 'white' or 'grey'
+
+    '''
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
@@ -748,7 +993,7 @@ def default_pipeline_class(Micrograph_object ,name='', medfilter=3, gaussfilter=
     Micrograph_object=Micrograph_object.convert_to_8bit()
 
     if scalebar==True:
-        Micrograph_object.make_scalebar(texton=texton, color=color)
+        Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
     if 'outdir' in kwargs:
         Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])

@@ -297,6 +297,8 @@ class MicroVideo:
             enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
         return enhanced_object
 
+    def __len__(self):
+        return self.frames.shape[0]
 
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
