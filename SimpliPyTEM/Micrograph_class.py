@@ -705,7 +705,13 @@ class Micrograph:
             ax[1].set_title(title2, fontsize=30)
         plt.show()
 
-
+    def plot_histogram(self):
+        plt.figure(figsize=(5,5))
+        if self.image.dtype == 'unit8':
+            plt.hist(self.image.ravel(), 256, [0,256])
+        else:
+            plt.hist(self.image.ravel(), 100)
+        plt.show()
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 
