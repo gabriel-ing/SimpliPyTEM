@@ -1,6 +1,5 @@
 from SimpliPyTEM.Micrograph_class import *
 from SimpliPyTEM.MicroVideo import *
-from ipyfilechooser import FileChooser
 from moviepy.editor import ImageSequenceClip
 from skimage import measure
 from imutils import contours
@@ -35,7 +34,7 @@ def Threshold(image, threshold):
     return thresh#,res
 
 
-def Find_contours(thresh, min_size=200):
+def Find_contours(thresh, min_size=200, complex_coords=False):
     cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     for cnt in cnts:
         cv.drawContours(thresh, [cnt], 0,255,-1)
@@ -56,9 +55,10 @@ def Find_contours(thresh, min_size=200):
         num_pixels = cv.countNonZero(label_mask)
         if num_pixels>min_size:
             mask = cv.add(mask, label_mask)
-    
-    contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    
+    if complex_coords:
+        contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
+    else:
+        contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     #for cnt in contours_im:
     #print(contours_im)
     contours_im = imutils.grab_contours(contours_im)

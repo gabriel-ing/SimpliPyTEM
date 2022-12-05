@@ -93,7 +93,28 @@ class MicroVideo:
         for frame in self.frames:
             frame = frame.astype('float32')
 
+    def open_avi(self, filename):
+        cap = cv.VideoCapture(filename)
+        self.frames= []
+        while cap.isOpened():
+            ret, frame =cap.read()
+            
+            #print(ret, frame)
+            if not ret:
+                print("Can't receive frame (stream end?). Exiting ...")
+                break
+            #print(frame.shape)
+            frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+            #plt.imshow(frame)
+            #cv.imshow('frame',frame)
+            if cv.waitKey(1)==ord('q'):
+                break
+            self.frames.append(frame)
+        print('{} frames loaded as micrograph object'.format(len(frames)))
+        print('As format is avi, the pixelsize is not loaded automatically, please set this using micrograph.pixelSize = n')
+        cap.release()
 
+        
     def open_array(self, arr, pixelsize='',pixelunit='nm', filename='Loaded_array'):
         print(arr.shape)
         if len(arr.shape)!=3:
