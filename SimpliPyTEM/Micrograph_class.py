@@ -292,6 +292,7 @@ class Micrograph:
         image8bit.image = image8bit.image.astype('uint8')
         return image8bit
 
+
     def bin_image(self, value=2):
 
             binned_image = deepcopy(self)
@@ -306,6 +307,65 @@ class Micrograph:
     #        self.image = self.image + next_frame['data']
 
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
+    
+
+    def clip_contrast(self, saturation=0.5, maxvalue=None, minvalue=None):
+        """
+        Function for enhancing the contrast in an image by clipping the histogram between two values. 
+        These values can be defined directly or can be automatically decided using a saturation value, which the is percentage of the pixels above or below this value.
+        I.e, if there are 1,000,000 pixels in an image and the saturation value is 0.1, the method searches the value for which only 0.1% or 1000 pixels are above/below. 
+        These values then become the new minimum and maximum of the image, and are scaled to between 0 and 255.
+        
+        This method will automatically convert to 8 bit (scale between 0 and 255), if this is an issue raise and it can be changed in future versions.
+
+        Parameters
+        ----------
+
+            saturation: Float
+                The percentage cutoff above/below which the pixels are set to zero/255, default is 0.5% of pixels
+
+            maxvalue: int
+                The maximum value that is being clipped (to be decided from histogram). Optional. 
+
+            minvalue: int
+                The minimum value that is being clipped (to be decided from histogram). Optional. 
+
+        Returns
+        -------
+
+            Contrast_enhanced_micrograph : Micrograph
+                Return a copy of the object with the contrast clipped at either end of the image
+
+        Usage
+        -----
+
+            MicrographContrastClipped = micrograph.clip_contrast(saturation=1)
+            
+            or 
+
+            MicrographContrastClipped = micrograph.clip_contrast(maxvalue=220, minvalue=20)
+
+        """
+        new_im  = self.convert_to_8bit()
+        if not maxvalue:
+            print(maxvalue)
+            for maxvalue in range(int(new_im.image.mean()), 255):
+                if 100*(len(new_im.image[new_im.image>maxvalue])/len(new_im.image))<saturation:
+                    print('Maxmium value : ',maxvalue)
+                    break
+            print(maxvalue)
+        if not minvalue:
+            for minvalue in range(int(new_im.image.mean()), 0,-1):
+                if 100*(len(new_im.image[new_im.image<minvalue])/len(new_im.image))<saturation:
+                    print('Minimum value : ',minvalue)
+                    break
+            print('Minimum value : ',minvalue)    
+        new_im.image = (new_im.image - minvalue)*(255/(maxvalue-minvalue))
+        new_im.image[new_im.image>255]=255
+        new_im.image[new_im.image<0]=0
+        return new_im.image
+
+
     def enhance_contrast(self, alpha=1.5, beta=0, gamma=''):
         '''
         Function for enhancing contrast. This uses the OpenCV methods detailed here: https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html. 
@@ -338,7 +398,7 @@ class Micrograph:
         enhanced_object.image = enhanced_image
         if type(gamma)==float or type(gamma)==int:
             if enhanced_object.image.dtype!='uint8':
-                enhanced_object.convert_to_8bit()
+                enhanced_objec=enhanced_object.convert_to_8bit()
             LUT =np.empty((1,256), np.uint8)
             for i in range(256):
                 LUT[0, i]=np.clip(pow(i/255.0,gamma)*255.0, 0, 255)

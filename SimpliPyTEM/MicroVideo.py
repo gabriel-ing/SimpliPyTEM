@@ -267,12 +267,14 @@ class MicroVideo:
         '''
     def convert_to_8bit(self):
         #  this will scale the pixels to between 0 and 255, this will automatically scale the image to its max and min
-        self.frames= (self.frames - self.frames.min())*(1/(self.frames.max()-self.frames.min())*255)
-        self.frames = self.frames.astype('uint8')
-        print(self.frames.dtype)
+        vid8bit = deepcopy(self)
+        vid8bit.frames= (self.frames - self.frames.min())*(1/(self.frames.max()-self.frames.min())*255)
+        vid8bit.frames = vid8bit.frames.astype('uint8')
+        #print(self.frames.dtype)
         #for i in range(len(self.frames)):
         #    self.frames[i] = ((self.frames[i] - self.frames.min()) * (1/(self.frames.max() - self.frames[i].min()) * 255)).astype('uint8')
-
+        return vid8bit
+    
     def bin(self, value=2):
         i=0
         frames = []
@@ -281,11 +283,13 @@ class MicroVideo:
             frame = cv.resize(frame, (int(frame.shape[0]/value), int(frame.shape[1]/value)), interpolation=cv.INTER_CUBIC)
             frames.append(frame)
             i+=1
-        self.frames=np.array(frames)
+        binned = deepcopy(self)
+        binned.frames=np.array(frames)
         print(self.frames.shape)
-        self.pixelSize= self.pixelSize*value
-        self.x = self.frames[0].shape[1]
-        self.y = self.frames[0].shape[0]
+        binned.pixelSize= self.pixelSize*value
+        binned.x = binned.frames[0].shape[1]
+        binned.y = binned.frames[0].shape[0]
+        return binned
 
 # Can be deleted I think... But should allow a function for opening series as video 
     def add_frames(self, frames):
@@ -606,6 +610,15 @@ class MicroVideo:
         sidebyside_object =deep_copy(self)
         sidebyside_object.frames = sidebyside
         return sidebyside    
+
+    def plot_histogram(self):
+        plt.figure(figsize=(5,5))
+        if self.frames.dtype == 'unit8':
+            plt.hist(self.frames.ravel(), 256, [0,256])
+        else:
+            plt.hist(self.frames.ravel(), 100)
+        plt.show()
+
     '''------------------------------------------
     SECTION: VIDEO SPECIFIC METHODS
 
