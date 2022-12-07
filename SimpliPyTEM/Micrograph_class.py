@@ -347,23 +347,28 @@ class Micrograph:
 
         """
         new_im  = self.convert_to_8bit()
+        print('Satauration = ',saturation)
         if not maxvalue:
             print(maxvalue)
             for maxvalue in range(int(new_im.image.mean()), 255):
-                if 100*(len(new_im.image[new_im.image>maxvalue])/len(new_im.image))<saturation:
+                #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
+                if 100*(len(new_im.image[new_im.image>maxvalue])/new_im.image.size)<saturation:
+                    #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
                     print('Maxmium value : ',maxvalue)
                     break
             print(maxvalue)
         if not minvalue:
             for minvalue in range(int(new_im.image.mean()), 0,-1):
-                if 100*(len(new_im.image[new_im.image<minvalue])/len(new_im.image))<saturation:
+                if 100*(len(new_im.image[new_im.image<minvalue])/new_im.image.size)<saturation:
                     print('Minimum value : ',minvalue)
                     break
-            print('Minimum value : ',minvalue)    
-        new_im.image = (new_im.image - minvalue)*(255/(maxvalue-minvalue))
+            #print('Minimum value : ',minvalue)    
+        image =new_im.image.astype(np.int16)    
+        new_im.image = (image - minvalue)*(255/(maxvalue-minvalue))
         new_im.image[new_im.image>255]=255
         new_im.image[new_im.image<0]=0
-        return new_im.image
+        new_im.image = new_im.image.astype(np.uint8)
+        return new_im
 
 
     def enhance_contrast(self, alpha=1.5, beta=0, gamma=''):
@@ -755,6 +760,8 @@ class Micrograph:
                 Title for the second image - Optional 
 
         '''
+        if str(type(other_image))=="<class 'SimpliPyTEM.Micrograph_class.Micrograph'>":
+            other_image = other_image.image
         fig, ax = plt.subplots(1,2, figsize=(30,20))
         ax[0].imshow(self.image)
         if title1!='':
@@ -766,7 +773,7 @@ class Micrograph:
         plt.show()
 
     def plot_histogram(self):
-        plt.figure(figsize=(5,5))
+        plt.figure(figsize=(8,5))
         if self.image.dtype == 'unit8':
             plt.hist(self.image.ravel(), 256, [0,256])
         else:
