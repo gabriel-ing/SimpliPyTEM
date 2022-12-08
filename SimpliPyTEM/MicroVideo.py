@@ -267,12 +267,14 @@ class MicroVideo:
         '''
     def convert_to_8bit(self):
         #  this will scale the pixels to between 0 and 255, this will automatically scale the image to its max and min
-        self.frames= (self.frames - self.frames.min())*(1/(self.frames.max()-self.frames.min())*255)
-        self.frames = self.frames.astype('uint8')
-        print(self.frames.dtype)
+        vid8bit = deepcopy(self)
+        vid8bit.frames= (self.frames - self.frames.min())*(1/(self.frames.max()-self.frames.min())*255)
+        vid8bit.frames = vid8bit.frames.astype('uint8')
+        #print(self.frames.dtype)
         #for i in range(len(self.frames)):
         #    self.frames[i] = ((self.frames[i] - self.frames.min()) * (1/(self.frames.max() - self.frames[i].min()) * 255)).astype('uint8')
-
+        return vid8bit
+    
     def bin(self, value=2):
         i=0
         frames = []
@@ -281,17 +283,82 @@ class MicroVideo:
             frame = cv.resize(frame, (int(frame.shape[0]/value), int(frame.shape[1]/value)), interpolation=cv.INTER_CUBIC)
             frames.append(frame)
             i+=1
-        self.frames=np.array(frames)
+        binned = deepcopy(self)
+        binned.frames=np.array(frames)
         print(self.frames.shape)
-        self.pixelSize= self.pixelSize*value
-        self.x = self.frames[0].shape[1]
-        self.y = self.frames[0].shape[0]
+        binned.pixelSize= self.pixelSize*value
+        binned.x = binned.frames[0].shape[1]
+        binned.y = binned.frames[0].shape[0]
+        return binned
 
-# Can be deleted I think... But should allow a function for opening series as video 
+    # Can be deleted I think... But should allow a function for opening series as video 
     def add_frames(self, frames):
         for frame in frames:
             next_frame = nci.dm.dmReader(frame)
             self.image = self.image + next_frame['data']
+
+
+    def clip_contrast(self, saturation=0.5, maxvalue=None, minvalue=None):
+        """
+        Function for enhancing the contrast in an image by clipping the histogram between two values. 
+        These values can be defined directly or can be automatically decided using a saturation value, which the is percentage of the pixels above or below this value.
+        I.e, if there are 1,000,000 pixels in an image and the saturation value is 0.1, the method searches the value for which only 0.1% or 1000 pixels are above/below. 
+        These values then become the new minimum and maximum of the image, and are scaled to between 0 and 255.
+        
+        This method will automatically convert to 8 bit (scale between 0 and 255), if this is an issue raise and it can be changed in future versions.
+
+        Parameters
+        ----------
+
+            saturation: Float
+                The percentage cutoff above/below which the pixels are set to zero/255, default is 0.5% of pixels
+
+            maxvalue: int
+                The maximum value that is being clipped (to be decided from histogram). Optional. 
+
+            minvalue: int
+                The minimum value that is being clipped (to be decided from histogram). Optional. 
+
+        Returns
+        -------
+
+            Contrast_enhanced_micrograph : Micrograph
+                Return a copy of the object with the contrast clipped at either end of the image
+
+        Usage
+        -----
+
+            MicrographContrastClipped = micrograph.clip_contrast(saturation=1)
+            
+            or 
+
+            MicrographContrastClipped = micrograph.clip_contrast(maxvalue=220, minvalue=20)
+
+        """
+        new_vid  = self.convert_to_8bit()
+        print('Satauration = ',saturation)
+        if not maxvalue:
+            #print(maxvalue)
+            for maxvalue in range(int(new_vid.frames.mean()+np.std(new_vid.frames)), 255):
+                #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
+                if 100*(len(new_vid.frames[new_vid.frames>maxvalue])/new_vid.frames.size)<saturation:
+                    #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
+                    print('Maxmium value : ',maxvalue)
+                    break
+            #print(maxvalue)
+        if not minvalue:
+            for minvalue in range(int(new_vid.frames.mean()-np.std(new_vid.frames)), 0,-1):
+                if 100*(len(new_vid.frames[new_vid.frames<minvalue])/new_vid.frames.size)<saturation:
+                    print('Minimum value : ',minvalue)
+                    break
+            #print('Minimum value : ',minvalue)    
+        frames =new_vid.frames.astype(np.int16)    
+        new_vid.frames = (frames - minvalue)*(255/(maxvalue-minvalue))
+        new_vid.frames[new_vid.frames>255]=255
+        new_vid.frames[new_vid.frames<0]=0
+        new_vid.frames = new_vid.frames.astype(np.uint8)
+        return new_vid
+
 
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
     def enhance_contrast(self, alpha=1.3, beta=1.1, gamma=1):
@@ -606,6 +673,15 @@ class MicroVideo:
         sidebyside_object =deep_copy(self)
         sidebyside_object.frames = sidebyside
         return sidebyside    
+
+    def plot_histogram(self):
+        plt.figure(figsize=(5,5))
+        if self.frames.dtype == 'unit8':
+            plt.hist(self.frames.ravel(), 256, [0,256])
+        else:
+            plt.hist(self.frames.ravel(), 100)
+        plt.show()
+
     '''------------------------------------------
     SECTION: VIDEO SPECIFIC METHODS
 
