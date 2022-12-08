@@ -1,7 +1,7 @@
 from airium import Airium
 import os
 
-def write_html(images, videos, title='Default_experiment_title', **kwargs):
+def write_html(images, videos, title='Default_experiment_title', notes='', **kwargs):
     a =Airium()
     with a.html(lang='en'):
         with a.head():
@@ -11,7 +11,10 @@ def write_html(images, videos, title='Default_experiment_title', **kwargs):
         with a.body():
             with a.div(klass='banner'):
                 with a.h1():
-                    a(title.replace('_', ' '))
+                    if title:
+                        a(title.replace('_', ' ').strip('.html'))
+                with a.h3():
+                    a(notes)
             with a.h2():
                 a('Images')
             for image in images:
@@ -33,8 +36,7 @@ def write_html(images, videos, title='Default_experiment_title', **kwargs):
         if 'outdir' in kwargs:
             outdir = kwargs['outdir']
             title = outdir + '/' + title
-        if title[-5:]!='.html':
-            title = title+'.html'
+        title+='.html'
 
 
     with open(title, 'w') as f:
@@ -55,8 +57,12 @@ def get_files(directory, imagedir, videodir, image_pattern='', video_pattern='')
 
 
 
-def write_css():
-    with open('style.css', 'w') as f:
+def write_css(outdir=None):
+    if outdir:
+        cssname = outdir+'/style.css'
+    else:
+        cssname='style.css' 
+    with open(cssname, 'w') as f:
         f.write('''
 * {
     font-family: Helvetica;

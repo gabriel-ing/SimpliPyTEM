@@ -5,7 +5,7 @@ from tkinter import ttk, filedialog
 import os
 from Micrograph_class import *
 from PDF_generator import pdf_generator 
-
+from html_writer import * 
 class MainApplication(tk.Tk):
 	def __init__(self):
 		super().__init__()
@@ -82,6 +82,8 @@ class MainApplication(tk.Tk):
 		self.pdf_on_button = ttk.Button(self, text='Generate PDF', command=self.pdf_command)
 		self.pdf_on_button.pack()
 
+		self.html_button = ttk.Button(self, text='Generate HTML', command= self.html_command)
+		self.html_button.pack()
 		
 		
 		self.med = True
@@ -136,8 +138,8 @@ class MainApplication(tk.Tk):
 		self.colorbutton.config(text='Scalebar colour: {}'.format(self.color))
 	
 	def TextoffCommand(self):
-		self.texton = self.cycle_options([True, False], self.textoff)
-		self.textbutton.config(text='Scalebar text: {}'.format(self.textoff))
+		self.texton = self.cycle_options([True, False], self.texton)
+		self.textbutton.config(text='Scalebar text: {}'.format(self.texton))
 
 	def MotioncorCommand(self):
 		self.motioncor = self.cycle_options(['On', 'Off'], self.motioncor)
@@ -155,8 +157,10 @@ class MainApplication(tk.Tk):
 
 	def pdf_command(self):
 		self.Retrive_folder()
-		os.chdir(self.folder)
-		print(os.getcwd())
+		if self.folder !=os.getcwd():
+			os.chdir(self.folder)
+			print(os.getcwd())
+
 		os.chdir(self.output_folder_name)
 		print(os.getcwd())
 		images = [x for x in os.listdir('.') if x[-4:]=='.jpg']
@@ -167,6 +171,12 @@ class MainApplication(tk.Tk):
 		print('Done!')
 		os.chdir(self.folder)
 
+
+	def html_command(self):
+		images = [x for x in os.listdir('.') if x[-4:]=='.jpg']
+		self.Retrive_title()
+		write_html(images, videos=[], title=self.title)
+		write_css()
 	'''-------------------------------------------------------------------------------------
 	SECTION: RETREVERS
 	'''
@@ -268,10 +278,10 @@ class MainApplication(tk.Tk):
 		file=self.folder
 		print(file)
 		micrograph = Micrograph()
-		micrograph.set_foldername(self.output_folder_name)
+		#micrograph.set_foldername(self.output_folder_name)
 		if file[-4:-1]=='.dm':
 			micrograph.open_dm(file)
-			default_pipeline_class(micrograph, xybin = self.bin, texton=self.texton, color=self.color,medfilter=self.median)
+			default_pipeline_class(micrograph, outdir=self.output_folder_name)
 
 		
 

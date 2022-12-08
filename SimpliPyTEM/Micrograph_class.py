@@ -12,6 +12,7 @@ import subprocess as sb
 from copy import deepcopy
 from scipy.signal import wiener
 import tifffile
+import itertools
 plt.gray()
 
 class Micrograph: 
@@ -191,7 +192,7 @@ class Micrograph:
 
 
         
-    def write_image(self, name='', ftype='jpg', **kwargs):
+    def write_image(self, name=None, ftype='jpg', **kwargs):
         '''
         Saves the image in a .jpg or .tif file for display or use with other programs. 
 
@@ -218,19 +219,24 @@ class Micrograph:
                     os.mkdir(outdir)
             elif outdir not in os.listdir('.'):
                 os.mkdir(outdir)
-            name=outdir+'/'+name    
-
-        if name!='':
+            if name.split('/')>1:
+                name=name.split('/')[:-1]+outdir+'/'+name
+            else:
+                name =outdir+name    
+        print('Start name :', name)
+        if name:
+                print('if name : ',name)
                 if name[-3:]=='jpg':
                     ftype='jpg'
                 elif name[-3:]=='tif':
                     ftype='tif'    
-                if len(name.split('.'))>1:
+                if len(name.split('.'))>2:
                     name='.'.join(name.split('.')[:-1])
-
+                    print('if len name: ', name)
+                    print('.'.join(name.split('.')[:-1]))
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
-
+                print('else_name = ',name)
         try:
             name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
         except AttributeError:
@@ -347,16 +353,16 @@ class Micrograph:
 
         """
         new_im  = self.convert_to_8bit()
-        print('Satauration = ',saturation)
+        #print('Satauration = ',saturation)
         if not maxvalue:
-            print(maxvalue)
+            #print(maxvalue)
             for maxvalue in range(int(new_im.image.mean()), 255):
                 #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
                 if 100*(len(new_im.image[new_im.image>maxvalue])/new_im.image.size)<saturation:
                     #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
                     print('Maxmium value : ',maxvalue)
                     break
-            print(maxvalue)
+            #print(maxvalue)
         if not minvalue:
             for minvalue in range(int(new_im.image.mean()), 0,-1):
                 if 100*(len(new_im.image[new_im.image<minvalue])/new_im.image.size)<saturation:
@@ -430,9 +436,18 @@ class Micrograph:
 
 
     def Local_normalisation(self,numpatches, padding=0, pad=False):
-        if not pad:
-            new_im = self.copy()
-        else:
+        """
+        Normalises contrast across the image, ensuring even contrast throughout. 
+        Image is taken and split into patches, following which the median of the patches ('local median') is compared to the median of the image ('global median').
+        The patch (local area) is then normalised using the medians (patch = patch* global_median/local_medium) leading to a uniform contrast in the image. 
+
+        The patch median was chosen so there would be less effect if there is a large dark/bright particle, however if this is too large compared with the patch size it will affect the resulting contrast. 
+        
+        Padding can be applied which will greatly reduce edge artefacts. However doing this well will greatly reduce the 
+        Note: if there is a black region (eg. edge of beam or grid) in the image this may lead to bad results.
+        """
+        new_im = deepcopy(self)
+        if pad:
             arrs = []
         xconst = int(new_im.image.shape[0]/numpatches)
         yconst = int(new_im.image.shape[1]/numpatches)
@@ -454,7 +469,7 @@ class Micrograph:
             local_patch = local_patch*global_median/local_median
 
             if pad:
-                empty_arr = np.zeros_like(image)
+                empty_arr = np.zeros_like(new_im.image)
                 empty_arr[x_low:x_high, y_low:y_high]=local_patch
                 arrs.append(empty_arr)
             else:    
@@ -462,13 +477,14 @@ class Micrograph:
             
         if pad:
             arrs = np.array(arrs)
-            empty_arr = np.zeros_like(image)
+            empty_arr = np.zeros_like(new_im.image)
             with np.nditer(empty_arr, flags=['multi_index'], op_flags=['writeonly']) as it:
                 for pix in it:
                     a = arrs[:, it.multi_index[0], it.multi_index[1]]
                     #print(a.shape)
                     pix[...]=np.mean(a[np.nonzero(a)])
-            return empty_arr
+            new_im.image= empty_arr
+            return new_im
             #new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)]= new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)]*(image.mean()/new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)].mean())
         #if numpatches>2:
         #    new_im = normalise_across_image(new_im, numpatches-1, padding)
@@ -1050,7 +1066,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
     #print('name=',name)
     #Micrograph_object = Micrograph_object.enhance_contrast()
     Micrograph_object=Micrograph_object.convert_to_8bit()
-
+    Micrograph_object = Micrograph_object.clip_contrast() 
     if scalebar==True:
         Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
@@ -1060,7 +1076,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         Micrograph_object.write_image(name=name) 
     #Micrograph_object.save_image(outname=name)
 
-def default_pipeline_class(Micrograph_object ,name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
 
     '''
     Default pipeline to process from a Micrograph_object, add scalebar, filter, bin and save the image, speeding up automation.
@@ -1102,17 +1118,19 @@ def default_pipeline_class(Micrograph_object ,name='', medfilter=3, gaussfilter=
     if xybin!= 0 and xybin!=1:
         Micrograph_object = Micrograph_object.bin_image(xybin)
 
-    if name !='':
+    if name:
         name = name
     else:
+        print(Micrograph_object.filename)
         name = '.'.join(Micrograph_object.filename.split('.')[:-1])
+        print(name)
         #print(filename)
     #if 'outdir' in kwargs:
     #print('name=',name)
     #Micrograph_object = Micrograph_object.enhance_contrast()
     Micrograph_object=Micrograph_object.convert_to_8bit()
-
-    if scalebar==True:
+    Micrograph_object = Micrograph_object.clip_contrast()
+    if scalebar:
         Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
     if 'outdir' in kwargs:
