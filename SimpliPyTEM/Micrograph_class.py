@@ -413,7 +413,7 @@ class Micrograph:
             enhanced_image[enhanced_image>255]=255
         return enhanced_object
 
-    def equalizeHist(self):
+    def eqHist(self):
         '''
         Spreads the contrast across a range of values, leading to an evened, flattened histogram. This can be very effective at enhancing midtones in images with very bright or very dark patches. 
         
@@ -427,6 +427,53 @@ class Micrograph:
         enhanced_object = enhanced_object.convert_to_8bit()
         enhanced_object.image = cv.equalizeHist(enhanced_object.image)
         return enhanced_object
+
+
+    def Local_normalisation(self,numpatches, padding=0, pad=False):
+        if not pad:
+            new_im = self.copy()
+        else:
+            arrs = []
+        xconst = int(new_im.image.shape[0]/numpatches)
+        yconst = int(new_im.image.shape[1]/numpatches)
+        x_coords = [i*xconst for i in range(numpatches)]
+        y_coords = [i*yconst for i in range(numpatches)]
+        patch_coords = list(itertools.product(x_coords, y_coords))
+        global_median = np.median(new_im.image)
+        for coord in patch_coords:
+            
+            x_low = coord[0]
+            x_high = coord[0]+xconst+int(padding*xconst)
+            y_low = coord[1]
+            y_high = coord[1]+yconst+int(padding*yconst)
+            
+            #local_mean = new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)].mean()
+            #.mean()
+            local_patch = new_im.image[x_low:x_high, y_low:y_high]
+            local_median = np.median(local_patch)
+            local_patch = local_patch*global_median/local_median
+
+            if pad:
+                empty_arr = np.zeros_like(image)
+                empty_arr[x_low:x_high, y_low:y_high]=local_patch
+                arrs.append(empty_arr)
+            else:    
+                new_im.image[x_low:x_high, y_low:y_high]=local_patch
+            
+        if pad:
+            arrs = np.array(arrs)
+            empty_arr = np.zeros_like(image)
+            with np.nditer(empty_arr, flags=['multi_index'], op_flags=['writeonly']) as it:
+                for pix in it:
+                    a = arrs[:, it.multi_index[0], it.multi_index[1]]
+                    #print(a.shape)
+                    pix[...]=np.mean(a[np.nonzero(a)])
+            return empty_arr
+            #new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)]= new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)]*(image.mean()/new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)].mean())
+        #if numpatches>2:
+        #    new_im = normalise_across_image(new_im, numpatches-1, padding)
+        else:
+            return new_im
 
     '''-----------------------------------------------------------------------------------------------------------------------
     SECTION: SCALEBAR
