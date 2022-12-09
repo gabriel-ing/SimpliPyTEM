@@ -843,13 +843,17 @@ class Micrograph:
                 ax[1].hist(self.image.ravel(), 256, [0,256])
             else:
                 ax[1].hist(self.image.ravel(), 100)
+            ax[1].set_xlabel('Pixel Values', fontsize=20)
+            ax[1].set_ylabel('Frequency',fontsize=20)
         else:
             plt.figure(figsize=(8,5))
             if self.image.dtype == 'unit8':
                 plt.hist(self.image.ravel(), 256, [0,256])
             else:
                 plt.hist(self.image.ravel(), 100)
-            plt.show()
+            ax[1].set_xlabel('Pixel Values', fontsize=20)
+            ax[1].set_ylabel('Frequency',fontsize=20)
+        plt.show()
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 
