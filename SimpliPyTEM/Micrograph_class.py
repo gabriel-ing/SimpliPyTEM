@@ -835,13 +835,21 @@ class Micrograph:
             ax[1].set_title(title2, fontsize=30)
         plt.show()
 
-    def plot_histogram(self):
-        plt.figure(figsize=(8,5))
-        if self.image.dtype == 'unit8':
-            plt.hist(self.image.ravel(), 256, [0,256])
+    def plot_histogram(self, sidebyside=False):
+        if sidebyside:
+            fig, ax = plt.subplots(1,2, figsiz3=(30,10))
+            ax[0].imshow(im.image)
+            if self.image.dtype == 'unit8':
+                ax[1].hist(self.image.ravel(), 256, [0,256])
+            else:
+                ax[1].hist(self.image.ravel(), 100)
         else:
-            plt.hist(self.image.ravel(), 100)
-        plt.show()
+            plt.figure(figsize=(8,5))
+            if self.image.dtype == 'unit8':
+                plt.hist(self.image.ravel(), 256, [0,256])
+            else:
+                plt.hist(self.image.ravel(), 100)
+            plt.show()
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 
