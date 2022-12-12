@@ -276,6 +276,19 @@ class MicroVideo:
         return vid8bit
     
     def bin(self, value=2):
+        """
+        This function applies binning to the frames in a micrograph object, reducing their size by a specified factor.
+    
+        Parameters
+        ----------
+        value : int
+            The factor by which to reduce the size of the frames. The default value is 2.
+    
+        Returns
+        -------
+        Microvideo_binned: MicroVideo
+            A new microvideo object with the binned frames.
+        """
         i=0
         frames = []
         for frame in self.frames:
