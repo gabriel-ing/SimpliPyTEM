@@ -837,8 +837,8 @@ class Micrograph:
 
     def plot_histogram(self, sidebyside=False):
         if sidebyside:
-            fig, ax = plt.subplots(1,2, figsiz3=(30,10))
-            ax[0].imshow(im.image)
+            fig, ax = plt.subplots(1,2, figsize=(30,10))
+            ax[0].imshow(self.image)
             if self.image.dtype == 'unit8':
                 ax[1].hist(self.image.ravel(), 256, [0,256])
             else:
@@ -851,8 +851,8 @@ class Micrograph:
                 plt.hist(self.image.ravel(), 256, [0,256])
             else:
                 plt.hist(self.image.ravel(), 100)
-            ax[1].set_xlabel('Pixel Values', fontsize=20)
-            ax[1].set_ylabel('Frequency',fontsize=20)
+            plt.xlabel('Pixel Values', fontsize=20)
+            plt.ylabel('Frequency',fontsize=20)
         plt.show()
     '''--------------------------------------------------------------------------------
     SECTION: METADATA

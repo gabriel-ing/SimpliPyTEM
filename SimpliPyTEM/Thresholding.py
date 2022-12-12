@@ -4,6 +4,7 @@ from moviepy.editor import ImageSequenceClip
 from skimage import measure
 from imutils import contours
 import imutils
+import math
 
 '''
 MAIN FUNCTIONS
@@ -53,10 +54,8 @@ def Find_contours(thresh, min_size=200, complex_coords=False):
         label_mask[labels==label]=255
         #particle_data['Radius']=255
         num_pixels = cv.countNonZero(label_mask)
-#        if num_pixels>min_size:
-        coords = np.where(label_mask>0)
-        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[0],num_pixels<min_size]):
-                mask = cv.add(mask, label_mask)
+        if num_pixels>min_size:
+            mask = cv.add(mask, label_mask)
     if complex_coords:
         contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
     else:
@@ -64,7 +63,10 @@ def Find_contours(thresh, min_size=200, complex_coords=False):
     #for cnt in contours_im:
     #print(contours_im)
     contours_im = imutils.grab_contours(contours_im)
-    contours_im = contours.sort_contours(contours_im)[0]
+    try:
+        contours_im = contours.sort_contours(contours_im)[0]
+    except ValueError:
+        print('Theres a ValueError! This is commonly because no particles are selected in the video.  Try raising the threshold value, or ')
     #print(contours_im)
     #plt.imshow(labels)
     #for labell in np.unique(labels)
@@ -73,13 +75,13 @@ def Find_contours(thresh, min_size=200, complex_coords=False):
 
 
     
-def Collect_particle_data(contours_im, pixelSize):    
+def Collect_particle_data(contours_im, pixelSize, multimeasure=False):    
     num_particle= len(contours_im)
     #print(num_particle)
 
 
     # this parameter computes the maximum length of a particle i.e. maximum distance between two point of a contour
-    max_length_particle = np.zeros([num_particle, 1], dtype=float)
+    #max_length_particle = np.zeros([num_particle, 1], dtype=float)
     # this parameter computes the areas of  particles
     #area_particle = np.zeros([num_particle, 1], dtype=float)
     area_particle=[]
@@ -100,6 +102,11 @@ def Collect_particle_data(contours_im, pixelSize):
     #meanradius_particle=np.zeros([num_particle, 1],dtype = float)
     MajorMinorRatio = []
 
+    if multimeasure:
+        maxlength  = []
+        minlength = []
+        meanlength= []
+        stddev_length= [] 
     for (i, c) in enumerate(contours_im):
         #print(i,c)
         moment_contour = cv.moments(c)
@@ -127,14 +134,27 @@ def Collect_particle_data(contours_im, pixelSize):
         MajorMinorRatio.append(MajMinRat)
         ((cx, cy), radius) = cv.minEnclosingCircle(c)
         radius_particle.append(radius*pixelSize)
-        circularity_particle.append(area/(np.pi*radius*radius))
+        #circularity_particle.append(area/(np.pi*radius*radius))
         aspect_ratio_particle[i, 0] = width/height
         box = cv.boxPoints(min_rectangle)
         box=np.int0(box)
 
-    particle_data = {'Max_length':max_length_particle, 'Area':area_particle, 'Centroid':centroid_particle, 
+        if multimeasure: 
+            dists,coords = multiMeasure_particle(c, centroid_particle[i])
+            maxlength.append(max(dists))
+            minlength.append(min(dists))
+            meanlength.append(np.mean(dists))
+            stddev_length.append(np.std(dists))
+    
+
+    particle_data = { 'Area':area_particle, 'Centroid':centroid_particle, 
                      'Aspect_ratio':aspect_ratio_particle, 'Perimeter':perimeter_particle, 'Circularity':circularity_particle, 
-                     'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle, 'Major-Minor Ratio':MajorMinorRatio}    
+                     'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle, 'Major-Minor Ratio':MajorMinorRatio}  
+    if multimeasure:
+        particle_data['Min diameter'] = minlength
+        particle_data['Max diameter'] = maxlength
+        particle_data['Mean diameter'] = meanlength
+        particle_data['Stddev diameter']=stddev_length
     #print(particle_data)
     return particle_data
 
@@ -193,4 +213,33 @@ def Particle_analysis_video(video,threshold, min_size,pixelSize):
         for key in data:
             video_data[key].append(data[key])
     masks = np.array(masks)
-    return masks, video_data    
+    return masks, video_data
+
+def multiMeasure_particle(particle_contours, centroid):
+    distances = []
+    coords = []
+    c = centroid
+    count=0
+    #print(c)
+    #print(contours_im[0])
+    for P1 in particle_contours:
+        #print(P1[0])
+        for P2 in particle_contours:
+            #print(P1[0][0],P1[0][1],P2[0][1],c[0],P2[0][1] )
+            #print('P1: ', P1)
+            #print('P2: ', P2)
+            #print('c: ', c)
+            ba = P1[0]-c
+            bc = P2[0]-c
+
+            cosine_angle = np.dot(ba,bc)/(np.linalg.norm(ba)*np.linalg.norm(bc))
+            angle = np.degrees(np.arccos(cosine_angle))
+
+            if 179.5<angle<180.5:
+                #print(angle)
+                count +=1
+                #d = np.linalg.norm(P1[0], P2[0])
+                d = math.hypot(P1[0][0]-P2[0][0], P1[0][1]-P2[0][1])
+                coords.append((P1[0],c, P2[0]))
+                distances.append(d)
+    return distances, coords
