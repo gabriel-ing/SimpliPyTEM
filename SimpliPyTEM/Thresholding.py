@@ -55,11 +55,10 @@ def Find_contours(thresh, min_size=200, complex_coords=False):
         #particle_data['Radius']=255
         num_pixels = cv.countNonZero(label_mask)
         #if num_pixels>min_size:
-        #    mask = cv.add(mask, label_mask)
+        #    mask = cv.add(mask, label_mas
         coords = np.where(label_mask>0)
         if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[0],num_pixels<min_size]):
                 mask = cv.add(mask, label_mask)
-
     if complex_coords:
         contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
     else:
