@@ -523,32 +523,33 @@ class MicroVideo:
 
     def make_scalebar(self, texton=True, color='Auto'):
         #print(pixvalue, textcolor)
-        self.choose_scalebar_size()
-        self.choose_scalebar_color(color)
+        vidSB = deepcopy(self)
+        vidSB.choose_scalebar_size()
+        vidSB.choose_scalebar_color(color)
         for i in range(len(self.frames)):
             #print(self.frames[i])
-            self.frames[i][self.scalebar_y:self.scalebar_y+self.height,self.scalebar_x:self.scalebar_x+self.width]=self.pixvalue
+            vidSB.frames[i][vidSB.scalebar_y:vidSB.scalebar_y+vidSB.height,vidSB.scalebar_x:vidSB.scalebar_x+vidSB.width]=vidSB.pixvalue
             
-            textposition = ((self.scalebar_x+self.width/2),self.scalebar_y-5)
+            textposition = ((vidSB.scalebar_x+vidSB.width/2),vidSB.scalebar_y-5)
             
             #if pixelUnit!='nm':
              #   Utext = str(n)+u'\u00b5'+ 'm'
               #  text = str(n)+'microns'
             #else:
-            self.text = '{}{}'.format(self.n,self.pixelUnit) 
+            vidSB.text = '{}{}'.format(vidSB.n,vidSB.pixelUnit) 
              
 
-            pil_image = Image.fromarray(self.frames[i])
+            pil_image = Image.fromarray(vidSB.frames[i])
 
             if texton==True:
                 #print('TEXTON!')
                 draw = ImageDraw.Draw(pil_image)        
                 
-                fontsize=int(self.scalebar_x/(25))
+                fontsize=int(vidSB.scalebar_x/(25))
                 font = ImageFont.truetype("/home/bat_workstation/helveticaneue.ttf", fontsize)
-                draw.text(textposition, self.text, anchor ='mb', fill=self.textcolor, font=font, stroke_width=1)
-                self.frames[i] = np.array(pil_image)    
-
+                draw.text(textposition, vidSB.text, anchor ='mb', fill=vidSB.textcolor, font=font, stroke_width=1)
+                vidSB.frames[i] = np.array(pil_image)    
+        return vidSB
 
 
     '''------------------------------------------------------------------------------------------------------------------------
