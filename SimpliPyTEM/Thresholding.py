@@ -54,8 +54,12 @@ def Find_contours(thresh, min_size=200, complex_coords=False):
         label_mask[labels==label]=255
         #particle_data['Radius']=255
         num_pixels = cv.countNonZero(label_mask)
-        if num_pixels>min_size:
-            mask = cv.add(mask, label_mask)
+        #if num_pixels>min_size:
+        #    mask = cv.add(mask, label_mask)
+        coords = np.where(label_mask>0)
+        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[0],num_pixels<min_size]):
+                mask = cv.add(mask, label_mask)
+
     if complex_coords:
         contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
     else:
@@ -134,7 +138,7 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
         MajorMinorRatio.append(MajMinRat)
         ((cx, cy), radius) = cv.minEnclosingCircle(c)
         radius_particle.append(radius*pixelSize)
-        #circularity_particle.append(area/(np.pi*radius*radius))
+        circularity_particle.append(area/(np.pi*radius*radius))
         aspect_ratio_particle[i, 0] = width/height
         box = cv.boxPoints(min_rectangle)
         box=np.int0(box)
@@ -235,7 +239,7 @@ def multiMeasure_particle(particle_contours, centroid):
             cosine_angle = np.dot(ba,bc)/(np.linalg.norm(ba)*np.linalg.norm(bc))
             angle = np.degrees(np.arccos(cosine_angle))
 
-            if 179.5<angle<180.5:
+            if 179<angle<181:
                 #print(angle)
                 count +=1
                 #d = np.linalg.norm(P1[0], P2[0])
