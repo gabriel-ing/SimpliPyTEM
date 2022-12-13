@@ -12,6 +12,8 @@ import subprocess as sb
 import tifffile
 from copy import deepcopy
 from moviepy.editor import ImageSequenceClip
+from Micrograph_class import *
+
 plt.gray()
 
 class MicroVideo: 
@@ -142,15 +144,6 @@ class MicroVideo:
 
 
     '''
-
-
-
-
-
-
-    
-
-
     def save_tif_stack(self, **kwargs):
         if 'name' in kwargs:
             name = kwargs['name']
@@ -255,8 +248,13 @@ class MicroVideo:
                 
 
 
-
-
+    def to_micrograph():
+        im = Micrograph()
+        for key in self.__dict__.keys():
+        if key!= 'frames':
+            setattr(im, key, self.__dict__[key])
+        im.image = np.sum(self.frames, 0)
+        return im
         '''-----------------------------------------------------------------------------------------------------------------------
         SECTION: BASIC FUNCTIONS
 
@@ -298,7 +296,7 @@ class MicroVideo:
             i+=1
         binned = deepcopy(self)
         binned.frames=np.array(frames)
-        print(self.frames.shape)
+        #print(self.frames.shape)
         binned.pixelSize= self.pixelSize*value
         binned.x = binned.frames[0].shape[1]
         binned.y = binned.frames[0].shape[0]
@@ -646,12 +644,19 @@ class MicroVideo:
     used for plotting images using matplotlib. Functions very basic so only meant for rapid use, for better figures write own function or use save command
 
     '''
-    def imshow(self, title=''):
-
+    def imshow(self, title='', vmax=None, vmin=None, average=False):
+        if not vmax:
+            vmax = np.max(self.frames)
+        if not vmin:
+            vmin = np.min(self.frames)
         plt.subplots(figsize=(30,20))
         if title!='':
             plt.title(title, fontsize=30)
-        plt.imshow(self.frames[0])
+        if average:
+            plt.imshow(np.sum(self.frames, axis=0),vmax=vmax, vmin=vmin)
+        else:
+            plt.imshow(self.frames[0], vmax=vmax, vmin=vmin)
+
         plt.show()
 
     def imshow_pair(self,other_image, title1='', title2=''):
@@ -666,6 +671,7 @@ class MicroVideo:
         plt.show()
 
     def imshow_average(self):
+
         plt.subplots(figsize=(30,20))
         plt.imshow(np.sum(self.frames, axis=0))
         plt.show()
@@ -755,7 +761,7 @@ class MicroVideo:
         command = '/home/bat_workstation/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda112-08-11-2021 -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(tifname, outname, self.pixelSize*10)
         print(command)
         print('dir = ',directory)
-        self.save_tif_stack(name=tifname)+66 
+        self.save_tif_stack(name=tifname)
 
         sb.call(command, shell=True, cwd=os.getcwd())
         MC_vid = deepcopy(self)
