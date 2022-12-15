@@ -12,7 +12,7 @@ import subprocess as sb
 import tifffile
 from copy import deepcopy
 from moviepy.editor import ImageSequenceClip
-from Micrograph_class import *
+from SimpliPyTEM.Micrograph_class import *
 
 plt.gray()
 
@@ -248,11 +248,11 @@ class MicroVideo:
                 
 
 
-    def to_micrograph():
+    def toMicrograph(self):
         im = Micrograph()
         for key in self.__dict__.keys():
-        if key!= 'frames':
-            setattr(im, key, self.__dict__[key])
+            if key!= 'frames':
+                setattr(im, key, self.__dict__[key])
         im.image = np.sum(self.frames, 0)
         return im
         '''-----------------------------------------------------------------------------------------------------------------------
@@ -644,19 +644,27 @@ class MicroVideo:
     used for plotting images using matplotlib. Functions very basic so only meant for rapid use, for better figures write own function or use save command
 
     '''
-    def imshow(self, title='', vmax=None, vmin=None, average=False):
-        if not vmax:
+    def imshow(self, title=None, vmax=None, vmin=None, framenumber=0, average=False):
+        if average:
+            av =  np.sum(self.frames, axis=0)
+
+        if not vmax and not average:
             vmax = np.max(self.frames)
-        if not vmin:
+        if not vmin and not average:
             vmin = np.min(self.frames)
+        if average and not vmax:
+            vmax = np.max(av)
+        if average and not vmin:
+            vmin =np.min(av)
+
+
         plt.subplots(figsize=(30,20))
-        if title!='':
+        if title:
             plt.title(title, fontsize=30)
         if average:
-            plt.imshow(np.sum(self.frames, axis=0),vmax=vmax, vmin=vmin)
+            plt.imshow(av, vmax=vmax, vmin=vmin)
         else:
-            plt.imshow(self.frames[0], vmax=vmax, vmin=vmin)
-
+            plt.imshow(self.frames[framenumber], vmax=vmax, vmin=vmin)
         plt.show()
 
     def imshow_pair(self,other_image, title1='', title2=''):
@@ -670,14 +678,17 @@ class MicroVideo:
             ax[1].set_title(title2, fontsize=30)
         plt.show()
 
-    def imshow_average(self):
-
+    def imshow_average(self, vmax=None, vmin=None):
+        if not vmax:
+            vmax = np.max(self.frames)
+        if not vmin:
+            vmin = np.min(self.frames)
         plt.subplots(figsize=(30,20))
-        plt.imshow(np.sum(self.frames, axis=0))
+        plt.imshow(np.sum(self.frames, axis=0), vmax=vmax, vmin=vmin)
         plt.show()
 
     def Sidebyside(self, Video2):
-    #Add video as numpy stack (Z,Y,X ) 
+        #Add video as numpy stack (Z,Y,X ) 
         print(Video1.shape)
         z1,y1,x1 = self.frames.shape
         z2, y2, x2=Video2.shape
@@ -694,12 +705,29 @@ class MicroVideo:
         sidebyside_object.frames = sidebyside
         return sidebyside    
 
-    def plot_histogram(self):
-        plt.figure(figsize=(5,5))
-        if self.frames.dtype == 'unit8':
-            plt.hist(self.frames.ravel(), 256, [0,256])
+    def plot_histogram(self, sidebyside=False, average=False):
+        if sidebyside:
+            fig, ax = plt.subplots(1,2, figsize=(30,15))
+            if average:
+                av =  np.sum(self.frames, axis=0) 
+                ax[0].imshow(av)
+                
+                ax[1].hist(av.ravel(), 100)
+           
+            else:
+                ax[0].imshow(self.frames[0])
+                if self.frames.dtype == 'unit8':
+                    ax[1].hist(self.frames.ravel(), 256, [0,256])
+                else:
+                    ax[1].hist(self.frames.ravel(), 100)
+            ax[1].set_xlabel('Pixel Values', fontsize=20)
+            ax[1].set_ylabel('Frequency',fontsize=20)
         else:
-            plt.hist(self.frames.ravel(), 100)
+            plt.figure(figsize=(5,5))
+            if self.frames.dtype == 'unit8':
+                plt.hist(self.frames.ravel(), 256, [0,256])
+            else:
+                plt.hist(self.frames.ravel(), 100)
         plt.show()
 
     '''------------------------------------------
