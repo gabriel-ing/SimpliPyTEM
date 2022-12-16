@@ -35,7 +35,7 @@ def Threshold(image, threshold):
     return thresh#,res
 
 
-def Find_contours(thresh, min_size=200, complex_coords=False):
+def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000):
     cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     for cnt in cnts:
         cv.drawContours(thresh, [cnt], 0,255,-1)
@@ -57,7 +57,8 @@ def Find_contours(thresh, min_size=200, complex_coords=False):
         #if num_pixels>min_size:
         #    mask = cv.add(mask, label_mas
         coords = np.where(label_mask>0)
-        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[0],num_pixels<min_size]):
+        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1],num_pixels<minsize, num_pixels>maxsize]):
+                
                 mask = cv.add(mask, label_mask)
     if complex_coords:
         contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
@@ -110,6 +111,7 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
         minlength = []
         meanlength= []
         stddev_length= [] 
+        measurements = []
     for (i, c) in enumerate(contours_im):
         #print(i,c)
         moment_contour = cv.moments(c)
@@ -148,6 +150,7 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
             minlength.append(min(dists))
             meanlength.append(np.mean(dists))
             stddev_length.append(np.std(dists))
+            measurements.append(len(dists))
     
 
     particle_data = { 'Area':area_particle, 'Centroid':centroid_particle, 
@@ -158,6 +161,7 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
         particle_data['Max diameter'] = maxlength
         particle_data['Mean diameter'] = meanlength
         particle_data['Stddev diameter']=stddev_length
+        particle_data['Measurements']=measurements
     #print(particle_data)
     return particle_data
 
@@ -198,20 +202,29 @@ def Sidebyside(Video1, Video2):
     #plt.show()
     return sidebyside
 
-def Particle_analysis(image, threshold, min_size, pixelSize):
+def Particle_analysis(image, threshold, minsize, pixelSize,multimeasure=False):
     thresh = Threshold(image, threshold)
-    contours_im, mask = Find_contours(thresh, min_size)
-    particle_data = Collect_particle_data(contours_im, pixelSize)
+    contours_im, mask = Find_contours(thresh, minsize)
+    particle_data = Collect_particle_data(contours_im, pixelSize, multimeasure)
     return mask, particle_data
 
-def Particle_analysis_video(video,threshold, min_size,pixelSize):
+def Particle_analysis_video(video,threshold, minsize,pixelSize, multimeasure=False):
     masks =[]
+
     video_data ={'Max_length':[], 'Area':[], 'Centroid':[], 
                      'Aspect_ratio':[], 'Perimeter':[], 'Circularity':[], 
                      'Width':[], 'Height':[], 'Radius':[], 'Major-Minor Ratio':[]}  
     
+    if multimeasure:
+        video_data['Min diameter'] = []
+        video_data['Max diameter'] = []
+        video_data['Mean diameter'] = []
+        video_data['Stddev diameter']=[]
+        video_data['Measurements']=[]
+    #print(particle_data)
+
     for frame in video:
-        mask, data =Particle_analysis(frame, threshold, min_size,pixelSize)
+        mask, data =Particle_analysis(frame, threshold, minsize,pixelSize, multimeasure)
         masks.append(mask)
         for key in data:
             video_data[key].append(data[key])

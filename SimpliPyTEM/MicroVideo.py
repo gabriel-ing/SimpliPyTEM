@@ -13,6 +13,7 @@ import tifffile
 from copy import deepcopy
 from moviepy.editor import ImageSequenceClip
 from SimpliPyTEM.Micrograph_class import *
+import matplotlib.animation as animation
 
 plt.gray()
 
@@ -399,6 +400,29 @@ class MicroVideo:
     def __len__(self):
         return self.frames.shape[0]
 
+    def mean_normalisation(self):
+        norm_frames = []
+        
+        vid_median= np.median(self.frames)
+        
+        norm_object = deepcopy(self)
+        for frame in self.frames:
+            frame_median = np.median(self.frames)
+            norm_frames.append(frame*vid_median/frame_median)
+        norm_object.frames =  np.array(norm_frames)
+        return norm_object
+
+    def mean_normalisation(self):
+        norm_frames = []
+        
+        vid_mean = np.mean(self.frames)
+        
+        norm_object = deepcopy(self)
+        for frame in self.frames:
+            frame_mean = np.mean(self.frames)
+            norm_frames.append(frame*vid_mean/frame_mean)
+        norm_object.frames =  np.array(norm_frames)
+        return norm_object
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 
@@ -679,12 +703,14 @@ class MicroVideo:
         plt.show()
 
     def imshow_average(self, vmax=None, vmin=None):
+        av = np.sum(self.frames, axis=0)
+
         if not vmax:
-            vmax = np.max(self.frames)
+            vmax = np.max(av)
         if not vmin:
-            vmin = np.min(self.frames)
+            vmin = np.min(av)
         plt.subplots(figsize=(30,20))
-        plt.imshow(np.sum(self.frames, axis=0), vmax=vmax, vmin=vmin)
+        plt.imshow(av, vmax=vmax, vmin=vmin)
         plt.show()
 
     def Sidebyside(self, Video2):
@@ -730,12 +756,34 @@ class MicroVideo:
                 plt.hist(self.frames.ravel(), 100)
         plt.show()
 
+    def show_video(self, fps=None, loop=True,reduce_size=1):
+        from IPython.display import HTML
+        if not fps and hasattr(self, 'fps'):
+            fps=self.fps
+        elif not fps and not hasattr(self, 'fps'):
+            fps=10
+
+        figsize = tuple(x/(100*reduce_size) for x in self.frames.shape[1:])
+        print(figsize)
+        fig, ax = plt.subplots(figsize=figsize)
+        
+
+        ax.set_xticks([])
+        ax.set_yticks([])
+        frames = []
+        fig.tight_layout()
+        def animate(frame_number):
+            ax.imshow(self.frames[frame_number], vmax=self.frames.max(), vmin=self.frames.min())
+            if frame_number%10==0:
+                print(frame_number)
+            return ax
+
+        ani = animation.FuncAnimation(fig,animate,interval=1000/fps, repeat_delay=2, blit=False,repeat=loop, frames=len(self.frames), cache_frame_data=False)
+
+        return HTML(ani.to_html5_video())
+
     '''------------------------------------------
     SECTION: VIDEO SPECIFIC METHODS
-
-    
-
-        
 
     '''
     def Average_frames(self, groupsize):
