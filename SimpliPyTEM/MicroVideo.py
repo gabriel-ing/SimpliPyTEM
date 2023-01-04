@@ -24,10 +24,6 @@ class MicroVideo:
         #self.image='Undefined'
         self.pixel_size= 'Undefined'
 
-
-
-
-
         '''-------------------------------------------------------------------------------------------------------------------------------------------
         SECTION: IMPORT IMAGES
 
@@ -38,7 +34,26 @@ class MicroVideo:
         '''
     
 
-    def open_dm(self, file):
+    def open_dm(self, file, pixelcorrection=True):
+        '''
+        Imports digital micrograph files into the micrograph object, initialising all the default attributes required, including saving the metadata into self.metadata_tags. 
+        By default, video dm files (dose fractionations) will be summed to create a single image file, there is also an option (video_average) to use the first frame only. 
+        
+        Some DM files have 'hot pixels' which have anomalously high signal due to detector malfunction, these often lead to contrast issues.
+        To correct for this any pixel which has a higher value than the mean value + (20 x standard deviation) is set to the mean pixel value, this is on by default but can be turned off using pixel_correction=False
+        
+        This uses the ncempy.io.dm package to read DM files, more information can be found here: https://openncem.readthedocs.io/en/latest/ncempy.io.html
+
+
+        Parameters
+        ----------
+            file : str
+                The name of the dm file to open. The path to the file can also be included if it is not in the same directory. 
+
+            pixel_correction: bool 
+                Set anomalous 'hot' pixels to the image mean, anomalous pixels defined as image_mean + 20*image_standard_deviation. Default is on (True). 
+
+        '''
         dm_input = nci.dm.dmReader(file)
         #if len(dm_input['data'].shape)==2:
         #    image = dm_input['data']
@@ -69,7 +84,8 @@ class MicroVideo:
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         #This line removes any giant outliers (bright pixels) from the images
         #print(self.frames[self.frames>self.frames.mean()+self.frames.std()*50])
-        self.frames[self.frames>self.frames.mean()+self.frames.std()*8]=0
+        if pixelcorrection:
+            self.frames[self.frames>self.frames.mean()+self.frames.std()*8]=0
         
         self.frames=  self.frames.astype('float32')
         #for frame in self.frames:
@@ -94,9 +110,14 @@ class MicroVideo:
         for frame in self.frames:
             frame = frame.astype('float32')
 
-    def open_avi(self, filename):
+    def open_video(self, filename,pixelsize='',pixelunit='nm',):
+        '''
+        Opens video file (commonly .avi or .mp4)
+        '''
+
         cap = cv.VideoCapture(filename)
-        self.frames= []
+        frames= []
+        self.filename = '.'.join(filename.split('.')[:-1])
         while cap.isOpened():
             ret, frame =cap.read()
             
@@ -110,11 +131,16 @@ class MicroVideo:
             #cv.imshow('frame',frame)
             if cv.waitKey(1)==ord('q'):
                 break
-            self.frames.append(frame)
-        print('{} frames loaded as micrograph object'.format(len(frames)))
+            frames.append(frame)
+            #print(len(frames))
+        self.frames = np.array(frames)
+        print('{} frames loaded as micrograph object'.format(len(self.frames)))
         print('As format is avi, the pixelsize is not loaded automatically, please set this using micrograph.pixelSize = n')
         cap.release()
-
+        self.reset_xy()
+        self.pixelSize=pixelsize
+        self.pixelUnit=pixelunit
+        
         
     def open_array(self, arr, pixelsize='',pixelunit='nm', filename='Loaded_array'):
         print(arr.shape)
@@ -128,9 +154,13 @@ class MicroVideo:
         self.filename=filename
         self.reset_xy()
 
-    #def read_screen_records()
+   
 
     def reset_xy(self):
+        '''
+        Resets the image attributes for the x, y and shape of the image. Used by the binning method and is also useful following cropping of the micrograph
+
+        '''
         self.x = self.frames[0].shape[1]
         self.y = self.frames[0].shape[0]
         self.shape = self.frames.shape
@@ -499,15 +529,27 @@ class MicroVideo:
     def __len__(self):
         return self.frames.shape[0]
 
-    def median_normalisation(self):
+    def Normalise_video(self, normtype='mean'):
         norm_frames = []
-        
-        vid_median= np.median(self.frames)
+        normtypes = ['median', 'mean']
+        if normtype not in normtypes:
+            raise Exception('this normalisation type is not supported, currently only median or mean are supported')
+        elif normtype=='mean':
+            vid_norm = np.mean(self.frames)
+        elif normtype=='median':
+            vid_norm = np.median(self.frames)
+
+        #vid_median= np.median(self.frames)
         
         norm_object = deepcopy(self)
         for frame in self.frames:
-            frame_median = np.median(self.frames)
-            norm_frames.append(frame*vid_median/frame_median)
+            
+            if normtype=='mean':
+                frame_norm = np.mean(self.frames)
+            elif normtype=='median':
+                frame_norm = np.median(self.frames)
+            #frame_median = np.median(self.frames)
+            norm_frames.append(frame*vid_norm/frame_norm)
         norm_object.frames =  np.array(norm_frames)
         return norm_object
 
@@ -757,7 +799,7 @@ class MicroVideo:
         return filtered_object
 
     def median_filter(self, kernal=3):
-                '''
+        '''
         Returns a median filtered copy of the Microvideo object, kernal size defined in the call (default is 3)
 
             Parameters
@@ -1022,7 +1064,7 @@ class MicroVideo:
         def animate(frame_number):
             ax.imshow(self.frames[frame_number], vmax=vmax, vmin=vmin)
             if frame_number%5==0:
-                print(frame_number + '  Done!')
+                print(str(frame_number) + '  Done!')
             return ax
 
         ani = animation.FuncAnimation(fig,animate,interval=1000/fps, repeat_delay=2, blit=False,repeat=loop, frames=len(self.frames), cache_frame_data=False)
