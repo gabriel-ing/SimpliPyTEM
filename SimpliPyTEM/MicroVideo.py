@@ -23,11 +23,9 @@ class MicroVideo:
         self.filename = ''
         #self.image='Undefined'
         self.pixel_size= 'Undefined'
-        self.foldername='.'
 
 
-    def set_foldername(self, foldername='Previews'):
-        self.foldername = foldername
+
 
 
         '''-------------------------------------------------------------------------------------------------------------------------------------------
@@ -172,8 +170,10 @@ class MicroVideo:
 
         if 'outdir' in kwargs:
             outdir = str(kwargs['outdir'])
-            if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])) and outdir!='.':
-                
+            if '/' in outdir:
+                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
+                    os.mkdir(outdir)
+            elif outdir not in os.listdir('.'):
                 os.mkdir(outdir)
             name = outdir+'/'+name
 
@@ -247,9 +247,98 @@ class MicroVideo:
         else:
             clip.write_videofile(name, fps=fps)
                 
+    def write_image(self, name=None, ftype='jpg', average=True, framenumber=0, **kwargs):
+        '''
+        Saves the image in a .jpg or .tif file for display or use with other programs. 
 
+        Parameters
+        ----------
+            name: str
+                Filename for saved image. Ending with either .jpg or .tif will define the format of the image, alternatively ftype argument can be used. 
+                This is optional, without including a name the name of the original file opened will be used. 
+
+            ftype: str
+                Optional. Filetype of output image, either 'jpg' or 'tif' (default jpg), this is better defined using the suffix of the name. 
+                Saving as a tif will save in whatever format it is currently in - this can be a 32-bit or 8-bit image, using convert_to_8bit() will ensure that latter.
+
+            outdir: str
+                Keyword argument (usage: outdir='/path/to/directory'). This defines the output location of the saved image, use a path relative to the current directory or an absolute path.
+                The final directory in the path will be made if it does not already exist.
+            
+            average:bool
+                Do you want to save an image of the average of the video? True or False (y/n)
+
+            framenumber:int
+                If not saving the average (average=False), this chooses which frame to save - index starts at zero and negative numbers count from the end
+
+        '''
+
+
+        if 'outdir' in kwargs:
+            outdir = str(kwargs['outdir'])
+            if '/' in outdir:
+                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
+                    os.mkdir(outdir)
+            elif outdir not in os.listdir('.'):
+                os.mkdir(outdir)
+            if name.split('/')>1:
+                name=name.split('/')[:-1]+outdir+'/'+name
+            else:
+                name =outdir+name    
+        print('Start name :', name)
+        if name:
+                print('if name : ',name)
+                if name[-3:]=='jpg':
+                    ftype='jpg'
+                elif name[-3:]=='tif':
+                    ftype='tif'    
+                if len(name.split('.'))>2:
+                    name='.'.join(name.split('.')[:-1])
+                    print('if len name: ', name)
+                    print('.'.join(name.split('.')[:-1]))
+        else:
+                name = '.'.join(self.filename.split('.')[:-1])
+                print('else_name = ',name)
+        try:
+            name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
+        except AttributeError:
+            name+='.'+ftype
+        #if self.foldername!='':
+        #        name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
+        #if self.foldername=='':
+        #    newname = self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
+        #else:
+        #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
+        if average:
+            image = np.sum(self.frames, axis=0)
+
+        else:
+            image = self.frames[framenumber]
+
+        if ftype=='jpg':
+            if image.max()!=255 or image.min()!=0:
+                print(image.max(), image.min())
+                image= (image - image.min())*(1/(image.max()-image.min())*255)
+                image = image.astype('uint8')
+                print('converting to 8bit')
+            cv.imwrite(name,image)
+        elif ftype=='tif':
+            tifffile.imsave(name, image,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
+
+        #self.pil_image.save(name, quality=self.quality)
+        print(name, 'Done!')
 
     def toMicrograph(self):
+        '''
+        Returns a micrograph object with the average of the image so the video average can be treated as a single image
+        
+        Returns
+        -------
+
+            micrograph:Micrograph
+                Micrograph object with the same metadata and an average of all the image frames.
+
+        '''
         im = Micrograph()
         for key in self.__dict__.keys():
             if key!= 'frames':
@@ -265,6 +354,13 @@ class MicroVideo:
 
         '''
     def convert_to_8bit(self):
+        '''Returns a microvideo object with the image scaled between 0 and 255 (an 8-bit image). Improves contrast, reduces data size and is a more usable image format than higher bit rates. 
+        
+        Returns
+        -------
+            MicroVideo8bit : MicroVideo
+                A copy of the microvideo object with the image scaled between 0 and 255
+        '''
         #  this will scale the pixels to between 0 and 255, this will automatically scale the image to its max and min
         vid8bit = deepcopy(self)
         vid8bit.frames= (self.frames - self.frames.min())*(1/(self.frames.max()-self.frames.min())*255)
@@ -299,8 +395,7 @@ class MicroVideo:
         binned.frames=np.array(frames)
         #print(self.frames.shape)
         binned.pixelSize= self.pixelSize*value
-        binned.x = binned.frames[0].shape[1]
-        binned.y = binned.frames[0].shape[0]
+        binned.reset_xy()
         return binned
 
     # Can be deleted I think... But should allow a function for opening series as video 
@@ -334,23 +429,26 @@ class MicroVideo:
         Returns
         -------
 
-            Contrast_enhanced_micrograph : Micrograph
+            Contrast_enhanced_microvideo : Microvideo
                 Return a copy of the object with the contrast clipped at either end of the image
 
         Usage
         -----
 
-            MicrographContrastClipped = micrograph.clip_contrast(saturation=1)
+            MicrovideoContrastClipped = video.clip_contrast(saturation=1)
             
             or 
 
-            MicrographContrastClipped = micrograph.clip_contrast(maxvalue=220, minvalue=20)
+            MicrovideoContrastClipped = video.clip_contrast(maxvalue=220, minvalue=20)
 
         """
         new_vid  = self.convert_to_8bit()
-        print('Satauration = ',saturation)
+        #print(new_vid)
+        #print(new_vid.frames)
+        
         if not maxvalue:
             #print(maxvalue)
+            print('Satauration = ',saturation)
             for maxvalue in range(int(new_vid.frames.mean()+np.std(new_vid.frames)), 255):
                 #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
                 if 100*(len(new_vid.frames[new_vid.frames>maxvalue])/new_vid.frames.size)<saturation:
@@ -359,12 +457,13 @@ class MicroVideo:
                     break
             #print(maxvalue)
         if not minvalue:
-            for minvalue in range(int(new_vid.frames.mean()-np.std(new_vid.frames)), 0,-1):
+            for minvalue in range(int(new_vid.frames.mean()), -1,-1):
                 if 100*(len(new_vid.frames[new_vid.frames<minvalue])/new_vid.frames.size)<saturation:
                     print('Minimum value : ',minvalue)
                     break
             #print('Minimum value : ',minvalue)    
         frames =new_vid.frames.astype(np.int16)    
+        print(maxvalue, minvalue)
         new_vid.frames = (frames - minvalue)*(255/(maxvalue-minvalue))
         new_vid.frames[new_vid.frames>255]=255
         new_vid.frames[new_vid.frames<0]=0
@@ -400,7 +499,7 @@ class MicroVideo:
     def __len__(self):
         return self.frames.shape[0]
 
-    def mean_normalisation(self):
+    def median_normalisation(self):
         norm_frames = []
         
         vid_median= np.median(self.frames)
@@ -544,6 +643,24 @@ class MicroVideo:
 
 
     def make_scalebar(self, texton=True, color='Auto'):
+        '''
+        Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
+        The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
+        This will work best for 8-bit images, as the scalebar will be given values of 0 or 255. 
+        
+        Parameters
+        ----------
+
+            color : str
+                The color of the scalebar, the options are 'white'. 'black' or 'grey'
+            texton : bool
+                Text can be turned off using texton=False, the selected size of the scalebar can be accessed using micrograph.scalebar_size
+
+        Returns
+        -------
+            Micrograph_object_with_scalebar: Micrograph
+                Copy of the micrograph object with a scale bar.
+        '''
         #print(pixvalue, textcolor)
         vidSB = deepcopy(self)
         vidSB.choose_scalebar_size()
@@ -594,8 +711,25 @@ class MicroVideo:
 
     '''
     def low_pass_filter(self, radius):
-    # This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
-    # If pixelsize is undefined the radius will refer to pixels only
+        '''
+        This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
+        If pixelsize is undefined the radius will refer to pixels only
+        
+        Parameters
+        ----------
+
+            radius : int (or potentially float)
+                The effects of this vary depending on if the pixelsize is defined in self.pixelSize.: 
+                     - Assuming your micrograph object has a pixel size defined, the filter works by removing any features smaller than the size you input as a parameter (the unit is the same as the pixelsize), A larger number yields a stronger filter, if it is too large, you won't see any features. 
+                    Effective filter sizes depends on features and magnification, so with something between 1-5 and tune it to your needs.
+                    - If your micrograph is missing a pixelsize the size input will be the radius of a circle kept in the power spectrum. Here the input number does the inverse - a smaller number leads to stronger filter. In this case, much larger numbers will be needed, 50 is a good starting value.
+        
+        Returns
+        -------
+                Low_pass_filtered_object :MicroVideo
+                    Low pass filtered copy of the microvideo object.          
+
+        '''    
         #print(N)
         N=self.frames[0].shape[0]
         if type(self.pixelSize)==int or type(self.pixelSize)==float and self.pixelSize!=0:
@@ -623,12 +757,41 @@ class MicroVideo:
         return filtered_object
 
     def median_filter(self, kernal=3):
+                '''
+        Returns a median filtered copy of the Microvideo object, kernal size defined in the call (default is 3)
+
+            Parameters
+            ----------
+                kernal:int
+                    The n x n kernal for median filter is defined here, must be an odd integer
+
+            Returns
+            -------
+                Median_filtered_object :Microvideo
+                    Median filtered copy of Microvideo object with median filtered image
+        '''
         filtered_object = deepcopy(self)
         for i in range(len(filtered_object.frames)):
             filtered_object.frames[i] = cv.medianBlur(filtered_object.frames[i],kernal)
         return filtered_object
 
     def weiner_filter(self, kernal=5):
+        '''
+        Returns a Weiner filtered copy of the Microvideo object, kernal size defined in the call (default is 5)
+
+            Parameters
+            ----------
+
+                n :int
+                    The n x n kernal for Weiner filter is defined here, must be an odd integer
+
+            Returns
+            -------
+
+                Weiner_filtered_object : Microvideo
+                    Weiner filtered copy of Microvideo object 
+        '''
+
         from scipy.signal import wiener
         filtered_object = deepcopy(self)
         for i in range(len(filtered_object.frames)):
@@ -636,6 +799,21 @@ class MicroVideo:
         return filtered_object
 
     def NLM_filter(self, h=5):
+
+        '''
+        Returns a non-local means filtered copy of the Microvideo, filter strength is defined in the call. 
+        More information on non-local means filtering can be found here: https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
+
+            Parameters
+            ----------
+                h:int
+                    Defines the strength of the Non-local means filter, default is 5
+            Returns
+            -------
+                nlm_filtered_object : Microvideo
+                    Non-local means filtered copy of the Microvideo object
+        '''
+
         filtered_object = deepcopy(self)
         for i in range(len(filtered_object.frames)):
             filtered_object.frames[i] = cv.fastNlMeansDenoising(np.uint8(filtered_object.frames[i]), h)
@@ -644,12 +822,19 @@ class MicroVideo:
         return filtered_object
 
     def gaussian_filter(self, kernal=3):
-        #for frame in filtered_object.frames:
-        #    print(frame)
-        #    print(type(frame))
-        #    print(frame.shape)
-        #    print(frame.dtype)
-        #    filtered_image = cv.GaussianBlur(self.image, (kernal,kernal),0)
+        '''
+        Returns a Gaussian filtered copy of the micrograph object, kernal size defined in the call (default is 3)
+
+            Parameters
+            ----------
+                n:int
+                    The n x n kernal for median filter is defined here, *must be an odd integer*
+
+            Returns
+            -------
+                Gaussian_filtered_object :Micrograph
+                    Gaussian filtered copy of micrograph object with gaussian filtered image
+        '''
         swapped = np.swapaxes(self.frames, 0,2)
         #print(kernal)
         swapped = cv.GaussianBlur(swapped, (kernal,kernal), 0)
@@ -669,6 +854,32 @@ class MicroVideo:
 
     '''
     def imshow(self, title=None, vmax=None, vmin=None, framenumber=0, average=False):
+        '''
+        Method to view the video as a static image. This method completely uses matplotlib's imshow function to show the image, however this allows control of display with a single command. 
+
+        This method allows control of the title, whether the image is averaged, which frame is plotted and the maximum and minimum values plotted. 
+
+        Parameters
+        ----------
+            
+            title:str
+                This gives a title to the plot. 
+
+            vmax:int or float
+                The maximum value in the image such that any value above vmax is white. 
+            
+            vmin: int or float
+                The minimum value in the image such that any value below vmin is black.
+            
+            framenumber: int
+                The index of the frame to be shown (starting from zero, minus numbers can also count from the final frame, i.e -1 is the final frame). If the frame number is out of range, an IndexError is raised.
+
+            average: bool 
+                Setting to True shows an average of all the frames of the video rather than individual frame number
+
+
+        '''
+
         if average:
             av =  np.sum(self.frames, axis=0)
 
@@ -682,7 +893,7 @@ class MicroVideo:
             vmin =np.min(av)
 
 
-        plt.subplots(figsize=(30,20))
+        plt.subplots(figsize=(20,10))
         if title:
             plt.title(title, fontsize=30)
         if average:
@@ -691,7 +902,12 @@ class MicroVideo:
             plt.imshow(self.frames[framenumber], vmax=vmax, vmin=vmin)
         plt.show()
 
-    def imshow_pair(self,other_image, title1='', title2=''):
+    def imshow_pair(self,other_image, title1='', title2='', average=True):
+        '''
+        Basic function for plotting 2 stills from videos side by side. this 
+
+
+        '''
         fig, ax = plt.subplots(1,2, figsize=(50,30))
         ax[0].imshow(self.frames[0])
         if title1!='':
@@ -734,6 +950,8 @@ class MicroVideo:
     def plot_histogram(self, sidebyside=False, average=False):
         if sidebyside:
             fig, ax = plt.subplots(1,2, figsize=(30,15))
+            ax[1].tick_params(axis='x', labelsize=25)
+            ax[1].tick_params(axis='y', labelsize=25)
             if average:
                 av =  np.sum(self.frames, axis=0) 
                 ax[0].imshow(av)
@@ -746,22 +964,51 @@ class MicroVideo:
                     ax[1].hist(self.frames.ravel(), 256, [0,256])
                 else:
                     ax[1].hist(self.frames.ravel(), 100)
-            ax[1].set_xlabel('Pixel Values', fontsize=20)
-            ax[1].set_ylabel('Frequency',fontsize=20)
+            ax[1].set_xlabel('Pixel Values', fontsize=30)
+            ax[1].set_ylabel('Frequency',fontsize=30)
         else:
-            plt.figure(figsize=(5,5))
+            fig,ax = plt.subplots(1,1, figsize=(5,5))
+            #ax.tick_params(axis='x', labelsize=25)
+            #ax.tick_params(axis='y', labelsize=25)
             if self.frames.dtype == 'unit8':
                 plt.hist(self.frames.ravel(), 256, [0,256])
+                plt.set_
             else:
                 plt.hist(self.frames.ravel(), 100)
         plt.show()
 
-    def show_video(self, fps=None, loop=True,reduce_size=1):
+    def show_video(self, fps=None, loop=True,reduce_size=1, vmax=None, vmin=None):
+        '''
+        Method to show the video within a jupyter notebook. 
+        
+        Parameters
+        ----------
+
+            fps: int
+                The frame rate of the video show (in frames per second), default is to take it from the metadata, and failing that show it at 10fps. 
+
+            vmax:int or float
+                The maximum value in the image such that any value above vmax is white. 
+            
+            vmin: int or float
+                The minimum value in the image such that any value below vmin is black.
+            
+            reduce size: int
+                Factor to reduce size when plotting the video, this is important to add for large videos to reduce the time to plot the video. 
+
+
+        '''
+
         from IPython.display import HTML
         if not fps and hasattr(self, 'fps'):
             fps=self.fps
         elif not fps and not hasattr(self, 'fps'):
             fps=10
+
+        if not vmax:
+            vmax = np.max(self.frames)
+        if not vmin:
+            vmin = np.min(self.frames)
 
         figsize = tuple(x/(100*reduce_size) for x in self.frames.shape[1:])
         print(figsize)
@@ -773,9 +1020,9 @@ class MicroVideo:
         frames = []
         fig.tight_layout()
         def animate(frame_number):
-            ax.imshow(self.frames[frame_number], vmax=self.frames.max(), vmin=self.frames.min())
-            if frame_number%10==0:
-                print(frame_number)
+            ax.imshow(self.frames[frame_number], vmax=vmax, vmin=vmin)
+            if frame_number%5==0:
+                print(frame_number + '  Done!')
             return ax
 
         ani = animation.FuncAnimation(fig,animate,interval=1000/fps, repeat_delay=2, blit=False,repeat=loop, frames=len(self.frames), cache_frame_data=False)
