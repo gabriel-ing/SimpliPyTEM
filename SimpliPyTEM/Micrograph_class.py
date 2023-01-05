@@ -91,15 +91,6 @@ class Micrograph:
 
 
 
-        '''-------------------------------------------------------------------------------------------------------------------------------------------
-        SECTION: IMPORT IMAGES
-
-            can be imported as dm3, dm4, mrc, **numpy array or tifs ** add the tifs 
-            need to add numpy and tif functionality
-
-
-        '''
-    
 
     def open_dm(self, file, video_average=True, pixel_correction=True):
         '''
@@ -188,6 +179,8 @@ class Micrograph:
         self.image = self.image.astype('float32')
         self.shape=self.image.shape
 
+
+    ##write a hyperspy opening function 
 
 
 
@@ -940,7 +933,7 @@ class Micrograph:
 
     def get_date_time(self): 
         '''
-        Prints and returns the exposure time for the image. 
+        Prints and returns the aquisition date and time for the image. 
 
         Returns
         -------
