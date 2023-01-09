@@ -38,48 +38,6 @@ class Micrograph:
     y:int    
         The size of the y axis in the image
 
-    Methods
-    -------
-    Filehandling: 
-
-    open_dm(filename, video_average=True):
-        Opens Digital Micrograph (dm3 or dm4) files
-    open_mrc(filename):
-        opens .mrc files
-    write_image(name='', ftype='jpg', **kwargs)    
-        Writes image files, filetype jpg or tif can be assigned with the suffix of the name or the ftype option. 
-    
-
-    Basic image functions: 
-
-    bin_image(value=2):
-        Bins the image on the x and y axis by the value given (default 2), returns a new object. 
-    convert_to_8bit():
-        Scales the data between 0 and 255 and makes the datatype 8-bit, returns a new object.
-    enhance_contrast(alpha, beta, gamma):
-        enhances contrast
-    equalizeHist():
-        converts to 8 bit and equalises the histogram, returns a new object.
-    reset_xy():
-        resets the image shape, x and y properties (if its cropped or changed image or similar)
-    
-
-    Fetching Metadata:
-    
-    get_exposure():
-        Prints and returns the exposure time metadata
-    get_voltage():
-        Prints and returns the voltage metadata
-    get_mag():
-        Prints and returns the image magnification
-    get_date_time():
-        prints and returns the image aquisition date and time
-    show_metadata():
-        prints all the metadata tags and associated values
-    
-
-
-
 
     '''
     def __init__(self):
@@ -438,6 +396,25 @@ class Micrograph:
         
         Padding can be applied which will greatly reduce edge artefacts. However doing this well will greatly reduce the 
         Note: if there is a black region (eg. edge of beam or grid) in the image this may lead to bad results.
+
+        Parameters
+        ----------
+
+            numpatches:int
+                The number of patches on each axis to split the image into, ie image is split into n x n patches and these are given the same median 
+
+            padding: int
+                percentage overlap between patches (only used if pad=True)
+            
+            pad:bool
+                Setting to true reduces edge artifacts from the patches of the image, however it also greatly increases processing time. 
+
+        Returns
+        -------
+
+            new_im: Micrograph
+                Copy of the object with an image that has been locally normalised 
+                
         """
         new_im = deepcopy(self)
         if pad:

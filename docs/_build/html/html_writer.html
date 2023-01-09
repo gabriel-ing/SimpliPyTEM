@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>html_writer module &mdash; SimpliPyTEM 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Thresholding module" href="Thresholding.html" />
+    <link rel="prev" title="PDF_generator module" href="PDF_generator.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> SimpliPyTEM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">html_writer module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Thresholding.html">Thresholding module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimpliPyTEM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">html_writer module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/html_writer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="html-writer-module">
+<h1>html_writer module<a class="headerlink" href="#html-writer-module" title="Permalink to this headline"></a></h1>
+<p>This creates html files with the images and movies from an experiment, which can be viewed as a webpage.</p>
+<blockquote>
+<div><p>These have the advantage over pdfs when dealing with in situ data, that movies can be played. The downside is that the media files are only linked in the html file, and therefore to share the file the images and movies need to be shared as well.</p>
+<p>There is also a function to write a css file which gives the document basic formatting, this is far from high quality formating but is a start.</p>
+<p>I recommend using a directory structure something like this:</p>
+</div></blockquote>
+<p>Experiment&gt;Media&gt;Images
+Experiment&gt;Media&gt;Videos</p>
+<p>Where experiment contains the raw data, media contains the html and css and Images &amp; Videos contain the .jpg (or .tif/.png) images and .mp4 videos respectively
+Then run the functions below from the media folder.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<p>Simple usage is summed up below:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#import module</span>
+<span class="kn">from</span> <span class="nn">SimpliPyTEM.html_writer</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#if you are not already in the Media directory (shown above) use:</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="o">/</span><span class="n">Path</span><span class="o">/</span><span class="n">To</span><span class="o">/</span><span class="n">Media</span><span class="p">)</span>
+
+<span class="c1">#Get files in lists</span>
+<span class="n">image_files</span><span class="p">,</span> <span class="n">video_files</span> <span class="o">=</span> <span class="n">get_files</span><span class="p">(</span><span class="n">Images_dir</span><span class="p">,</span> <span class="n">Video_dir</span><span class="p">)</span>
+
+<span class="c1">#Write the html file</span>
+<span class="n">html_writer</span><span class="p">(</span><span class="n">image_files</span><span class="p">,</span> <span class="n">video_files</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Experiment title&#39;</span><span class="p">,</span> <span class="n">note</span><span class="o">=</span><span class="s1">&#39;Add some notes about the experiment here...&#39;</span><span class="p">)</span>
+
+<span class="c1">#Write the css file</span>
+<span class="n">write_css</span><span class="p">()</span>
+</pre></div>
+</div>
+<span class="target" id="module-html_writer"></span><dl class="py function">
+<dt class="sig sig-object py" id="html_writer.get_files">
+<span class="sig-prename descclassname"><span class="pre">html_writer.</span></span><span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imagedir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">videodir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#html_writer.get_files" title="Permalink to this definition"></a></dt>
+<dd><p>Simple method for getting the image and video files.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>imagedir:str</dt><dd><p>Directory containing the images (jpg, png or tif format)</p>
+</dd>
+<dt>videodir:str</dt><dd><p>Directory containing videos. Videos must  be .mp4</p>
+</dd>
+<dt>image_pattern:str</dt><dd><p>Pattern which the images contain, it is assumed they will be .jpg but if any more specific patterns in the filename are required (E.g. to  only include a single sample) It can be added here.</p>
+</dd>
+<dt>video_pattern:str</dt><dd><p>As image pattern but for videos.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="html_writer.write_css">
+<span class="sig-prename descclassname"><span class="pre">html_writer.</span></span><span class="sig-name descname"><span class="pre">write_css</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#html_writer.write_css" title="Permalink to this definition"></a></dt>
+<dd><p>Writes a basic css document called style.css, this is linked in the html generated. This gives it some basic formatting. You may consider making your own css for better formatting.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="html_writer.write_html">
+<span class="sig-prename descclassname"><span class="pre">html_writer.</span></span><span class="sig-name descname"><span class="pre">write_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">videos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Default_experiment_title'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#html_writer.write_html" title="Permalink to this definition"></a></dt>
+<dd><p>Writes html file containing the images and videos from an experiment so they can be viewed on a webbrowser. This can be preferable over PDFS as the videos can be played. 
+The images and videos are only linked in this html, so in order to share the page these need to be sent as well.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Images:list</dt><dd><p>List of images (including their path from the current directory), can be made with get_files()</p>
+</dd>
+<dt>Videos: list</dt><dd><p>List of videos (including their path from the current directory), can be made with get_files()</p>
+</dd>
+<dt>Title:str</dt><dd><p>The title for the experiment (name of html doc and title of the resulting page)</p>
+</dd>
+<dt>Notes:str</dt><dd><p>Accompanying notes for the experiment, included at the top of the doc.</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><p>HTML document {title}.html saved in the current working directory. This html document has the images from an experiment as well as playable videos.</p>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PDF_generator.html" class="btn btn-neutral float-left" title="PDF_generator module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Thresholding.html" class="btn btn-neutral float-right" title="Thresholding module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gabriel Ing.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

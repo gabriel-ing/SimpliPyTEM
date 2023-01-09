@@ -18,7 +18,8 @@ import matplotlib.animation as animation
 plt.gray()
 
 class MicroVideo: 
-
+    '''
+    '''
     def __init__(self):
         self.filename = ''
         #self.image='Undefined'

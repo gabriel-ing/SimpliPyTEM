@@ -11,6 +11,23 @@ MAIN FUNCTIONS
 '''
 
 def Threshold(image, threshold):
+    '''
+    Threshold the image to a particular value, such that below that value goes to black and above that value goes to white.
+    
+    Parameters
+    ----------
+        image:numpy array
+            The image to be thresholded
+
+        threshold: int
+            The threshold value
+
+    returns
+    -------
+        thresh:numpy array
+            The thresholded image 
+
+    '''
     imG=cv.GaussianBlur(image, (5,5),0)
     #croppedThresh[croppedThresh<90] = 0
     #croppedThresh[croppedThresh>90]=255
@@ -36,6 +53,35 @@ def Threshold(image, threshold):
 
 
 def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000):
+    '''
+    Finds the contours (or edges) of the particles in the image 
+
+    In doing so, this also filters the particles by minimum and maximum size (in number of pixels total area) and removes any particles which are on the edge of the image.
+
+    Parameters
+    ----------
+
+        thresh:numpy array
+            The thresholded image produced by threshold()
+        
+        minsize:int
+            The minimum area (in pixels) for a particle to be considered a particle
+
+        minsize:int
+            The maximum area (in pixels) for a particle to be considered a particle
+
+        complex_coords:bool 
+            Whether to use cv.CHAIN_APPROX_SIMPLE or cv.CHAIN_APPROX_NONE in the contours. Complex_coords = False (off, chain_approx_simple) simplifies the bounding coordinates leading to less total coordinates, this is faster to process. Full coordinates (complex_coords=True) allows more detailed measurements across the particle, however will take longer. 
+
+    Returns
+    -------
+        contours_im:list 
+            This is a list of arrays with coordinates which bound each particle selected in the image. This is used in downstream processing. 
+
+        mask:numpy array
+            Binary image showing the particles selected in white and the background in black. 
+
+    '''
     cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     for cnt in cnts:
         cv.drawContours(thresh, [cnt], 0,255,-1)
@@ -80,6 +126,46 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000):
 
     
 def Collect_particle_data(contours_im, pixelSize, multimeasure=False):    
+    '''
+    This collects a number of data sets from the contours_im outputted by the find_contours function. Complex measurement of particle size can be done with multimeasure (it measures the distance across each particle at multiple points and then includes max, min, mean and std of these measurements)
+
+    Data collected for each particle in this function: 
+        Area - The area of the particle in the image
+        Centroid - The center point coordinate of the particle (x, y)
+        Aspect ratio - ratio between minimum and maximum length of particle
+        Circularity - The area of the particle divided by the area of a circle that completely bounds the particle, giving a value for how circular it is (or how much of a circle it fills)
+        width - The width of the smallest possible rectangle that could fully contain the particle
+        Height - The height of the smallest possible rectangle that could fully contain the particle
+        radius - The radius of the smallest possible circle that could fully contain the particle. 
+        Major-Minor Ratio  - the ratio between width and height
+
+        Multimeasure specific: 
+
+            Max-diameter 
+            Min-diameter
+            Mean-diameter
+            Stddev-diameter
+            Number of measurements  - the number of measurements across the particle to give the above diameter values. 
+
+        particle_data = { 'Area':area_particle, 'Centroid':centroid_particle, 
+                     'Aspect_ratio':aspect_ratio_particle, 'Perimeter':perimeter_particle, 'Circularity':circularity_particle, 
+                     'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle, 'Major-Minor Ratio':MajorMinorRatio} 
+
+    Parameters
+    ----------
+ 
+        contours_im:list
+            As generated from find_contours()
+        pixelSize:float
+            Pixel size in the image, the same unit is used in the output data so not important here but worth keeping an eye on. 
+        multimeasure:bool
+            Whether to measure the distance across the particle many times, this can give an idea of the variation in shape and a better measure of diameter, but also  significantly increases runtime. 
+    
+    Returns
+    -------
+        particle_data:dict
+            A dictionary containing the data collected (with keys describing what the data is)
+    '''
     num_particle= len(contours_im)
     #print(num_particle)
 
@@ -175,18 +261,37 @@ PLOT RADIUS DATA
 #print(np.array(widths))
 #widths_list = [x for i in widths for x in i]
 def Flatten_list(l):
+    '''
+    Simple function to make a single list from a list of lists, useful for combining data from different frames
+
+    Parameters
+    ----------
+
+        l: list of list of lists
+            These can be created if from the particle_analysis_video function or if you do particle analysis of multiple frames, the data from these can be combined with this function. 
+    Returns
+    -------
+        single list of values 
+    '''
     return [x for i in l for x in i]
-    
-def plot_histogram(data):
-    plt.style.use('seaborn-whitegrid')
-    plt.hist(data, color =(0.9,0.9,1), edgecolor='black', bins=50)
-    
-    plt.xlabel('Particle size (nm)')
-    plt.ylabel('Frequency')
-    plt.show()
     
 
 def Sidebyside(Video1, Video2):
+
+    '''
+    Stitches two videos together side by side - (good for comparing masks and originals)
+
+    Parameters
+    ----------
+        Video1:numpy array
+            Lefthand video
+        Video2:numpy array 
+            Righthand video
+    Returns
+    -------
+        sidebyside: numpy array 
+            Single videos where the two videos play side by side 
+    '''
     #Videos need to be the same shape. Add video as numpy stack (Z,Y,X ) 
     print(Video1.shape)
     z1,y1,x1 = Video1.shape
@@ -203,12 +308,61 @@ def Sidebyside(Video1, Video2):
     return sidebyside
 
 def Particle_analysis(image, threshold, minsize, pixelSize,multimeasure=False):
+    '''
+    Do the thresholding, contours finding and data collection all in one to collect data from the particles  in an image
+    
+    Parameters
+    ----------
+        image:numpy array 
+            The image to analyse
+        threshold:int
+            The threshold pixel value
+        minsize:int
+            minimum area of particles 
+        pixelSize:float
+            Pixel size in the image, normally in nanometers but this unit is kept in the resulting data so it doesnt matter. 
+        Multimeasure:bool
+            Whether to measure the distance across the particle many times, this can give an idea of the variation in shape and a better measure of diameter, but also  significantly increases runtime. 
+    
+    Returns
+    -------
+        mask:numpy array 
+            A binary image showing the particles selected in white.
+
+        particle_data:dict
+            A dictionary containing the data collected (with keys describing what the data is)
+    '''
+
     thresh = Threshold(image, threshold)
     contours_im, mask = Find_contours(thresh, minsize)
     particle_data = Collect_particle_data(contours_im, pixelSize, multimeasure)
     return mask, particle_data
 
 def Particle_analysis_video(video,threshold, minsize,pixelSize, multimeasure=False):
+    '''
+    Runs the particle analysis for every frame in a video and creates a dictionary with a list of lists (data from each frame) as the value.  
+
+    Parameters
+    ----------
+        video:numpy array 
+            The video to analyse
+        threshold:int
+            The threshold pixel value
+        minsize:int
+            minimum area of particles 
+        pixelSize:float
+            Pixel size in the image, normally in nanometers but this unit is kept in the resulting data so it doesnt matter. 
+        Multimeasure:bool
+            Whether to measure the distance across the particle many times, this can give an idea of the variation in shape and a better measure of diameter, but also  significantly increases runtime. 
+    
+    Returns
+    -------
+        mask:numpy array 
+            A binary video showing the particles selected in white.
+
+        particle_data:dict
+            A dictionary containing the data collected (with keys describing what the data is)
+    '''
     masks =[]
 
     video_data ={'Max_length':[], 'Area':[], 'Centroid':[], 
@@ -232,6 +386,24 @@ def Particle_analysis_video(video,threshold, minsize,pixelSize, multimeasure=Fal
     return masks, video_data
 
 def multiMeasure_particle(particle_contours, centroid):
+    '''
+    Measures the diameter of the particle at multiple points around the particle by seeing if the angle between any two points on the perimeter and the center of the particle is 180 +/- 1 degree.
+
+    Parameters
+    ----------
+        particle_contours: list
+            A list of the coordinates bounding the particle (each list within contours_im)
+
+        centroid: array
+            The central coordinate of the particle. 
+
+    returns
+    -------
+        distances: list
+            A list  of the diameters measured
+        coordinates 
+            The pairs of coordinates measured (point1, center point, point2)
+    '''
     distances = []
     coords = []
     c = centroid
