@@ -13,15 +13,19 @@ SimpliPyTEM also has a modules designed for *in situ* TEM videos, easily alterin
 
 This project aims to make use of the rapid automation of image analysis methods available through python while making it approachable for the user.
 
+Functions to generate pdf and html files containing images and videos are also included in this package. This allows easy viewing and sharing of all the images/videos taken in an imaging session, making experiment evaluation significantly easier. 
 
  
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
    :caption: Contents:
 
    Micrograph_class
-
+   MicroVideo_class
+   PDF_generator
+   html_writer
+   Thresholding
 Installation
 ------------
 
