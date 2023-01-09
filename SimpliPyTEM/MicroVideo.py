@@ -112,7 +112,9 @@ class MicroVideo:
 
     def open_video(self, filename,pixelsize='',pixelunit='nm',):
         '''
-        Opens video file (commonly .avi or .mp4)
+        Loads video files (eg. mp4 and avi, unsure if others will work) into microvideo object.
+        The pixel size is not taken from the video by default, and so it should be included in the command, else the default of 1nm/pixel is used. This can be addedd later using video.pixelSize= {new pixel size}
+        
         '''
 
         cap = cv.VideoCapture(filename)
@@ -142,7 +144,11 @@ class MicroVideo:
         self.pixelUnit=pixelunit
         
         
-    def open_array(self, arr, pixelsize='',pixelunit='nm', filename='Loaded_array'):
+    def open_array(self, arr, pixelsize=1,pixelunit='nm', filename='Loaded_array'):
+        '''
+        Loads a numpy array into the microvideo object, allowing use of all the other available methods. Filename, pixel size and pixel unit should be given in the call, defaults of 1nm/pixel allow this to be avoided but correct pixel size should be loaded if a scalebar is required (as well as certain other functions)
+        
+        '''
         print(arr.shape)
         if len(arr.shape)!=3:
             print('Error, this doesnt appear to be an image stack, please double check!')
@@ -154,7 +160,12 @@ class MicroVideo:
         self.filename=filename
         self.reset_xy()
 
-   
+       
+    def add_frames(self, frames):
+        # Not functioning but here to act as a reminder to make a function to open image series.
+        for frame in frames:
+            next_frame = nci.dm.dmReader(frame)
+            self.image = self.image + next_frame['data']
 
     def reset_xy(self):
         '''
@@ -173,33 +184,66 @@ class MicroVideo:
 
 
     '''
-    def save_tif_stack(self, **kwargs):
-        if 'name' in kwargs:
-            name = kwargs['name']
+    def save_tif_stack(self, name=None, outdir=None):
+        '''
+        Saves the video as a single, multi-image tif file (stack). Files saved in current condition so if an 8bit tif is required, run video.convert_to_8bit() before use.
+        These can be useful for viewing editted video in imageJ
+        
+        Parameters
+        ----------
+            name:str
+                Prefix for the outputted filename.
+
+            outdir:str
+                The output directory for the files, if this directory doesn't exist (in the cwd) a new one will be created.
+
+        Outputs
+        -------
+
+            Saves a multi-image tif stack into the output directory listed (cwd is default)
+
+        '''
+
+        if name:
             if name[-4:]!='.tif':
                 name+='.tif'        
         else:
             name = '.'.join(self.filename.split('.')[:-1])+'.tif'    
         
-        if 'outdir' in kwargs:
-            outdir = str(kwargs['outdir'])
+        if outdir:
             if outdir not in os.listdir('.') and outdir!='.':
                 os.mkdir(outdir)
             name = outdir+'/'+name
         tifffile.imsave(name, self.frames,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
 
 
-    def save_tif_sequence(self, **kwargs):
-            
-        if 'name' in kwargs:
+    def save_tif_sequence(self, name=None, outdir=None):
+        '''        
+        Saves each frame of the video as a tif, this is saved in the current format, so if an 8bit tif is required, run video.convert_to_8bit() before use.
+        nameand outdir can be included to give a name (prefix) and  the output directory. 
+        
+        Parameters
+        ----------
+            name:str
+                Prefix for the outputted filenames.
+
+            outdir:str
+                The output directory for the files, if this directory doesn't exist (in the cwd) a new one will be created.
+
+        Outputs
+        -------
+
+            Saves a sequence of Tif files into the output directory listed (cwd is default)
+
+        '''
+        if name:
             name = kwargs['name']
             if name[-4:]=='.tif':
                 name= name.strip('.tif')
         else: 
             name = '.'.join(self.filename.split('.')[:1]) 
 
-        if 'outdir' in kwargs:
-            outdir = str(kwargs['outdir'])
+        if outdir:
             if '/' in outdir:
                 if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
                     os.mkdir(outdir)
@@ -236,11 +280,24 @@ class MicroVideo:
         clip.to_videofile(name, fps)
     
 
-    def write_video(self, name='', **kwargs):
+    def write_video(self, name=None, outdir=None):
         '''
         This allows saving as an mp4 or a raw avi file (imageJ compatible)
+
+        Parameters
+        ----------
+            name:str
+                Output filename. Outputted files can be in mp4 or uncompressed avi (imageJ readable) filetypes (mp4 by default), this is denoted by the suffix of the name. 
+
+            outdir:str
+                The output directory for the files, if this directory doesn't exist (in the cwd) a new one will be created.
+
+        Outputs
+        -------
+
+            Saves a sequence of Tif files into the output directory listed (cwd is default)
         '''    
-        if name!='':
+        if name:
             #name = kwargs['name']
             if name[-4:]!='.mp4' and name[-4:]!='.avi':
                 name= name+'.mp4'
@@ -253,8 +310,7 @@ class MicroVideo:
             name = '.'.join(self.filename.split('.')[:-1])+'.mp4' 
             outformat='mp4'
 
-        if 'outdir' in kwargs:
-            outdir = str(kwargs['outdir'])
+        if outdir:
             if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])) and outdir!='.':
                 os.mkdir(outdir)
             name = outdir+'/'+name
@@ -428,11 +484,7 @@ class MicroVideo:
         binned.reset_xy()
         return binned
 
-    # Can be deleted I think... But should allow a function for opening series as video 
-    def add_frames(self, frames):
-        for frame in frames:
-            next_frame = nci.dm.dmReader(frame)
-            self.image = self.image + next_frame['data']
+
 
 
     def clip_contrast(self, saturation=0.5, maxvalue=None, minvalue=None):
@@ -503,6 +555,30 @@ class MicroVideo:
 
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
     def enhance_contrast(self, alpha=1.3, beta=1.1, gamma=1):
+        '''
+        Function for enhancing contrast. This uses the OpenCV methods detailed here: https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html. 
+        There are 3 input values which define contast controls: alpha, beta and gamma, the gamma value is optional. 
+        
+        Parameters
+        ----------
+
+            alpha:float
+                Basic contrast control, usually in the range of 1-3. The histogram is streched. 
+
+            beta: int (or float)
+                Brightness control, this will add the value to every pixel in the image, only really has an effect with 8-bit images (and any pixels above 255 will be clipped to this)
+            
+            gamma:float
+                Non-linear contrast control, values between 0-1 makes images brighter (particularly the dark areas), while values >1 darken the image(particularly the bright areas)
+                Optional, if included image will be converted to 8 bit. 
+
+        Returns 
+        -------
+
+            Contrast_enhanced_microvidoe : MicroVideo
+                Return a copy of the object with the contrast enhanced.
+        '''
+
         enhanced_object = deepcopy(self)
         for i in range(len(enhanced_object.frames)):
             #print(enhanced_object.frames.dtype)
@@ -520,6 +596,15 @@ class MicroVideo:
         return enhanced_object
 
     def eqHist(self):
+        '''
+        Spreads the contrast across complete range of values, leading to an evened, flattened histogram. This can be very effective at enhancing midtones in images with very bright or very dark patches. 
+        
+        Returns
+        -------
+            Contrast_enhanced_microvideo : MicroVideo
+                Return a copy of the object with the contrast enhanced.
+
+        '''
         enhanced_object=deepcopy(self)
         enhanced_object.convert_to_8bit()
         for i in range(len(enhanced_object.frames)):
@@ -530,6 +615,24 @@ class MicroVideo:
         return self.frames.shape[0]
 
     def Normalise_video(self, normtype='mean'):
+        '''
+        Normalises the video frames to have equal contrast, either through  mean or median normalisation
+            
+        Parameters
+        ----------
+            
+            normtype:str
+                options are mean or median - changes the type of normalisation, either the mean of each frame  is equal or the median of each frame is equal. 
+
+
+        Returns
+        -------
+            
+            Normalised_microvideo: MicroVideo
+                Returns  a normalised copy of the original object.
+
+        '''
+
         norm_frames = []
         normtypes = ['median', 'mean']
         if normtype not in normtypes:
@@ -553,17 +656,7 @@ class MicroVideo:
         norm_object.frames =  np.array(norm_frames)
         return norm_object
 
-    def mean_normalisation(self):
-        norm_frames = []
-        
-        vid_mean = np.mean(self.frames)
-        
-        norm_object = deepcopy(self)
-        for frame in self.frames:
-            frame_mean = np.mean(self.frames)
-            norm_frames.append(frame*vid_mean/frame_mean)
-        norm_object.frames =  np.array(norm_frames)
-        return norm_object
+
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 
@@ -572,11 +665,28 @@ class MicroVideo:
         exposure and aquisition date/time. 
     '''
     def show_metadata(self):
+        '''
+        prints the metadata tags, this can be useful for finding the names of metadata features within the metadata.tags file. 
+
+        '''
         for tag in self.metadata_tags:
             print('{} : {}\n'.format(tag, self.metadata_tags[tag]))
 
 
     def get_mag(self):
+        '''
+                
+        Returns Micrograph magnifications (indicated and actual) and saves them as microvideo attributes (microscope.indicated_mag, microscope.actual_mag)
+
+        Returns
+        -------
+
+            indicated_mag:float
+                Indicated magnification (i.e. what the microscope tells you the mag is) for the image
+            actual_mag: float
+                Actual magnification of the image at the camera. 
+        
+        '''
         try:
             self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
         except KeyError:
@@ -598,10 +708,33 @@ class MicroVideo:
             return self.indicated_mag, self.actual_mag
 
     def get_voltage(self):
+        '''
+        Returns voltage and saves is as micrograph attribute
+
+        Returns
+        -------
+
+            Voltage:int
+                Microscope voltage for the image
+        '''        
         self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
         return self.voltage
 
     def get_exposure(self):
+        '''
+        Prints and returns the frame rate, exposure time per frame, imaging time and number of frames.
+
+        Returns
+        -------
+
+            fps:int
+                Frame rate of the video in frames per second
+
+            Imaging_time:int
+                The total imaging time for the video. s
+        '''
+        #print('Frame rate : {}fps'.format(self.fps))
+        #print('Exposure time per frame: {}s '.format(1/self.fps))
         print('Frame rate : {}fps'.format(self.fps))
         print('Exposure time per frame: {}s '.format(1/self.fps))
         print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
@@ -609,6 +742,17 @@ class MicroVideo:
         return self.fps, self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']
 
     def get_date_time(self): 
+        '''
+        Prints and returns the aquisition date and time for the image. 
+
+        Returns
+        -------
+
+            AqDate:str
+                Date on which the micrograph was captured
+            AqTime:str
+                Time at which the micrograph was captured
+        '''
         self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
         self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
         print('Date: {} '.format(self.AqDate))
@@ -626,7 +770,9 @@ class MicroVideo:
 
     '''
     def choose_scalebar_size(self):
-        
+        '''
+        Function for choosing scalebar size, called through make_scalebar(), not a standalone function.
+        '''
        
         
         #make coordinates for the scalebar, currently set to y-12.5%,x-5% of image size from the bottom right corner 
@@ -661,7 +807,10 @@ class MicroVideo:
 
 
     def choose_scalebar_color(self,color):
-    #choose color - this can be given as black, white or grey in the function
+        '''
+        Function for choosing the scalebar color and returns the pixelvalue and text color for the annotation.
+        Called through make_scalebar(), not a standalone function
+        '''
         if color=='black':
             self.pixvalue = 0
             self.textcolor = 'black'
@@ -925,14 +1074,16 @@ class MicroVideo:
         if average:
             av =  np.sum(self.frames, axis=0)
 
-        if not vmax and not average:
-            vmax = np.max(self.frames)
-        if not vmin and not average:
-            vmin = np.min(self.frames)
-        if average and not vmax:
-            vmax = np.max(av)
-        if average and not vmin:
-            vmin =np.min(av)
+        if not vmax:
+            if not average:
+                vmax = np.max(self.frames)
+            else:
+                vmax = np.max(av)
+        if not vmin:
+            if not average:
+                vmax = np.min(self.frames)
+            else:
+                vmax = np.min(av)        
 
 
         plt.subplots(figsize=(20,10))
@@ -960,18 +1111,22 @@ class MicroVideo:
             ax[1].set_title(title2, fontsize=30)
         plt.show()
 
-    def imshow_average(self, vmax=None, vmin=None):
-        av = np.sum(self.frames, axis=0)
-
-        if not vmax:
-            vmax = np.max(av)
-        if not vmin:
-            vmin = np.min(av)
-        plt.subplots(figsize=(30,20))
-        plt.imshow(av, vmax=vmax, vmin=vmin)
-        plt.show()
 
     def Sidebyside(self, Video2):
+        '''
+        Joins a second video (in the form of a numpy array) to the original video, allowing them to be played side by side.
+
+        Parameters
+        ----------
+
+            Video2:np array
+                The second video to add to the original video
+
+        Returns
+        -------
+            sidebyside:MicroVideo
+                Copy of the original video with the second video grafted onto the side.
+        '''
         #Add video as numpy stack (Z,Y,X ) 
         print(Video1.shape)
         z1,y1,x1 = self.frames.shape
@@ -989,25 +1144,71 @@ class MicroVideo:
         sidebyside_object.frames = sidebyside
         return sidebyside    
 
-    def plot_histogram(self, sidebyside=False, average=False):
+    def plot_histogram(self, sidebyside=False, imAverage=True, histAverage=False, vmax=None, vmin=None):
+        '''
+        Plots the histogram of the video (or average of the video), this an be accompanied by either the first frame of the video or the sum of the video frames.
+
+        Parameters
+        ----------
+            sidebyside:bool
+                plots the histogram beside a still image of the video - either first frame or image sum
+            
+            imAverage:bool 
+                if plotting a still, this determines whether the still is the video sum (average) or the first frame, true for video sum.
+
+            histAverage:bool
+                Plot the histogram of the average frame? (True) or the histogram of the whole video (False)
+
+             vmax:int or float
+                The maximum value in the sidebyside plotted image such that any value above vmax is white. 
+            
+            vmin: int or float
+                The minimum value in the sidebyside plotted image such that any value below vmin is black.
+                       
+        Output
+        ------
+
+            Plots the histogram of the video, can have a video still beside the histogram.
+
+
+        '''
+
         if sidebyside:
+            #evalute the vmaxes depending on imAverage
+            if imAverage:
+                av =  np.sum(self.frames, axis=0)
+
+
+            if not vmax:
+                if not imAverage:
+                    vmax = np.max(self.frames)
+                else:
+                    vmax = np.max(av)
+            if not vmin:
+                if not imAverage:
+                    vmax = np.min(self.frames)
+                else:
+                    vmax = np.min(av)        
+
             fig, ax = plt.subplots(1,2, figsize=(30,15))
             ax[1].tick_params(axis='x', labelsize=25)
             ax[1].tick_params(axis='y', labelsize=25)
-            if average:
-                av =  np.sum(self.frames, axis=0) 
-                ax[0].imshow(av)
-                
-                ax[1].hist(av.ravel(), 100)
-           
+            
+            if imAverage:
+                ax[0].imshow(av, vmax=vmax,vmin=vmin) 
             else:
-                ax[0].imshow(self.frames[0])
+                ax[0].imshow(self.frames[0],vmax=vmax,vmin=vmin)
+            if histAverage:
+                ax[1].hist(av.ravel,100)
+            else:
                 if self.frames.dtype == 'unit8':
                     ax[1].hist(self.frames.ravel(), 256, [0,256])
                 else:
                     ax[1].hist(self.frames.ravel(), 100)
             ax[1].set_xlabel('Pixel Values', fontsize=30)
             ax[1].set_ylabel('Frequency',fontsize=30)
+
+
         else:
             fig,ax = plt.subplots(1,1, figsize=(5,5))
             #ax.tick_params(axis='x', labelsize=25)
@@ -1037,6 +1238,7 @@ class MicroVideo:
             
             reduce size: int
                 Factor to reduce size when plotting the video, this is important to add for large videos to reduce the time to plot the video. 
+
 
 
         '''
@@ -1075,7 +1277,24 @@ class MicroVideo:
     SECTION: VIDEO SPECIFIC METHODS
 
     '''
-    def Average_frames(self, groupsize):
+    def Average_frames(self, groupsize, keep_remainder=True):
+        '''
+        Sums frames in groups, reducing the number of frames and the time resolution but increases contrast.
+        
+        Parameters
+        ----------
+            Groupsize:int
+                Number of frames per group to average. Best as a multiple of the number of frames, else the final group will be the remainder (ie a 25 frame video split into groups of 10 will have 3 output frames: 1-10,11-20, 21-25 ). 
+            
+            keep_remainder: bool
+                Set to false to ignore the remainder when averaging (eg a 25 frame video split into sets of 10 leads to 2 frames, with the final 5 frames of the original being abandonned.)
+
+        Returns
+        -------
+            SummedMicroVideo: Microvideo
+                Copy of the original video object with frames averaged in groups of {groupsize}
+        '''
+
         newframes = []
         for x in range(0, len(self.frames), groupsize):
             if x+groupsize>len(self.frames):
@@ -1085,11 +1304,25 @@ class MicroVideo:
                 frame = np.sum(self.frames[x:x+groupsize],axis=0)    
             newframes.append(frame)
         averaged_object=deepcopy(self)    
+        if len(self.frames)%groupsize!=0 and not keep_remainder:
+            newframes=newframes[:-1]
         averaged_object.frames=np.array(newframes)
         return averaged_object
 
 
     def Running_average(self, groupsize):
+        '''
+        Sums frames in group of {groupsize} in a running or rolling average fashion - in this case these groups overlap with only a single frame offset, meaning the resulting video has (n - groupsize) frames. 
+
+        Parameters
+        ----------
+            Groupsize:int
+                Number of frames per group to average. Best as a multiple of the number of frames, else the final group will be the remainder (ie a 25 frame video split into groups of 10 will have 3 output frames: 1-10,11-20, 21-25 ). 
+        Returns
+        -------
+            RunningAveragedMicrovideo:Microvideo
+                Copy of the original video object with frames averaged into groups of {groupsize} with a 1 frame offset between frames
+        '''
         averaged_video = []
         for i in range(0, len(self.frames)-groupsize):
             frame_group = self.frames[i:i+groupsize]
@@ -1111,6 +1344,10 @@ class MicroVideo:
     '''        
 
     def motioncorrect_vid(self):
+        '''
+        Not currently for public use. Thiis are based on using motioncor2 to motion-correct videos, this does not work very well and is currently written specifically for my computer system (based on pathway to exectuatble).
+        '''
+
         original_cwd = os.getcwd()
         tifname = 'OutIntermediateTiff.tif'
         outname= '.'.join(self.filename.split('.')[:-1])+'Motion_corrected.mrc'
@@ -1136,6 +1373,10 @@ class MicroVideo:
         return MC_vid
 
     def motioncor_frames(self, frames_dict):
+        '''
+        Not currently for public use. Thiis are based on using motioncor2 to motion-correct videos, this does not work very well and is currently written specifically for my computer system (based on pathway to exectuatble).
+        '''
+
         for vid in frames_dict:
             frames = frames_dict[vid]
             outfile = '_'.join(frames[0].split('-')[:-1])+'.mrc'
@@ -1148,6 +1389,10 @@ class MicroVideo:
             self.open_mrc(outfile_aligned)  
 
     def motioncorrect_video(self, file):
+        '''
+        Not currently for public use. Thiis are based on using motioncor2 to motion-correct videos, this does not work very well and is currently written specifically for my computer system (based on pathway to exectuatble).
+        '''
+    
         outfile = '_'.join(file.split('.')[:-1])+'.mrc'
         outfile_aligned = '_'.join(file.split('.')[:-1])+'_aligned.mrc'
         pixelsize = nci.dm.fileDM(file).scale[2]
@@ -1158,72 +1403,7 @@ class MicroVideo:
         os.remove(outfile)
         self.open_mrc(outfile_aligned)            
 
-     
-
-
-    '''-----------------------------------------------------------------------------
-    SECTION: DEPRECIATED FUNCTIONS
-
-
-    '''
-
-
-
-    # this is depreciated as functions within it have become standalone methods. 
-    def image_conversion(self):
-        #apply median filter and gaussian blur
-        
-        #print(self.image)
-        print(self.image.dtype)
-        self.image = self.image.astype('float32')
-        if self.med==True:
-            try:
-                img_median = cv.medianBlur(self.image,self.medkernal)
-            except Exception:
-                print('median filter failed')
-                img_median=self.image
-        if self.gauss==True:
-            img_gauss = cv.GaussianBlur(img_median, (self.gauss_kernal,self.gauss_kernal),0)
-        
-        #Scale image between 0-255 (turn it into an 8bit greyscale image)
-        
-        self.image = ((img_median - img_median.min()) * (1/(img_median.max() - img_median.min()) * 255)).astype('uint8')
-       
-        #these commands can increase contrast, by default the contrast is stretched to limits in previous line though
-        #new_image = cv.convertScaleAbs(img_gauss, alpha=alpha, beta=beta)
-        #new_image = cv.equalizeHist(new_arr)
-
-        if self.xybin>1:
-            self.image = cv.resize(self.image, (int(self.image.shape[0]/self.xybin), int(self.image.shape[1]/self.xybin)), interpolation=cv.INTER_CUBIC) 
-            self.pixelSize= self.pixelSize*self.xybin
-
-    def default_pipeline(self, medianfilter=3, gaussian_filter=0, scalebar=True, texton = True, bin=2):
-        if self.image.shape == 3:
-            self.average_video()
-        #self.image_conversion()
-        self.make_scalebar()
-        
-        
-        self.save_image()
-
-    def save_image(self, **kwargs):#use name='outname' to give a filename   
-        if self.foldername not in os.listdir('.') :
-            os.mkdir(self.foldername)        
-        if kwargs:
-                name = kwargs['name']
-        else:
-                name = '.'.join(self.filename.split('.')[:1])
-        name += '_'+self.text+'scale.jpg'
-        if self.foldername!='':
-                name = self.foldername.strip('/n') + '/' + name
-        #if self.foldername=='':
-        #    newname = self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
-        #else:
-        #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
-        cv.imwrite(name,self.image)
-        #self.pil_image.save(name, quality=self.quality)
-        print(name, 'Done!')
-
+    
 
 
 
