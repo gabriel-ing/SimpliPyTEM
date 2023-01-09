@@ -726,7 +726,7 @@ class Micrograph:
 
     def weiner_filter(self, kernal=5):
         '''
-        Returns a Weiner filtered copy of the micrograph object, kernal size defined in the call (default is 3)
+        Returns a Weiner filtered copy of the micrograph object, kernal size defined in the call (default is 5)
 
             Parameters
             ----------
@@ -771,7 +771,7 @@ class Micrograph:
             Parameters
             ----------
                 n:int
-                    The n x n kernal for median filter is defined here, must be an odd integer
+                    The n x n kernal for median filter is defined here, *must be an odd integer*
 
             Returns
             -------
