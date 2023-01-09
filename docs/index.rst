@@ -22,6 +22,8 @@ This project aims to make use of the rapid automation of image analysis methods 
 
    Micrograph_class
 
+   MicroVideo 
+
 Installation
 ------------
 
