@@ -1,3 +1,4 @@
+
 from fpdf import FPDF
 import os
 import itertools
@@ -206,7 +207,9 @@ def pdf_generator(images, title, notes, max_num=9):
 
 	print('PDF generated!')
 
-images = [x for x in os.listdir('.') if x[-3:]=='jpg']	    
-pdf_generator(images, 'New_attempt', 'Hello world')
+if __name__=='__main__':
+	images = [x for x in os.listdir('.') if x[-3:]=='jpg']	    
+
+	pdf_generator(images, 'New_attempt', 'Hello world')
 
 
