@@ -3,6 +3,7 @@ import ncempy.io as nci
 import os
 import cv2 as cv
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 from PIL import Image, ImageOps, ImageFont, ImageDraw, ImageFilter
 import numpy as np 
 import time
@@ -877,7 +878,14 @@ class MicroVideo:
                 draw = ImageDraw.Draw(pil_image)        
                 
                 fontsize=int(vidSB.scalebar_x/(25))
-                font = ImageFont.truetype("/home/bat_workstation/helveticaneue.ttf", fontsize)
+                try:
+                    file = font_manager.findfont('Helvetica Neue')
+                    font = ImageFont.truetype(file, fontsize)
+                except:
+                    font_search = font_manager.FontProperties(family='sans-serif', weight='normal')
+                    file = font_manager.findfont(font_search)
+                    font = ImageFont.truetype(file, fontsize)
+
                 draw.text(textposition, vidSB.text, anchor ='mb', fill=vidSB.textcolor, font=font, stroke_width=1)
                 vidSB.frames[i] = np.array(pil_image)    
         return vidSB
@@ -1082,9 +1090,9 @@ class MicroVideo:
                 vmax = np.max(av)
         if not vmin:
             if not average:
-                vmax = np.min(self.frames)
+                vmin = np.min(self.frames)
             else:
-                vmax = np.min(av)        
+                vmin = np.min(av)        
 
 
         plt.subplots(figsize=(20,10))
@@ -1187,9 +1195,9 @@ class MicroVideo:
                     vmax = np.max(av)
             if not vmin:
                 if not imAverage:
-                    vmax = np.min(self.frames)
+                    vmin = np.min(self.frames)
                 else:
-                    vmax = np.min(av)        
+                    vmin = np.min(av)        
 
             fig, ax = plt.subplots(1,2, figsize=(30,15))
             ax[1].tick_params(axis='x', labelsize=25)
@@ -1200,7 +1208,7 @@ class MicroVideo:
             else:
                 ax[0].imshow(self.frames[0],vmax=vmax,vmin=vmin)
             if histAverage:
-                ax[1].hist(av.ravel,100)
+                ax[1].hist(av.ravel(),100)
             else:
                 if self.frames.dtype == 'unit8':
                     ax[1].hist(self.frames.ravel(), 256, [0,256])

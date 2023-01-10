@@ -3,6 +3,7 @@ import ncempy.io as nci
 import os
 import cv2 as cv
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 from PIL import Image, ImageOps, ImageFont, ImageDraw, ImageFilter
 import numpy as np 
 import time
@@ -603,7 +604,13 @@ class Micrograph:
             draw = ImageDraw.Draw(pil_image)        
             
             fontsize=int(scalebar_x/(25))
-            font = ImageFont.truetype("/home/bat_workstation/helveticaneue.ttf", fontsize)
+            try:
+                file = font_manager.findfont('Helvetica Neue')
+                font = ImageFont.truetype(file, fontsize)
+            except:
+                font_search = font_manager.FontProperties(family='sans-serif', weight='normal')
+                file = font_manager.findfont(font_search)
+                font = ImageFont.truetype(file, fontsize)
             draw.text(textposition, micrograph_SB.scalebar_size, anchor ='mb', fill=textcolor, font=font, stroke_width=1)
             micrograph_SB.image = np.array(pil_image)    
 
