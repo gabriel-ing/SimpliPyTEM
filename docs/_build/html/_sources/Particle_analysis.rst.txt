@@ -15,7 +15,7 @@ The basic method is:
 This can be done as follows::
       
       #import module 
-      from simpliPyTEM.thresholding import * 
+      from simpliPyTEM.Particle_analysis import * 
 
       #Threshold the image using pixel value 100 (for example)
       thresh = Threshold(image, 100)

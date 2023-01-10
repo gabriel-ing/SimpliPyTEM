@@ -25,7 +25,7 @@ Functions to generate pdf and html files containing images and videos are also i
    MicroVideo_class
    PDF_generator
    html_writer
-   Thresholding
+   Particle_analysis
 Installation
 ------------
 

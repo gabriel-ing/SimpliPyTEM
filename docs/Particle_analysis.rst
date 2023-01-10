@@ -1,4 +1,4 @@
-Thresholding module
+Particle analysis module
 ===================
 
 This is a module for some basic analysis of particle size and shape by thresholding the particle and extracting data, this works for videos and for images. There is a tutorial for using this module in the tutorials folder on the github (thresholding)
@@ -15,7 +15,7 @@ The basic method is:
 This can be done as follows::
       
       #import module 
-      from simpliPyTEM.thresholding import * 
+      from simpliPyTEM.Particle_analysis import * 
 
       #Threshold the image using pixel value 100 (for example)
       thresh = Threshold(image, 100)
@@ -33,7 +33,7 @@ This can be done as follows::
      
 Documentation
 -------------
-.. automodule:: Thresholding
+.. automodule:: Particle_analysis
    :members:
    :undoc-members:
    :show-inheritance:

@@ -48,7 +48,7 @@
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_writer.html">html_writer module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Thresholding.html">Thresholding module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
 </ul>
 
         </div>
@@ -345,7 +345,7 @@ Optional, if included image will be converted to 8 bit.</p>
 <blockquote>
 <div><blockquote>
 <div><dl class="simple">
-<dt>n:int</dt><dd><p>The n x n kernal for median filter is defined here, must be an odd integer</p>
+<dt>n:int</dt><dd><p>The n x n kernal for median filter is defined here, <em>must be an odd integer</em></p>
 </dd>
 </dl>
 </div></blockquote>
@@ -605,7 +605,7 @@ To correct for this any pixel which has a higher value than the mean value + (20
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.weiner_filter">
 <span class="sig-name descname"><span class="pre">weiner_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.weiner_filter" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a Weiner filtered copy of the micrograph object, kernal size defined in the call (default is 3)</p>
+<dd><p>Returns a Weiner filtered copy of the micrograph object, kernal size defined in the call (default is 5)</p>
 <blockquote>
 <div><blockquote>
 <div><dl class="simple">

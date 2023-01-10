@@ -17,7 +17,8 @@
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="html_writer module" href="html_writer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,12 +37,16 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="html_writer.html">html_writer module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Particle analysis module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Particle_analysis">Documentation</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -60,7 +65,7 @@
       <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">Particle analysis module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/Thresholding.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Particle_analysis.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -84,7 +89,7 @@ While this module is relatively basic, it can be very easily and effectively use
 </dl>
 <p>This can be done as follows:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#import module</span>
-<span class="kn">from</span> <span class="nn">simpliPyTEM.thresholding</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">simpliPyTEM.Particle_analysis</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="c1">#Threshold the image using pixel value 100 (for example)</span>
 <span class="n">thresh</span> <span class="o">=</span> <span class="n">Threshold</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
@@ -315,7 +320,9 @@ Number of measurements  - the number of measurements across the particle to give
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="html_writer.html" class="btn btn-neutral float-left" title="html_writer module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 
