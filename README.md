@@ -6,30 +6,3 @@ The image data within these classes are kept in numpy arrays, which is the most 
 
 On top of the simplified python functions, I have also implemented an app to automate the image analysis - this allows all the files in a directory to be processed (eg. filtered, contrast enhanced, add scalebar, save as jpg) to make looking at, presenting and downloaded images much faster and the filesizes much smaller. This is also combined with outputting the images onto a pdf document or an html file which then allows for viewing images and videos as a webpage. This type of automation is designed to make viewing the results of an experiment a rapid and straightforward process 
 
-### Dependancies :
-
-numpy (*pip install numpy*) - array handling 
-
-opencv (*pip install opencv-python*) - image handling and filtering 
-
-ncempy (*pip install ncempy*) - .dm3 parser 
-
-matplotlib (*pip install matplotlib*) - Not needed unless you want to plot the images while running, will signficantly increase running time. (uncomment import and lines of code)
-
-os (*pip install os_sys*) - handling operating system functions (create directory to save files in, list files in the directory etc) should be installed by default
-
-pillow (pip install Pillow) - adding text, image handling
-
-argsparse - adding arguments, should be installed by default
-
-mrcfile - parsing mrc files 
-
-copy - copying objects effectively 
-
-moviepy - saving movie files 
-
-airium - html file writing 
-
-(skimage, imutils - not currently implemented here but for thresholding 
-
-
