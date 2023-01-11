@@ -88,7 +88,7 @@ def get_files( imagedir, videodir=None, image_pattern='', video_pattern=''):
     #os.chdir(directory) 
     image_files = [imagedir+'/'+x for x in os.listdir(imagedir) if x[-3:]=='jpg' or x[-3:]=='tif' or x[-3:]=='png' and image_pattern in x]
     #print(image_files)
-    if videodir:
+    if videodir & videodir in os.listdir('.'):
         video_files = [videodir+'/'+x for x in os.listdir(videodir) if x[-3:]=='mp4' and video_pattern in x]
     #print(video_files)
     #os.chdir(current_dir)

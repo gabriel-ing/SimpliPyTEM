@@ -12,6 +12,7 @@ import mrcfile
 import subprocess as sb
 from copy import deepcopy
 from scipy.signal import wiener
+from SimpliPyTEM.MotionCorExe import MOTION_COR_EXECUTABLE 
 import tifffile
 import itertools
 plt.gray()
@@ -144,7 +145,7 @@ class Micrograph:
 
 
         
-    def write_image(self, name=None, ftype='jpg', **kwargs):
+    def write_image(self, name=None, ftype='jpg',outdir=''):
         '''
         Saves the image in a .jpg or .tif file for display or use with other programs. 
 
@@ -164,17 +165,21 @@ class Micrograph:
         '''
 
 
-        if 'outdir' in kwargs:
-            outdir = str(kwargs['outdir'])
+        if 'outdir':
+
             if '/' in outdir:
                 if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
                     os.mkdir(outdir)
             elif outdir not in os.listdir('.'):
+                print(outdir)
+                print(os.listdir('.'))
                 os.mkdir(outdir)
-            if name.split('/')>1:
+
+            if len(name.split('/'))>1:
                 name=name.split('/')[:-1]+outdir+'/'+name
             else:
-                name =outdir+name    
+                name =outdir+'/'+name  
+ 
         print('Start name :', name)
         if name:
                 print('if name : ',name)
@@ -252,17 +257,43 @@ class Micrograph:
 
 
     def bin_image(self, value=2):
+        '''
+        This bins (reduces size) of the image on the x and y dimensions by the selected value (e.g. a 4000x4000 pixels image goes to 2000x2000 pixels with a value of 2)
 
+        Parameters
+        ----------
+            value:int
+                The scale by which to reduce the image size on each dimension. This is normally kept to powers of 2 but any number (including floating point numbers) should work.
+        Returns
+        -------
+            Binned_image:Micrograph
+                Copy of micrograph object with reduced image size
+
+        '''
             binned_image = deepcopy(self)
             binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
             binned_image.pixelSize= binned_image.pixelSize*value
             binned_image.reset_xy()
             return binned_image
 
-    #def add_frames(self, frames):
-    #    for frame in frames:
-    #        next_frame = nci.dm.dmReader(frame)
-    #        self.image = self.image + next_frame['data']
+    def add_frames(self, frames):
+        '''
+        This is used to create a sum of a series of frames where each frame is a saved in a separate .dm file. 
+
+        Parameters
+        ----------
+            frames:list
+                A series of frames (name or path+name) to add to the original frame
+
+        Output
+        ------
+            Adds the frames to the existing frame, self.image is now an average of all the frames. 
+
+        '''
+
+        for frame in frames:
+            next_frame = nci.dm.dmReader(frame)
+            self.image = self.image + next_frame['data']
 
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
     
@@ -960,8 +991,16 @@ class Micrograph:
             outfile_aligned = '_'.join(frames[0].split('.')[:-1])+'_aligned.mrc'
             pixelsize = nci.dm.fileDM(frames[0]).scale[2]
             sb.call('dm2mrc *{}-* {} '.format(vid, outfile), shell=True, cwd=os.getcwd())
-            motion_cor_command = '~/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021 -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(outfile, outfile_aligned, pixelsize)
-            sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
+            MCor_path = os.environ.get('MOTIONCOR2_PATH')
+            if path:
+                motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(Mcor_path,  outfile, outfile_aligned, pixelsize)
+                sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
+
+            else:
+                print('Sorry, the motioncor2 exectuable is not defined and so cannot be run. Please give the executable using "export MOTIONCOR2_PATH=\'PATH/TO/EXECUTABLE\'" for more info, please see documentation  ')
+                return 1
+            #motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(MOTION_COR_EXECUTABLE,  outfile, outfile_aligned, pixelsize)
+            #sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
             os.remove(outfile)
             self.open_mrc(outfile_aligned)  
 
@@ -985,8 +1024,14 @@ class Micrograph:
         pixelsize = nci.dm.fileDM(file).scale[2]
         #print(pixelsize)
         sb.call('dm2mrc {} {} '.format(file, outfile), shell=True, cwd=os.getcwd())
-        motion_cor_command = '~/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021 -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(outfile, outfile_aligned, pixelsize)
-        sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
+        MCor_path = os.environ.get('MOTIONCOR2_PATH')
+        if path:
+            motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(Mcor_path,  outfile, outfile_aligned, pixelsize)
+            sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
+
+        else:
+            print('Sorry, the motioncor2 exectuable is not defined and so cannot be run. Please give the executable using "export MOTIONCOR2_PATH=\'PATH/TO/EXECUTABLE\'" (or on windows: "setx MY_EXECUTABLE_PATH \'path/to/executable\'") for more info, please see documentation  ')
+            return 1
         os.remove(outfile)
         self.open_mrc(outfile_aligned)            
 
@@ -1123,8 +1168,10 @@ def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilte
         Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
     if 'outdir' in kwargs:
+        print(kwargs['outdir'])
         Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])
     else:
+        print('No outdir')
         Micrograph_object.write_image(name=name) 
     #Micrograph_object.save_image(outname=name)
 

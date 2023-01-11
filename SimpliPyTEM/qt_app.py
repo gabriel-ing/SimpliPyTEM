@@ -14,7 +14,11 @@ class MainApplication(QWidget):
         self.setWindowTitle('Micrograph Previews App')
         
         title = QLabel('Program for generating small filesize previews of micrographs',self)
-        app.setStyleSheet("QLabel, QCheckBox{font-size: 16pt;}")
+        title_font = title.font()
+        title_font.setBold(True)
+        title_font.setPointSize(20)
+
+        #app.setStyleSheet("QLabel, QCheckBox{font-size: 16pt;}")
         #font = QFont("Helvetica [Cronyx]", 12)
         #title.setFont(font)
         folderlabel = QLabel('Choose whether to process a folder,\n a file or liveprocessing a folder:')
@@ -99,6 +103,18 @@ class MainApplication(QWidget):
         self.video_group.addButton(self.video_option3)
         self.video_group.addButton(self.video_option4)
 
+        self.doc_label=QLabel('Following generation of images/videos, use this section to create \n an html or pdf file to display the resulting images:')
+        self.title_box_label = QLabel('Give a title for the experiment:')
+        self.title_box = QLineEdit()
+        self.notes_box_label=  QLabel('Add some notes here:')
+        self.notes_box = QTextEdit()
+
+        self.html_button = QPushButton('Make HTML!')
+        self.html_button.clicked.connect(self.html_command)
+        self.pdf_button  = QPushButton('Made PDF!')
+        self.pdf_button.clicked.connect(self.pdf_command)
+
+
         #Layoutss
         layout.addWidget(title,0,0, 1,2)
         layout.addWidget(folderlabel,1,0,1,1)
@@ -122,7 +138,15 @@ class MainApplication(QWidget):
         layout.addWidget(self.video_option3,10,0,1,1)
         layout.addWidget(self.video_option4,10,1,1,1)
         layout.addWidget(Run_button, 11,0,1,2)
-        
+        layout.addWidget(self.doc_label, 12, 0,1,2)
+        layout.addWidget(self.title_box_label, 13, 0,1,1)
+        layout.addWidget(self.title_box,14,0,1,2)
+        layout.addWidget(self.notes_box_label, 15,0,1,1)
+        layout.addWidget(self.notes_box, 16,0,1,3)
+
+        layout.addWidget(self.html_button, 20,0,1,1)
+        layout.addWidget(self.pdf_button, 20,1,1,1)
+
         self.show()
 
     def text_changed(self, s): # i is an int
@@ -150,6 +174,29 @@ class MainApplication(QWidget):
         else:
             self.folderpath = QFileDialog.getOpenFileName(self, 'Select a File')[0]
 
+    def html_command(self):
+        outdir = self.output_folder_box.text()
+        cwd = os.getcwd()
+        os.chdir(outdir)
+        title = title_box.text()
+        notes = notes_box.text()
+        image_files, video_files = get_files('Images', 'Videos')
+        write_html(image_files, video_files, title, notes)
+        write_css()
+        os.chdir(cwd)
+
+    def pdf_command(self):
+        outdir = self.output_folder_box.text()
+        cwd = os.getcwd()
+        os.chdir(outdir)
+        title = title_box.text()
+        notes = notes_box.text()
+
+        images = [x for x in os.listdir('Images')]
+        pdf_generator(images, title, notes)
+
+        os.chdir(cwd)
+
     def RunCommand(self):
         #print('Gauss=', self.Gauss_state)
         #print('Med=',self.Med_state)
@@ -158,11 +205,12 @@ class MainApplication(QWidget):
         #print('Folder:' ,self.folder_option)
         
         
-        outdir = self. output_folder_box.text()
+        outdir = self.output_folder_box.text()
         if outdir=='':
-            outdir='Images'
+            outdir='.'
         elif '\n' in outdir:
             outdir.replace('\n','')
+
 
         if self.Med_state==False:
             self.med_filter_value=0
@@ -176,11 +224,13 @@ class MainApplication(QWidget):
             return 1
 
         if self.live=='Folder':
-            print('calling?')
+            print('Running folder?')
             process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
-        else:
-            print(self.live)
-
+        elif self.live=='File':
+            print(self.live)    
+            process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+        elif self.live =='Live Processing':
+            live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
 
 
 
