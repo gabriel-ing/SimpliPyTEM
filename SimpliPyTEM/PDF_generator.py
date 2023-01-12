@@ -98,25 +98,10 @@ def pdf_generator(images, title, notes, directory='',max_num=9):
         
         image_coords, cap_coords, size = return_coords(num)
         print(image_coords, cap_coords, size)
-        for i in range(len(group)):
 
+        for i in range(len(group)):
                     
             j =i-(pagenum*num)
-
-                #pdf.set_xy(coordinates[i])
-
-        image_coords, cap_coords, size = return_coords(num)
-
-        for i in range(len(group)):
-                    
-            j =i-(pagenum*9)
-            #print(i, j, pagenum)
-                #pdf.set_xy(coordinates[i])
-                #print(image)
-            #print('i', i)
-            #print('j',j)
-
-            #print('len:',len(group))
 
             pdf.image(group[i],image_coords[j][0], image_coords[j][1], size )
                    
@@ -252,8 +237,8 @@ def return_coords(max_num):
         capx = [123,431]
         capy = [442,768]
         size = 280
-        capy = [422,754]
-        size = 284
+        #capy = [422,754]
+#        size = 284
 
     elif max_num==6:
         imx = [68,358]

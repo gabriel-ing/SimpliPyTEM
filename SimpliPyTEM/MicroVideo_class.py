@@ -67,7 +67,7 @@ class MicroVideo:
             #image = np.average(images, axis=0)
             dm='_Video_'
         else:
-            print('Error, {} is not a video, please use Micrograph() class')
+            print('Error, {} is not a video, consider using Micrograph() class unless you are running open_series'.format(file))
         dmfile = nci.dm.fileDM(file)
         self.metadata_tags =dmfile.allTags
         if '.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Frame Exposure' in self.metadata_tags:
@@ -86,6 +86,8 @@ class MicroVideo:
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         #This line removes any giant outliers (bright pixels) from the images
         #print(self.frames[self.frames>self.frames.mean()+self.frames.std()*50])
+        
+        self.frames = np.flip(self.frames,axis=0)
         if pixelcorrection:
             self.frames[self.frames>self.frames.mean()+self.frames.std()*8]=0
         
@@ -101,8 +103,10 @@ class MicroVideo:
         mrc= mrcfile.open(file)
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
+
         self.pixelSize = float(str(voxel_size).split(',')[0].strip('('))
         self.frames = mrc.data
+        self.frames = np.flip(self.frames, axis=1)
         self.x = self.frames.shape[1]
         self.y = self.frames.shape[0]
         self.pixelUnit='nm'
@@ -163,11 +167,16 @@ class MicroVideo:
         self.reset_xy()
 
        
-    def add_frames(self, frames):
-        # Not functioning but here to act as a reminder to make a function to open image series.
-        for frame in frames:
+    def open_series(self, frames):
+        '''
+        Hasn't exactly been tested but should work! 
+        '''
+        self.open_dm(frame[0])
+        new_frames = []
+        for frame in frames[1:]:
             next_frame = nci.dm.dmReader(frame)
-            self.image = self.image + next_frame['data']
+            new_frames.append(next_frame)
+        self.frames = np.array(new_frames)
 
     def reset_xy(self):
         '''
@@ -282,7 +291,7 @@ class MicroVideo:
         clip.to_videofile(name, fps)
     
 
-    def write_video(self, name=None, outdir=None):
+    def write_video(self, name=None, outdir=None, **kwargs):
         '''
         This allows saving as an mp4 or a raw avi file (imageJ compatible)
 
@@ -1354,7 +1363,33 @@ class MicroVideo:
 
     def motioncorrect_vid(self):
         '''
-        Not currently for public use. Thiis are based on using motioncor2 to motion-correct videos, this does not work very well and is currently written specifically for my computer system (based on pathway to exectuatble).
+        This is tricky to use but can be incredibly effective, motioncorrecting LTEM videos can dramatically improve the signal to noise ratio of outputted averages. 
+        Here I use the publically available software motioncor2, which can be downloaded from here: https://emcore.ucsf.edu/ucsf-software which can correct for motion within the video. 
+
+        In order to use this function, you need to download this software, and then set a path to the executable, note that several versions will be downloaded so ensure you use the correct one for your CUDA setup, I believe CUDA is required for this. 
+
+        to set the executable, open terminal and type: 
+            ```export MOTIONCOR2_PATH='PATH/TO/EXECUTABLE'``` 
+
+        to give an example of what this looks like, this is how it looks on my computer: 
+
+            ```export MOTIONCOR2_PATH='/home/Gabriel/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021'```
+
+
+
+        To avoid needing to do this for every new terminal opened, add this line to your .bashrc file in your home directory (you can use the terminal text editor nano for this: ```nano ~/.bashrc```)
+
+        After doing this, the function should hopefully work, just use: 
+            
+            video=MicroVideo()
+            video.open_dm('myfile.dm4')
+            motioncorrected_vid = video.motioncorrect_vid()
+
+        Returns
+        -------
+
+            MotionCorrected_video_object: 
+
         '''
 
         original_cwd = os.getcwd()
@@ -1369,15 +1404,25 @@ class MicroVideo:
             directory=os.getcwd() 
         os.chdir(directory)   
         print('cwd = ', os.getcwd())
-        command = '/home/bat_workstation/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda112-08-11-2021 -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(tifname, outname, self.pixelSize*10)
-        print(command)
-        print('dir = ',directory)
-        self.save_tif_stack(name=tifname)
+        MCor_path = os.environ.get('MOTIONCOR2_PATH')
+        if MCor_path:
 
-        sb.call(command, shell=True, cwd=os.getcwd())
+            command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixelSize*10)
+            print(command)
+            print('dir = ',directory)
+            self.save_tif_stack(name=tifname)
+
+            sb.call(command, shell=True, cwd=os.getcwd())
+        else:
+            print('Sorry, the motioncor2 exectuable is not defined and so cannot be run. Please give the executable using "export MOTIONCOR2_PATH=\'PATH/TO/EXECUTABLE\'" (or on windows: "setx MY_EXECUTABLE_PATH \'path/to/executable\'") for more info, please see documentation  ')
+            return 1
         MC_vid = deepcopy(self)
         inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
         MC_vid.open_mrc(inname)
+        MC_vid.metadata_tags = self.metadata_tags
+        MC_vid.pixelSize = self.pixelSize
+        MC_vid.pixelUnit=self.pixelUnit
+        MC_vid.fps = self.fps
         os.chdir(original_cwd)
         return MC_vid
 

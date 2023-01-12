@@ -12,7 +12,7 @@ import mrcfile
 import subprocess as sb
 from copy import deepcopy
 from scipy.signal import wiener
-from SimpliPyTEM.MotionCorExe import MOTION_COR_EXECUTABLE 
+
 import tifffile
 import itertools
 plt.gray()
@@ -93,6 +93,7 @@ class Micrograph:
         dmfile = nci.dm.fileDM(file)
         self.metadata_tags =dmfile.allTags        
         #extract x and y shapes
+        self.image = np.flip(np.flip, axis=0)
         x = image.shape[1]
         y = image.shape[0]
         pixelSize=dm_input['pixelSize'][-1]
@@ -104,6 +105,8 @@ class Micrograph:
         self.y = y
         self.pixelSize= float(pixelSize)
         self.pixelUnit = pixelUnit
+
+
         
         #this line removes dead pixels which are super bright (any pixel which is more than mean+25*stddeviation
         if pixel_correction:
@@ -134,7 +137,7 @@ class Micrograph:
         self.pixelUnit='nm'
         self.filename = file
         if pixel_correction:
-            self.image[self.image>self.image.mean()+self.image.std()*20]=image.mean()
+            self.image[self.image>self.image.mean()+self.image.std()*20]=self.image.mean()
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
         self.shape=self.image.shape
@@ -1023,10 +1026,11 @@ class Micrograph:
         outfile_aligned = '_'.join(file.split('.')[:-1])+'_aligned.mrc'
         pixelsize = nci.dm.fileDM(file).scale[2]
         #print(pixelsize)
-        sb.call('dm2mrc {} {} '.format(file, outfile), shell=True, cwd=os.getcwd())
+        #sb.call('dm2mrc {} {} '.format(file, outfile), shell=True, cwd=os.getcwd())
+        self.save_tif_stack()
         MCor_path = os.environ.get('MOTIONCOR2_PATH')
-        if path:
-            motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(Mcor_path,  outfile, outfile_aligned, pixelsize)
+        if MCor_path:
+            motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(MCor_path,  outfile, outfile_aligned, pixelsize)
             sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
 
         else:

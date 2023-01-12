@@ -90,6 +90,8 @@ def get_files( imagedir, videodir=None, image_pattern='', video_pattern=''):
     #print(image_files)
     if videodir and videodir in os.listdir('.'):
         video_files = [videodir+'/'+x for x in os.listdir(videodir) if x[-3:]=='mp4' and video_pattern in x]
+    else:
+        video_files = []
     #print(video_files)
     #os.chdir(current_dir)
     return image_files, video_files
