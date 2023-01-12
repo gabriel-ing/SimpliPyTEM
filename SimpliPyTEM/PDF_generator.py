@@ -51,8 +51,8 @@ def pdf_generator(images, title, notes, directory='',max_num=9):
     pdf.set_xy(20, 50 )
 
     pdf.multi_cell(0, 12,notes)
-
-    images = [directory+'/'+image for image in images]
+    if directory:
+        images = [directory+'/'+image for image in images]
     i = 0
     grouped_images = group_images(images)
     group_number = 0
@@ -68,8 +68,8 @@ def pdf_generator(images, title, notes, directory='',max_num=9):
 
         #pdf.set_xy(10, 100)
         #pdf.set_font('Arial', 'B', 14)
-        sample_name = 'Sample name: {}'.format(' '.join(prefix.split('_')))
-        pdf.cell(540, 10, sample_name, align='C')
+        #xsample_name = 'Sample name: {}'.format(' '.join(prefix.split('_')))
+        #pdf.cell(540, 10, sample_name, align='C')
         pagenum =0
 
         group_size= len(group)
@@ -275,8 +275,6 @@ def return_coords(max_num):
                 
         imx = [12, 205, 398]
         imy= [146, 361, 576]
-        
-
         capx = [85,280, 473]
         capy = [335, 550, 764]
         size = 180

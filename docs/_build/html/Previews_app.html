@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Previews App &mdash; SimpliPyTEM 0.1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Particle analysis module" href="Particle_analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> SimpliPyTEM
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_writer.html">html_writer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Previews App</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage-section-1-image-generation">Usage - Section 1: Image generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#section-2-document-generation">Section 2: Document Generation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SimpliPyTEM</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Previews App</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Previews_app.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="previews-app">
+<h1>Previews App<a class="headerlink" href="#previews-app" title="Permalink to this headline"></a></h1>
+<p>While using python will allow one to get the most out of the package, for many learning python is intimidating, and time ends up being wasted manually processing images. Here I am introducing a GUI-based pipeline to create high quality JPEGs, with a good size scale bar automatically added, minor filtering (median and gaussian filtering) available, and video (or dose-fractionation) processing options included.</p>
+<p>Combined with this, there are options to create html or pdf documentss containing the images (and videos in the case of html) generated. These documents can be a very useful way to easily evaluate the images/videos taken in an TEM experiment.</p>
+<section id="usage-section-1-image-generation">
+<h2>Usage - Section 1: Image generation<a class="headerlink" href="#usage-section-1-image-generation" title="Permalink to this headline"></a></h2>
+<p>App usage is fairly simple, and is presented in a stepwise fashion here;</p>
+<p>Open terminal and call:</p>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">SimpliPyTEM_app.py`</span></code>  <strong>Need to find a way to make this run from anywhere</strong></p>
+<p>The GUI should appear as follows:</p>
+<a class="reference internal image-reference" href="_images/App_screenshot1.png"><img alt="a screenshot showing the app GUI" src="_images/App_screenshot1.png" style="width: 300px;" /></a>
+<p>This app is split into two main sections, The top section containing the Image/video generator. You can either select a folder, a file or run live processing:</p>
+<blockquote>
+<div><p><strong>Folder</strong> - process each .dm3 or .dm4 file in the folder</p>
+<p><strong>File</strong> - process a single file</p>
+<p><strong>Live processing</strong> - process new .dm3/.dm4 files which appear within the folder.</p>
+</div></blockquote>
+<p>After selecting this option, a folder/file needs to be selected using the ‘Choose Folder’ button, this should open a file dialog where you can navigate to the intended folder/file.</p>
+<p>The options below are the basic processing options available, these are:</p>
+<blockquote>
+<div><p><strong>Median filter</strong> - applies a median filter to reduce salt-and-pepper noise in the output. The number next to it denotes the kernal size of the filter</p>
+<p><strong>Gaussian filter</strong> - applies a gaussian filter to smooth the output. The number next to it denotes the kernal size of the filter</p>
+<p><strong>Bin image</strong> - Reduces the size of the image on the x&amp;y axis</p>
+<p><strong>Scalebar</strong> - Adds a suitably-sized scalebar to the image</p>
+</div></blockquote>
+<p>Below this there is an option to give an output folder name. The images will be saved in a directory called Images, and the videos in a directory called Videos. These can be contained in an extra directory, which is particularly useful for holding  html/css files you may wish generate later.</p>
+<p>Add an output folder name or leave blank, as you wish.</p>
+<p>There are then options on how to handle video, or image stack files (collected as dose-fractionations on Gatan Direct electron detectors). If you do not have video files, you can ignore this. If video files are included in the dataset, there are a few options:</p>
+<blockquote>
+<div><p><strong>Save Average</strong> - Saves a time-average of the frames in the video</p>
+<p><strong>Save Video as MP4</strong> - Save video as mp4 file (good for making an html)</p>
+<p><strong>Save Tif Sequence</strong> - Saves each frame of the video as tif file</p>
+<p><strong>Save MotionCorrected average</strong> - Motioncorrects video using motionCor2 (executable must be set, see motioncorrection page)</p>
+</div></blockquote>
+<p>After the options are selected press the <strong>‘Run!’</strong> button and the files will be processed.</p>
+</section>
+<section id="section-2-document-generation">
+<h2>Section 2: Document Generation<a class="headerlink" href="#section-2-document-generation" title="Permalink to this headline"></a></h2>
+<p>This section handles the generation of html or pdf documents containing your images/videos for easy post-experiment image evaluation and sharing.</p>
+<p>The videos are found based on the folder choices in section 1, but will work even if you haven’t Run! this section. To generate the document do as follows:</p>
+<blockquote>
+<div><p>Choose folder with the raw data  by clicking ‘Choose Folder’
+Choose output folder name within this in the ‘Give’ output folder a name’ box  (leave blank if you are happy with the same folder).</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The key point here is that this folder (or the previous folder if this one is blank) should have a folder called ‘Images’ in.</p></li>
+</ul>
+</div></blockquote>
+<p>Add an experiment title and/or notes about the experiment in the boxes in the document section</p>
+<p>Click <strong>‘Make HTML!’</strong> for an html file (this also generates a .css file to improve the style of this doc)
+Click <strong>‘Make PDF!’</strong> for a pdf file.</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Particle_analysis.html" class="btn btn-neutral float-left" title="Particle analysis module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gabriel Ing.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

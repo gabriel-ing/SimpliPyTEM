@@ -1454,22 +1454,22 @@ def default_video_pipeline(MicroVideo_object, medfilter=0, gaussfilter=3, scaleb
 
 
 
-def group_frames(self, frames):
-    prefixes = []
-    prefix_set=set()
-    frames.sort()
-    tups = []
-    organised_dict= {}
-    for file in frames:
-        file2 = file[:-4]
-        end = file2[-9:]
-        ids = end.split('-')
-        vid_id = ids[0]
-        frame_id = ids[1]
-        tups.append((file, vid_id, frame_id))
-        prefix_set.add(vid_id)
+#def group_frames( frames):
+#    prefixes = []
+ #   prefix_set=set()
+ #   frames.sort()
+ #   tups = []
+ #   organised_dict= {}
+ #   for file in frames:
+#        file2 = file[:-4]
+  #      end = file2[-9:]
+ #       ids = end.split('-')
+  #      vid_id = ids[0]
+  #      frame_id = ids[1]
+ #       tups.append((file, vid_id, frame_id))
+ #       prefix_set.add(vid_id)
         
-    for prefix in prefix_set: 
-        images_per_prefix = [x[0] for x in tups if x[1]==prefix]
-        organised_dict[prefix]=images_per_prefix
-        return organised_dict
+ #   for prefix in prefix_set: 
+ #       images_per_prefix = [x[0] for x in tups if x[1]==prefix]
+ #       organised_dict[prefix]=images_per_prefix
+   #     return organised_dict

@@ -220,6 +220,39 @@ Note: if there is a black region (eg. edge of beam or grid) in the image this ma
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.add_frames">
+<span class="sig-name descname"><span class="pre">add_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.add_frames" title="Permalink to this definition"></a></dt>
+<dd><p>This is used to create a sum of a series of frames where each frame is a saved in a separate .dm file.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>frames:list</dt><dd><p>A series of frames (name or path+name) to add to the original frame</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><p>Adds the frames to the existing frame, self.image is now an average of all the frames.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Micrograph_class.Micrograph.bin_image">
+<span class="sig-name descname"><span class="pre">bin_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.bin_image" title="Permalink to this definition"></a></dt>
+<dd><p>This bins (reduces size) of the image on the x and y dimensions by the selected value (e.g. a 4000x4000 pixels image goes to 2000x2000 pixels with a value of 2)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>value:int</dt><dd><p>The scale by which to reduce the image size on each dimension. This is normally kept to powers of 2 but any number (including floating point numbers) should work.</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>Binned_image:Micrograph</dt><dd><p>Copy of micrograph object with reduced image size</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.choose_scalebar_color">
 <span class="sig-name descname"><span class="pre">choose_scalebar_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.choose_scalebar_color" title="Permalink to this definition"></a></dt>
 <dd><p>Chooses the scalebar color and returns the pixelvalue and text color for the annotation. parameters are most of the outputs from choose_scalebar_size()</p>
@@ -624,7 +657,7 @@ To correct for this any pixel which has a higher value than the mean value + (20
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.write_image">
-<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.write_image" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.write_image" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the image in a .jpg or .tif file for display or use with other programs.</p>
 <blockquote>
 <div><dl class="simple">

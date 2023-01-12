@@ -6,6 +6,12 @@ import os
 from Micrograph_class import *
 from PDF_generator import pdf_generator 
 from html_writer import * 
+#from sys import platform as sys_pf
+#if sys_pf == 'darwin':
+#    import matplotlib
+#    matplotlib.use("Qt5Agg")
+
+
 class MainApplication(tk.Tk):
 	def __init__(self):
 		super().__init__()

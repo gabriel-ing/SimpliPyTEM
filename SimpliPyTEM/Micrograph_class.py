@@ -270,11 +270,11 @@ class Micrograph:
                 Copy of micrograph object with reduced image size
 
         '''
-            binned_image = deepcopy(self)
-            binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
-            binned_image.pixelSize= binned_image.pixelSize*value
-            binned_image.reset_xy()
-            return binned_image
+        binned_image = deepcopy(self)
+        binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
+        binned_image.pixelSize= binned_image.pixelSize*value
+        binned_image.reset_xy()
+        return binned_image
 
     def add_frames(self, frames):
         '''

@@ -18,7 +18,7 @@ Functions to generate pdf and html files containing images and videos are also i
  
 
 .. toctree::
-   :maxdepth: 5
+   :maxdepth: 1
    :caption: Contents:
 
    Micrograph_class
@@ -26,6 +26,8 @@ Functions to generate pdf and html files containing images and videos are also i
    PDF_generator
    html_writer
    Particle_analysis
+   Previews_app
+
 Installation
 ------------
 

@@ -5,6 +5,7 @@ import os
 def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
     print('Processing folder!')
     cwd = os.getcwd()
+
     os.chdir(folder)
 
     dm_files = [x for x in os.listdir('.') if x[-4:-1]=='.dm']
@@ -12,17 +13,17 @@ def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter,
     dm_frames = [x for x in dm_files if x[-9]=='-' and x[-13:-9].isdigit() and x[-8:-4].isdigit()]
     dm_ims = [x for x in dm_files if x not in dm_vids and x not in dm_frames]   
 
-    if output_folder_name not in os.listdir('.'):
+    if output_folder_name not in os.listdir('.') and output_folder_name!='.':
         os.mkdir(output_folder_name)
 
     for file in dm_vids:
         video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
 
     for  file in dm_ims:
-        default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'Images')
-
-    for file in dm_frames:
-        frames_processing(dm_files,output_folder_name+'Images',xybin, medfilter, gaussian_filter, video_status )
+        default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
+    if len(dm_frames)!=0: 
+        print(dm_frames)
+        frames_processing(dm_frames,output_folder_name+'/Images',xybin, medfilter, gaussian_filter, video_status )
 
 
     print('All files in folder complete!')  
@@ -164,7 +165,7 @@ def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_fil
     else: 
         print('Error, the video status is not one of the correct options, dunno how this has happened.' )
 
-def isvideo():
+def isvideo(file):
     if os.path.getsize(file)>230165776:
         print('Large_file, probably video')
         return True
