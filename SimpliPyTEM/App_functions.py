@@ -17,6 +17,7 @@ def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter,
         os.mkdir(output_folder_name)
 
     for file in dm_vids:
+        print('Processing: ', file)
         video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
 
     for  file in dm_ims:
@@ -104,7 +105,7 @@ def process_file(filename, output_folder_name,xybin, medfilter, gaussian_filter,
             print('This isnt coded in yet!')
 
     else:
-        default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
+        default_image_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
 
 def live_process(filename, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
     cwd = os.getcwd()
@@ -156,8 +157,8 @@ def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_fil
     if video_status=='Save Average':
 
         default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
-    else video_status =='Save Video as mp4':
-        default_video_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images') #output folder = output_folder+videos
+    else:
+        default_video_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name) #output folder = output_folder+videos
      
 
 

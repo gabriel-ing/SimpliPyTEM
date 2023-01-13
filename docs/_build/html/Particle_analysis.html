@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Particle analysis module &mdash; SimpliPyTEM 0.1.0 documentation</title>
@@ -14,10 +14,13 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Previews App" href="Previews_app.html" />
     <link rel="prev" title="html_writer module" href="html_writer.html" /> 
 </head>
 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
@@ -44,9 +47,20 @@
 <li class="toctree-l1"><a class="reference internal" href="html_writer.html">html_writer module</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Particle analysis module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Particle_analysis">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Particle_analysis">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Collect_particle_data"><code class="docutils literal notranslate"><span class="pre">Collect_particle_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Find_contours"><code class="docutils literal notranslate"><span class="pre">Find_contours()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Flatten_list"><code class="docutils literal notranslate"><span class="pre">Flatten_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Particle_analysis"><code class="docutils literal notranslate"><span class="pre">Particle_analysis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Particle_analysis_video"><code class="docutils literal notranslate"><span class="pre">Particle_analysis_video()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Sidebyside"><code class="docutils literal notranslate"><span class="pre">Sidebyside()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.Threshold"><code class="docutils literal notranslate"><span class="pre">Threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Particle_analysis.multiMeasure_particle"><code class="docutils literal notranslate"><span class="pre">multiMeasure_particle()</span></code></a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Previews_app.html">Previews App</a></li>
 </ul>
 
         </div>
@@ -74,11 +88,11 @@
            <div itemprop="articleBody">
              
   <section id="particle-analysis-module">
-<h1>Particle analysis module<a class="headerlink" href="#particle-analysis-module" title="Permalink to this headline"></a></h1>
+<h1>Particle analysis module<a class="headerlink" href="#particle-analysis-module" title="Permalink to this heading"></a></h1>
 <p>This is a module for some basic analysis of particle size and shape by thresholding the particle and extracting data, this works for videos and for images. There is a tutorial for using this module in the tutorials folder on the github (thresholding)
 While this module is relatively basic, it can be very easily and effectively used.</p>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
 <dl class="simple">
 <dt>The basic method is:</dt><dd><ol class="arabic simple">
 <li><p>apply threshold to get binary image (Threshold())</p></li>
@@ -107,7 +121,7 @@ While this module is relatively basic, it can be very easily and effectively use
 </div>
 </section>
 <section id="module-Particle_analysis">
-<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-Particle_analysis" title="Permalink to this headline"></a></h2>
+<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-Particle_analysis" title="Permalink to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.Collect_particle_data">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Collect_particle_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contours_im</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multimeasure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Collect_particle_data" title="Permalink to this definition"></a></dt>
@@ -136,6 +150,8 @@ Number of measurements  - the number of measurements across the particle to give
 </dl>
 </dd>
 </dl>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>contours_im:list</dt><dd><p>As generated from find_contours()</p>
@@ -146,12 +162,16 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>particle_data:dict</dt><dd><p>A dictionary containing the data collected (with keys describing what the data is)</p>
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -159,6 +179,8 @@ Number of measurements  - the number of measurements across the particle to give
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Find_contours</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thresh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">complex_coords</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Find_contours" title="Permalink to this definition"></a></dt>
 <dd><p>Finds the contours (or edges) of the particles in the image</p>
 <p>In doing so, this also filters the particles by minimum and maximum size (in number of pixels total area) and removes any particles which are on the edge of the image.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>thresh:numpy array</dt><dd><p>The thresholded image produced by threshold()</p>
@@ -171,6 +193,9 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>contours_im:list </dt><dd><p>This is a list of arrays with coordinates which bound each particle selected in the image. This is used in downstream processing.</p>
@@ -179,27 +204,36 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.Flatten_list">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Flatten_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Flatten_list" title="Permalink to this definition"></a></dt>
 <dd><p>Simple function to make a single list from a list of lists, useful for combining data from different frames</p>
+<section id="id3">
+<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>l: list of list of lists</dt><dd><p>These can be created if from the particle_analysis_video function or if you do particle analysis of multiple frames, the data from these can be combined with this function.</p>
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><p>single list of values</p>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.Particle_analysis">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Particle_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multimeasure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Particle_analysis" title="Permalink to this definition"></a></dt>
 <dd><p>Do the thresholding, contours finding and data collection all in one to collect data from the particles  in an image</p>
+<section id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>image:numpy array </dt><dd><p>The image to analyse</p>
@@ -214,6 +248,9 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>mask:numpy array </dt><dd><p>A binary image showing the particles selected in white.</p>
@@ -222,12 +259,15 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.Particle_analysis_video">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Particle_analysis_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multimeasure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Particle_analysis_video" title="Permalink to this definition"></a></dt>
 <dd><p>Runs the particle analysis for every frame in a video and creates a dictionary with a list of lists (data from each frame) as the value.</p>
+<section id="id7">
+<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>video:numpy array </dt><dd><p>The video to analyse</p>
@@ -242,6 +282,9 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id8">
+<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>mask:numpy array </dt><dd><p>A binary video showing the particles selected in white.</p>
@@ -250,12 +293,15 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.Sidebyside">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Sidebyside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Video1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Video2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Sidebyside" title="Permalink to this definition"></a></dt>
 <dd><p>Stitches two videos together side by side - (good for comparing masks and originals)</p>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Video1:numpy array</dt><dd><p>Lefthand video</p>
@@ -264,18 +310,24 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id10">
+<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>sidebyside: numpy array </dt><dd><p>Single videos where the two videos play side by side</p>
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.Threshold">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">Threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.Threshold" title="Permalink to this definition"></a></dt>
 <dd><p>Threshold the image to a particular value, such that below that value goes to black and above that value goes to white.</p>
+<section id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>image:numpy array</dt><dd><p>The image to be thresholded</p>
@@ -284,18 +336,24 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id12">
+<h3>returns<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>thresh:numpy array</dt><dd><p>The thresholded image</p>
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Particle_analysis.multiMeasure_particle">
 <span class="sig-prename descclassname"><span class="pre">Particle_analysis.</span></span><span class="sig-name descname"><span class="pre">multiMeasure_particle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">particle_contours</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centroid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Particle_analysis.multiMeasure_particle" title="Permalink to this definition"></a></dt>
 <dd><p>Measures the diameter of the particle at multiple points around the particle by seeing if the angle between any two points on the perimeter and the center of the particle is 180 +/- 1 degree.</p>
+<section id="id13">
+<h3>Parameters<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>particle_contours: list</dt><dd><p>A list of the coordinates bounding the particle (each list within contours_im)</p>
@@ -304,6 +362,9 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
+<section id="id14">
+<h3>returns<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>distances: list</dt><dd><p>A list  of the diameters measured</p>
@@ -312,6 +373,7 @@ Number of measurements  - the number of measurements across the particle to give
 </dd>
 </dl>
 </div></blockquote>
+</section>
 </dd></dl>
 
 </section>
@@ -322,6 +384,7 @@ Number of measurements  - the number of measurements across the particle to give
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="html_writer.html" class="btn btn-neutral float-left" title="html_writer module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Previews_app.html" class="btn btn-neutral float-right" title="Previews App" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

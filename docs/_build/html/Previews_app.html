@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Previews App &mdash; SimpliPyTEM 0.1.0 documentation</title>
@@ -14,7 +14,9 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -36,7 +38,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
@@ -75,16 +77,16 @@
            <div itemprop="articleBody">
              
   <section id="previews-app">
-<h1>Previews App<a class="headerlink" href="#previews-app" title="Permalink to this headline"></a></h1>
+<h1>Previews App<a class="headerlink" href="#previews-app" title="Permalink to this heading"></a></h1>
 <p>While using python will allow one to get the most out of the package, for many learning python is intimidating, and time ends up being wasted manually processing images. Here I am introducing a GUI-based pipeline to create high quality JPEGs, with a good size scale bar automatically added, minor filtering (median and gaussian filtering) available, and video (or dose-fractionation) processing options included.</p>
 <p>Combined with this, there are options to create html or pdf documentss containing the images (and videos in the case of html) generated. These documents can be a very useful way to easily evaluate the images/videos taken in an TEM experiment.</p>
 <section id="usage-section-1-image-generation">
-<h2>Usage - Section 1: Image generation<a class="headerlink" href="#usage-section-1-image-generation" title="Permalink to this headline"></a></h2>
+<h2>Usage - Section 1: Image generation<a class="headerlink" href="#usage-section-1-image-generation" title="Permalink to this heading"></a></h2>
 <p>App usage is fairly simple, and is presented in a stepwise fashion here;</p>
 <p>Open terminal and call:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">SimpliPyTEM_app.py`</span></code>  <strong>Need to find a way to make this run from anywhere</strong></p>
 <p>The GUI should appear as follows:</p>
-<a class="reference internal image-reference" href="_images/App_screenshot1.png"><img alt="a screenshot showing the app GUI" src="_images/App_screenshot1.png" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="media/Images/App_screenshot1.png"><img alt="a screenshot showing the app GUI" src="media/Images/App_screenshot1.png" style="width: 300px;" /></a>
 <p>This app is split into two main sections, The top section containing the Image/video generator. You can either select a folder, a file or run live processing:</p>
 <blockquote>
 <div><p><strong>Folder</strong> - process each .dm3 or .dm4 file in the folder</p>
@@ -111,7 +113,7 @@
 <p>After the options are selected press the <strong>‘Run!’</strong> button and the files will be processed.</p>
 </section>
 <section id="section-2-document-generation">
-<h2>Section 2: Document Generation<a class="headerlink" href="#section-2-document-generation" title="Permalink to this headline"></a></h2>
+<h2>Section 2: Document Generation<a class="headerlink" href="#section-2-document-generation" title="Permalink to this heading"></a></h2>
 <p>This section handles the generation of html or pdf documents containing your images/videos for easy post-experiment image evaluation and sharing.</p>
 <p>The videos are found based on the folder choices in section 1, but will work even if you haven’t Run! this section. To generate the document do as follows:</p>
 <blockquote>

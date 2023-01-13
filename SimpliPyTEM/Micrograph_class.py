@@ -77,7 +77,7 @@ class Micrograph:
         '''
         dm_input = nci.dm.dmReader(file)
         if len(dm_input['data'].shape)==2:
-            image = dm_input['data']
+            self.image = dm_input['data']
             
 
         # at the moment it automatically averages a video into a single image. This will be changed soon to allow for video analysis.
@@ -86,23 +86,21 @@ class Micrograph:
             if video_average:
 
                 images = dm_input['data']
-                image= np.sum(images, axis=0)
+                self.image= np.sum(images, axis=0)
             else:
-                image=dm_input['data'][0]
+                self.image=dm_input['data'][0]
         
         dmfile = nci.dm.fileDM(file)
         self.metadata_tags =dmfile.allTags        
         #extract x and y shapes
-        self.image = np.flip(np.flip, axis=0)
-        x = image.shape[1]
-        y = image.shape[0]
+        
+        self.image = np.flip(self.image, axis=0)
+        self.x = self.image.shape[1]
+        self.y = self.image.shape[0]
         pixelSize=dm_input['pixelSize'][-1]
         #print(pixelSize,type(pixelSize))
         pixelUnit = dm_input['pixelUnit'][-1]
         self.filename = file
-        self.image = image
-        self.x = x 
-        self.y = y
         self.pixelSize= float(pixelSize)
         self.pixelUnit = pixelUnit
 
@@ -110,7 +108,7 @@ class Micrograph:
         
         #this line removes dead pixels which are super bright (any pixel which is more than mean+25*stddeviation
         if pixel_correction:
-            self.image[self.image>self.image.mean()+self.image.std()*20]=image.mean()
+            self.image[self.image>self.image.mean()+self.image.std()*20]=self.image.mean()
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
         #       #return image, x, y, pixelSize, pixelUnit
@@ -259,7 +257,7 @@ class Micrograph:
         return image8bit
 
 
-    def bin_image(self, value=2):
+    def bin(self, value=2):
         '''
         This bins (reduces size) of the image on the x and y dimensions by the selected value (e.g. a 4000x4000 pixels image goes to 2000x2000 pixels with a value of 2)
 
@@ -1093,7 +1091,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         Micrograph_object = Micrograph_object.gaussian_filter(medfilter)
 
     if xybin!= 0 and xybin!=1:
-        Micrograph_object = Micrograph_object.bin_image(xybin)
+        Micrograph_object = Micrograph_object.bin(xybin)
 
     if name !='':
         name = name
@@ -1154,7 +1152,7 @@ def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilte
         Micrograph_object = Micrograph_object.gaussian_filter(medfilter)
 
     if xybin!= 0 and xybin!=1:
-        Micrograph_object = Micrograph_object.bin_image(xybin)
+        Micrograph_object = Micrograph_object.bin(xybin)
 
     if name:
         name = name

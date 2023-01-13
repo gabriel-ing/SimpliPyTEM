@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import os
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtWidgets import (QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QHBoxLayout,
@@ -89,23 +90,17 @@ class MainApplication(QWidget):
 
 
 
-        #Video options checkboxes:
-        self.video_group = QButtonGroup()
+        #Video options :
         self.video_label =  QLabel('If there are videos, choose how video files are handled, else ignore: ')
+        self.video_status='Save Average'
+
+        self.video_choice = QComboBox(self)
+        #live_button.clicked.connect(self.liveCommand)
+        videochoices = ['Save Average', 'Save Tif Stack', 'Save Tif Sequence', 'Save Video as .mp4', 'Save video as .avi', 'Save MotionCorrected Average']
         
+        self.video_choice.addItems(videochoices)
+        self.video_choice.currentTextChanged.connect(self.video_choice_changed)
 
-
-
-        self.video_option1 = QCheckBox('Save Average', self)
-        self.video_option2 = QCheckBox('Save Video as mp4', self)
-        self.video_option3 = QCheckBox('Save Tif Stack', self)
-        self.video_option4 = QCheckBox('Save MotionCorrected average', self)
-        self.video_group.buttonClicked.connect(self.video_group_func)
-        self.video_status='Save Averages'
-        self.video_group.addButton(self.video_option1)
-        self.video_group.addButton(self.video_option2)
-        self.video_group.addButton(self.video_option3)
-        self.video_group.addButton(self.video_option4)
 
         self.doc_label1 = QLabel('Document Section')
         
@@ -119,8 +114,9 @@ class MainApplication(QWidget):
 
 
 
-        #Layoutsss
+        #Call other functions
         self.make_buttons()
+        #self.video_checkbox_functions()
         self.set_fonts()
         self.set_layouts()
         self.add_styles()
@@ -143,17 +139,17 @@ class MainApplication(QWidget):
         self.html_button.clicked.connect(self.html_command)
 
         #pdf button
-        self.pdf_button  = QPushButton('Made PDF!')
+        self.pdf_button  = QPushButton('Make PDF!')
         self.pdf_button.clicked.connect(self.pdf_command)
 
     def add_styles(self):
         #app.setStyleSheet(" QCheckBox{font-size: 14pt;}")
         #app.setStyleSheet("QPushButton{background-color:White;font-size:16pt;font-weight:500;}")
-        app.setStyleSheet('''QWidget{background-color:#C2E4E9;} \
+        app.setStyleSheet('''*{font-family:"Roboto", serif;} QWidget{background-color:#C2E4E9;} \
             QPushButton:hover{background-color: #D8BBEA; color:black;} \
             QPushButton{background-color:white;font-size:16pt;font-weight:500;}  \
             QPushButton.active{background-color:#502673}
-            QCheckBox{font-size: 14pt; } \
+            QCheckBox{background-color:white;font-size: 14pt; } \
             QComboBox{background-color:white;font-size:14px}\
             QTextEdit{background-color:white;} \
             QLineEdit{background-color:white}''')
@@ -170,7 +166,7 @@ class MainApplication(QWidget):
 
         #define and set video label font 
         self.video_labelfont = QFont()
-        self.video_labelfont.setPointSize(16)
+        self.video_labelfont.setPointSize(12)
         self.video_labelfont.setItalic(True)
         self.video_label.setFont(self.video_labelfont)
 
@@ -205,15 +201,16 @@ class MainApplication(QWidget):
         self.layout.addWidget(self.bin_check,5,0,1,1)
         self.layout.addWidget(self.bin_choice,5,1,1,1)
 
-        self.layout.addWidget(self.scalebar_check, 6,0,1,2)
+        self.layout.addWidget(self.scalebar_check, 6,0,1,1)
         self.layout.addWidget(self.output_folder_label, 7,0,1,1)
         self.layout.addWidget(self.output_folder_box,7,1,1,1)
 
         self.layout.addWidget(self.video_label, 8,0,1,2)
-        self.layout.addWidget(self.video_option1,9,0,1,1)
-        self.layout.addWidget(self.video_option2,9,1,1,1)
-        self.layout.addWidget(self.video_option3,10,0,1,1)
-        self.layout.addWidget(self.video_option4,10,1,1,1)
+        self.layout.addWidget(self.video_choice, 9, 0,1,2)
+        #self.layout.addWidget(self.video_option1,9,0,1,1)
+        #self.layout.addWidget(self.video_option2,9,1,1,1)
+        #self.layout.addWidget(self.video_option3,10,0,1,1)
+        #self.layout.addWidget(self.video_option4,10,1,1,1)
         self.layout.addWidget(self.Run_button, 11,0,1,2)
         self.layout.addWidget(self.doc_label1, 12,0,1,2)
         self.layout.addWidget(self.doc_label, 13, 0,1,2)
@@ -225,6 +222,20 @@ class MainApplication(QWidget):
         self.layout.addWidget(self.html_button, 21,0,1,1)
         self.layout.addWidget(self.pdf_button, 21,1,1,1)
 
+    def video_checkbox_functions(self):
+                #Video options checkboxes:
+        self.video_group = QButtonGroup()
+        
+        self.video_option1 = QCheckBox('Save Average', self)
+        self.video_option2 = QCheckBox('Save Video as mp4', self)
+        self.video_option3 = QCheckBox('Save Tif Stack', self)
+        self.video_option4 = QCheckBox('Save MotionCorrected average', self)
+        self.video_group.buttonClicked.connect(self.video_group_func)
+        self.video_status='Save Average'
+        self.video_group.addButton(self.video_option1)
+        self.video_group.addButton(self.video_option2)
+        self.video_group.addButton(self.video_option3)
+        self.video_group.addButton(self.video_option4)
         
 
     def text_changed(self, s): # i is an int
@@ -244,7 +255,9 @@ class MainApplication(QWidget):
     def updateScalebar(self,state):
         self.scalebar_on=state
     def video_group_func(self, but):
-        self.videostatus = (but.text())
+        self.video_status = (but.text())
+    def video_choice_changed(self, s):
+        self.video_status = s
 
     def FileFolderChooser(self):
         if self.folder_option=='Folder' or self.folder_option=='Live Processing':
@@ -316,15 +329,17 @@ class MainApplication(QWidget):
             print('Please select a folder/file')
             return 1
         print(self.folderpath)
+        
         if self.live=='Folder':
-            print('Running folder?')
-            process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+                print('Running folder?')
+                process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
         elif self.live=='File':
-            print(self.live)    
-            process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+                print(self.live)    
+                process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
         elif self.live =='Live Processing':
-            live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
-
+                live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+        #except:
+        #    print('Whoops there is an error, check the terminal and your inputs and try again.')
 
 
 
