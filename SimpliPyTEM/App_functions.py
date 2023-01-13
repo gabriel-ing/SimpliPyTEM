@@ -26,6 +26,7 @@ def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter,
         frames_processing(dm_frames,output_folder_name+'/Images',xybin, medfilter, gaussian_filter, video_status )
 
 
+
     print('All files in folder complete!')  
     os.chdir(cwd)
 
@@ -155,15 +156,11 @@ def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_fil
     if video_status=='Save Average':
 
         default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
-    elif video_status =='Save Video as mp4':
-        default_video_pipeline() #output folder = output_folder+videos
-        print('Not written {} yet'.format(video_status))
-    elif video_status =='Save Tif Stack':
-        print('Not written {} yet'.format(video_status))
-    elif video_status =='Save MotionCorrected average':
-        print('Not written {} yet'.format(video_status))
-    else: 
-        print('Error, the video status is not one of the correct options, dunno how this has happened.' )
+    else video_status =='Save Video as mp4':
+        default_video_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images') #output folder = output_folder+videos
+     
+
+
 
 def isvideo(file):
     if os.path.getsize(file)>230165776:

@@ -1463,41 +1463,74 @@ class MicroVideo:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_video_pipeline(MicroVideo_object, medfilter=0, gaussfilter=3, scalebar=True, texton = True, xybin=2, color='Auto',Average_frames=5, **kwargs):
-    
-    if Average_frames!= 0 and Average_frames!=1:
-        MicroVideo_object=MicroVideo_object.Average_frames(Average_frames)
-    if xybin!= 0 and xybin!=1:
-        MicroVideo_object.bin(xybin)
-    if type(medfilter)==int and medfilter!=0: 
-        MicroVideo_object = MicroVideo_object.median_filter(medfilter)
-    
-    if type(gaussfilter)==int and gaussfilter!=0:  
-        MicroVideo_object = MicroVideo_object.gaussian_filter(gaussfilter)
+def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True, texton = True, xybin=2, color='Auto',Average_frames=2,, **kwargs):
+    '''
+
+    '''
 
 
+    MicroVideo_object = MicroVideo()
+    MicroVideo_object.open_dm(filename)
 
     if 'name' in kwargs:
         name=kwargs['name']
     else:
-        name = '.'.join(MicroVideo_object.filename.split('.')[:1])+'.mp4' 
-	
-    #MicroVideo_object.bin(xybin)
-    
-    
-    MicroVideo_object.convert_to_8bit()
-    #MicroVideo_object = MicroVideo_object.enhance_contrast(alpha=1.3, beta=5)
-    if scalebar==True:
-        MicroVideo_object.make_scalebar(texton=texton, color=color)
+        name = '.'.join(MicroVideo_object.filename.split('.')[:1])
 
-    if 'outdir' in kwargs:
-        MicroVideo_object.write_video(name=name,outdir=kwargs['outdir'])
+    if output_type=='Save MotionCorrected average':
+        MCor_vid = MicroVideo_object.motioncorrect_vid()
+        aved =  MCor_vid.toMicrograph()
+        if median_filter!=0:
+            aved.median_filter(medfilter)
+        if gaussfilter!=0:
+            aved.gaussian_filter(gaussfilter)
+        if scalebar:
+            aved.make_scalebar()
+        if xybin!=0 and xybin!=1:
+            aved.bin(xybin)
+        aved.write_image(name)
+
     else:
-        MicroVideo_object.write_video(name=name)     
+
+
+        if Average_frames!= 0 and Average_frames!=1:
+            MicroVideo_object=MicroVideo_object.Average_frames(Average_frames)
+        if xybin!= 0 and xybin!=1:
+            MicroVideo_object.bin(xybin)
+        if type(medfilter)==int and medfilter!=0: 
+            MicroVideo_object = MicroVideo_object.median_filter(medfilter)
         
+        if type(gaussfilter)==int and gaussfilter!=0:  
+            MicroVideo_object = MicroVideo_object.gaussian_filter(gaussfilter)
 
 
+        if 'name' in kwargs:
+            name=kwargs['name']
+        else:
+            name = '.'.join(MicroVideo_object.filename.split('.')[:1])
+        #MicroVideo_object.bin(xybin)
+        
+        if output_type=='Save Video as mp4':
+            print('Saving {} as video'.format(filename))
+            MicroVideo_object.convert_to_8bit()
+            MicroVideo_object = MicroVideo_object.clip_contrast(alpha=1.3, beta=5)
+            if scalebar==True:
+                MicroVideo_object.make_scalebar(texton=texton, color=color)
 
+            if 'outdir' in kwargs:
+                MicroVideo_object.write_video(name=name,outdir=kwargs['outdir'])
+            else:
+                MicroVideo_object.write_video(name=name)     
+                
+        elif output_type=='Save tif stack':
+            if scalebar==True:
+                MicroVideo_object.make_scalebar(texton=texton, color=color)
+            if 'outdir' in kwargs:
+                MicroVideo_object.save_tif_stack(name=name, outdir=kwargs['outdir'])
+            else: 
+                MicroVideo_object.save_tif_stack(name=name)
+        else:
+            print('Error "{}" is not an acceptable output type.')
 
 #def group_frames( frames):
 #    prefixes = []
