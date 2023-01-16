@@ -1428,36 +1428,6 @@ class MicroVideo:
         os.chdir(original_cwd)
         return MC_vid
 
-    def motioncor_frames(self, frames_dict):
-        '''
-        Not currently for public use. Thiis are based on using motioncor2 to motion-correct videos, this does not work very well and is currently written specifically for my computer system (based on pathway to exectuatble).
-        '''
-
-        for vid in frames_dict:
-            frames = frames_dict[vid]
-            outfile = '_'.join(frames[0].split('-')[:-1])+'.mrc'
-            outfile_aligned = '_'.join(frames[0].split('.')[:-1])+'_aligned.mrc'
-            pixelsize = nci.dm.fileDM(frames[0]).scale[2]
-            sb.call('dm2mrc *{}-* {} '.format(vid, outfile), shell=True, cwd=os.getcwd())
-            motion_cor_command = '~/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021 -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(outfile, outfile_aligned, pixelsize)
-            sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
-            os.remove(outfile)
-            self.open_mrc(outfile_aligned)  
-
-    def motioncorrect_video(self, file):
-        '''
-        Not currently for public use. Thiis are based on using motioncor2 to motion-correct videos, this does not work very well and is currently written specifically for my computer system (based on pathway to exectuatble).
-        '''
-    
-        outfile = '_'.join(file.split('.')[:-1])+'.mrc'
-        outfile_aligned = '_'.join(file.split('.')[:-1])+'_aligned.mrc'
-        pixelsize = nci.dm.fileDM(file).scale[2]
-        #print(pixelsize)
-        sb.call('dm2mrc {} {} '.format(file, outfile), shell=True, cwd=os.getcwd())
-        motion_cor_command = '~/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021 -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(outfile, outfile_aligned, pixelsize)
-        sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
-        os.remove(outfile)
-        self.open_mrc(outfile_aligned)            
 
     
 

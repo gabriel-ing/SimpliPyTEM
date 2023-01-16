@@ -145,7 +145,7 @@ class MainApplication(QWidget):
     def add_styles(self):
         #app.setStyleSheet(" QCheckBox{font-size: 14pt;}")
         #app.setStyleSheet("QPushButton{background-color:White;font-size:16pt;font-weight:500;}")
-        app.setStyleSheet('''*{font-family:"Roboto", serif;} QWidget{background-color:#C2E4E9;} \
+        app.setStyleSheet('''*{font-family:"helvetica", serif; font-weight:200} QWidget{background-color:#C2E4E9;} \
             QPushButton:hover{background-color: #D8BBEA; color:black;} \
             QPushButton{background-color:white;font-size:16pt;font-weight:500;}  \
             QPushButton.active{background-color:#502673}
@@ -267,8 +267,13 @@ class MainApplication(QWidget):
 
     def html_command(self):
         outdir = self.output_folder_box.text()
+
         if outdir=='':
             outdir='.'
+
+        if self.folderpath=='' or self.folderpath==None:
+            print('Please select a folder/file')
+            return 1
 
         cwd = os.getcwd()
         os.chdir(self.folderpath+'/'+outdir)
@@ -276,7 +281,14 @@ class MainApplication(QWidget):
         title = self.title_box.text()
         notes = self.notes_box.toPlainText()
         print('Writing html and css files')
-        image_files, video_files = get_files('Images', 'Videos')
+        try: 
+            image_files, video_files = get_files('Images', 'Videos')
+        except FileNotFoundError: 
+            print('The Images folder was not found, please make sure that the output folder defined above has a folder of images called images.')
+            os.chdir(cwd)
+            return 1
+        print(images)
+
         write_html(image_files, video_files, title, notes)
         write_css()
         print('Done!')
@@ -287,6 +299,11 @@ class MainApplication(QWidget):
         if outdir=='':
             outdir='.'
 
+
+        if self.folderpath=='' or self.folderpath==None:
+            print('Please select a folder/file')
+            return 1
+            
         cwd = os.getcwd()
         os.chdir(self.folderpath+'/'+outdir)
 
@@ -296,11 +313,18 @@ class MainApplication(QWidget):
         
         print(os.getcwd())
         print(os.listdir('.'))
-
-        images = ['Images/'+x for x in os.listdir('Images')]
+        try: 
+            images = ['Images/'+x for x in os.listdir('Images')]
+        except FileNotFoundError: 
+            print('The Images folder was not found, please make sure that the output folder defined above has a folder of images called images.')
+            os.chdir(cwd)
+            return 1
         print(images)
-        pdf_generator(images, title, notes)
-
+        try:
+            pdf_generator(images, title, notes)
+        except Exception as e:
+            print('Error! Not sure what has happened here')
+            print(e)
         os.chdir(cwd)
 
     def RunCommand(self):
@@ -330,17 +354,19 @@ class MainApplication(QWidget):
             return 1
         print(self.folderpath)
         
-        if self.live=='Folder':
-                print('Running folder?')
-                process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
-        elif self.live=='File':
-                print(self.live)    
-                process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
-        elif self.live =='Live Processing':
-                live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
-        #except:
-        #    print('Whoops there is an error, check the terminal and your inputs and try again.')
+        try: 
+            if self.live=='Folder':
+                    print('Running folder?')
+                    process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+            elif self.live=='File':
+                    print(self.live)    
+                    process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+            elif self.live =='Live Processing':
+                    live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+        except Exception as e:
 
+            print('Whoops there is an error, check the terminal and your inputs and try again.')
+            print(e)
 
 
 #MainApplication.show()

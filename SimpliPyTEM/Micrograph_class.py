@@ -994,7 +994,7 @@ class Micrograph:
             sb.call('dm2mrc *{}-* {} '.format(vid, outfile), shell=True, cwd=os.getcwd())
             MCor_path = os.environ.get('MOTIONCOR2_PATH')
             if path:
-                motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(Mcor_path,  outfile, outfile_aligned, pixelsize)
+                motion_cor_command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixSize {} '.format(MCor_path,  outfile, outfile_aligned, pixelsize)
                 sb.call(motion_cor_command, shell=True, cwd=os.getcwd())
 
             else:
@@ -1016,9 +1016,6 @@ class Micrograph:
         ----------
             filename:str
                 The filename to motion correct
-
-
-
         '''
         outfile = '_'.join(file.split('.')[:-1])+'.mrc'
         outfile_aligned = '_'.join(file.split('.')[:-1])+'_aligned.mrc'
