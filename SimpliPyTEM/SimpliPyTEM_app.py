@@ -8,6 +8,7 @@ import sys
 from App_functions import * 
 from SimpliPyTEM.PDF_generator import *
 from html_writer import *
+import threading 
 
 
 class MainApplication(QWidget):
@@ -40,6 +41,7 @@ class MainApplication(QWidget):
 
 
         self.folderpath = None
+        self.folderpath_label = QLabel('')
         #Checkbox for median filter
         self.med_check = QCheckBox('Median filter',self)
         #self.med_check.setEnabled(True)
@@ -142,6 +144,10 @@ class MainApplication(QWidget):
         self.pdf_button  = QPushButton('Make PDF!')
         self.pdf_button.clicked.connect(self.pdf_command)
 
+        #stop button
+        self.stopButton = QPushButton('Stop Process')
+        self.stopButton.clicked.connect(self.stopCommand)
+        self.stopButton.setObjectName('stopButton')
     def add_styles(self):
         #app.setStyleSheet(" QCheckBox{font-size: 14pt;}")
         #app.setStyleSheet("QPushButton{background-color:White;font-size:16pt;font-weight:500;}")
@@ -152,7 +158,8 @@ class MainApplication(QWidget):
             QCheckBox{background-color:white;font-size: 14pt; } \
             QComboBox{background-color:white;font-size:14px}\
             QTextEdit{background-color:white;} \
-            QLineEdit{background-color:white}''')
+            QLineEdit{background-color:white}\
+            #stopButton:hover{background-color:#F2B8D5}''')
 
     def set_fonts(self):
         #define title font
@@ -193,34 +200,36 @@ class MainApplication(QWidget):
         self.layout.addWidget(self.folderlabel,1,0,1,1)
         self.layout.addWidget(self.live_choice,1,1,1,1)
         self.layout.addWidget(self.FolderBrowse_button, 2,0,1,2)
-        self.layout.addWidget(self.med_check,3,0,1,1)
-        self.layout.addWidget(self.med_choice,3,1,1,1)
+        self.layout.addWidget(self.folderpath_label, 3,0,1,2)
+        self.layout.addWidget(self.med_check,4,0,1,1)
+        self.layout.addWidget(self.med_choice,4,1,1,1)
 
-        self.layout.addWidget(self.gauss_check,4,0,1,1)
-        self.layout.addWidget(self.gauss_choice,4,1,1,1)
-        self.layout.addWidget(self.bin_check,5,0,1,1)
-        self.layout.addWidget(self.bin_choice,5,1,1,1)
+        self.layout.addWidget(self.gauss_check,5,0,1,1)
+        self.layout.addWidget(self.gauss_choice,5,1,1,1)
+        self.layout.addWidget(self.bin_check,6,0,1,1)
+        self.layout.addWidget(self.bin_choice,6,1,1,1)
 
-        self.layout.addWidget(self.scalebar_check, 6,0,1,1)
-        self.layout.addWidget(self.output_folder_label, 7,0,1,1)
-        self.layout.addWidget(self.output_folder_box,7,1,1,1)
+        self.layout.addWidget(self.scalebar_check, 7,0,1,1)
+        self.layout.addWidget(self.output_folder_label, 8,0,1,1)
+        self.layout.addWidget(self.output_folder_box,8,1,1,1)
 
-        self.layout.addWidget(self.video_label, 8,0,1,2)
-        self.layout.addWidget(self.video_choice, 9, 0,1,2)
+        self.layout.addWidget(self.video_label, 9,0,1,2)
+        self.layout.addWidget(self.video_choice, 10, 0,1,2)
         #self.layout.addWidget(self.video_option1,9,0,1,1)
         #self.layout.addWidget(self.video_option2,9,1,1,1)
         #self.layout.addWidget(self.video_option3,10,0,1,1)
         #self.layout.addWidget(self.video_option4,10,1,1,1)
-        self.layout.addWidget(self.Run_button, 11,0,1,2)
-        self.layout.addWidget(self.doc_label1, 12,0,1,2)
-        self.layout.addWidget(self.doc_label, 13, 0,1,2)
-        self.layout.addWidget(self.title_box_label, 14, 0,1,1)
-        self.layout.addWidget(self.title_box,15,0,1,2)
-        self.layout.addWidget(self.notes_box_label, 16,0,1,1)
-        self.layout.addWidget(self.notes_box, 17,0,1,3)
+        self.layout.addWidget(self.Run_button, 12,0,2,2)
+        self.layout.addWidget(self.stopButton, 14,0,1,2)
+        self.layout.addWidget(self.doc_label1, 15,0,1,2)
+        self.layout.addWidget(self.doc_label, 16, 0,1,2)
+        self.layout.addWidget(self.title_box_label, 17, 0,1,1)
+        self.layout.addWidget(self.title_box,18,0,1,2)
+        self.layout.addWidget(self.notes_box_label, 19,0,1,1)
+        self.layout.addWidget(self.notes_box, 20,0,1,3)
 
-        self.layout.addWidget(self.html_button, 21,0,1,1)
-        self.layout.addWidget(self.pdf_button, 21,1,1,1)
+        self.layout.addWidget(self.html_button, 24,0,1,1)
+        self.layout.addWidget(self.pdf_button, 24,1,1,1)
 
     def video_checkbox_functions(self):
                 #Video options checkboxes:
@@ -236,7 +245,9 @@ class MainApplication(QWidget):
         self.video_group.addButton(self.video_option2)
         self.video_group.addButton(self.video_option3)
         self.video_group.addButton(self.video_option4)
-        
+
+    def stopCommand(self):
+        pass
 
     def text_changed(self, s): # i is an int
         self.folder_option=s 
@@ -264,6 +275,7 @@ class MainApplication(QWidget):
             self.folderpath = QFileDialog.getExistingDirectory(self, 'Select a Folder')
         else:
             self.folderpath = QFileDialog.getOpenFileName(self, 'Select a File')[0]
+        self.folderpath_label.setText(self.folderpath)
 
     def html_command(self):
         outdir = self.output_folder_box.text()
@@ -303,7 +315,7 @@ class MainApplication(QWidget):
         if self.folderpath=='' or self.folderpath==None:
             print('Please select a folder/file')
             return 1
-            
+
         cwd = os.getcwd()
         os.chdir(self.folderpath+'/'+outdir)
 
@@ -357,7 +369,8 @@ class MainApplication(QWidget):
         try: 
             if self.live=='Folder':
                     print('Running folder?')
-                    process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+                    thread = threading.Thread(target =process_folder, args=(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status ))
+                    thread.start()
             elif self.live=='File':
                     print(self.live)    
                     process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
@@ -369,6 +382,39 @@ class MainApplication(QWidget):
             print(e)
 
 
+
+'''
+class JobRunner(QRunnable):
+
+    signals = WorkerSignals()
+
+    def __init__(self):
+        super().__init__()
+
+        self.is_paused = False
+        self.is_killed = False
+
+    @pyqtSlot()
+    def run(self):
+        for n in range(100):
+            self.signals.progress.emit(n + 1)
+            time.sleep(0.1)
+
+            while self.is_paused:
+                time.sleep(0)
+
+            if self.is_killed:
+                break
+
+    def pause(self):
+        self.is_paused = True
+
+    def resume(self):
+        self.is_paused = False
+
+    def kill(self):
+        self.is_killed = True
+'''
 #MainApplication.show()
 #application.exec()
 app = QApplication(sys.argv)
