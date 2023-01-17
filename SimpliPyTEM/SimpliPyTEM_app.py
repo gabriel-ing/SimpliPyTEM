@@ -148,6 +148,7 @@ class MainApplication(QWidget):
         self.stopButton = QPushButton('Stop Process')
         self.stopButton.clicked.connect(self.stopCommand)
         self.stopButton.setObjectName('stopButton')
+        self.stopSignal=False
     def add_styles(self):
         #app.setStyleSheet(" QCheckBox{font-size: 14pt;}")
         #app.setStyleSheet("QPushButton{background-color:White;font-size:16pt;font-weight:500;}")
@@ -247,7 +248,15 @@ class MainApplication(QWidget):
         self.video_group.addButton(self.video_option4)
 
     def stopCommand(self):
-        pass
+
+        self.stopSignal=True
+        print('Stopping before next file')
+
+    def eval_stop(self):
+        if self.stopSignal==True:
+            print('Stop signal recieved, exiting now')
+            self.stopSignal=False
+            return True
 
     def text_changed(self, s): # i is an int
         self.folder_option=s 
@@ -367,20 +376,109 @@ class MainApplication(QWidget):
         print(self.folderpath)
         
         try: 
-            if self.live=='Folder':
+            if self.folder_option=='Folder':
                     print('Running folder?')
-                    thread = threading.Thread(target =process_folder, args=(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status ))
+                    thread = threading.Thread(target =self.process_folder, args=(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status ))
                     thread.start()
-            elif self.live=='File':
+            elif self.folder_option=='File':
                     print(self.live)    
-                    process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
-            elif self.live =='Live Processing':
-                    live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+                    self.process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+            elif self.folder_option =='Live Processing':
+                    #live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
+                    print('Live processing')
+                    thread = threading.Thread(target=self.live_process, args=(self.folderpath,outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status ))
+                    thread.start()
         except Exception as e:
 
             print('Whoops there is an error, check the terminal and your inputs and try again.')
             print(e)
 
+    def process_folder(self,folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
+        print('Processing folder!')
+        cwd = os.getcwd()
+
+        os.chdir(folder)
+
+        dm_files = [x for x in os.listdir('.') if x[-4:-1]=='.dm']
+        dm_vids = [x for x in dm_files if isvideo(x)]
+        dm_frames = [x for x in dm_files if x[-9]=='-' and x[-13:-9].isdigit() and x[-8:-4].isdigit()]
+        dm_ims = [x for x in dm_files if x not in dm_vids and x not in dm_frames]   
+
+        if output_folder_name not in os.listdir('.') and output_folder_name!='.':
+            os.mkdir(output_folder_name)
+
+        for file in dm_vids:
+            print(self.stopSignal)
+            if self.eval_stop():
+                return 1 
+            print('Processing: ', file)
+            video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
+
+        for  file in dm_ims:
+            if self.eval_stop():
+                return 1 
+            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
+        if len(dm_frames)!=0: 
+            print(dm_frames)
+            frames_processing(dm_frames,output_folder_name+'/Images',xybin, medfilter, gaussian_filter, video_status )
+        print('All files in folder complete!')  
+        os.chdir(cwd)
+
+
+    def live_process(self, folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
+        cwd = os.getcwd()
+        #print('calling function')
+        os.chdir(folder)
+        files = os.listdir('.')
+        file_set = set(files)
+        start_time = time.time()
+        max_running_time = 3600
+        #print(os.getcwd())
+        if output_folder_name not in os.listdir('.') and output_folder_name!='.':
+            os.mkdir(output_folder_name)
+
+        while True:
+            if self.eval_stop():
+                    return 1 
+            for file in os.listdir('.'):
+         #       print(file)
+                if file not in file_set:
+                    currentsize = os.path.getsize(file)
+                    time.sleep(1)
+          #          print(file)
+                    if os.path.getsize(file)>currentsize:
+                        print('Breaking here')
+                        break
+                    if file[-4:-1]=='.dm':
+
+                        if isvideo(file):
+                                
+                            
+                            video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
+
+                        #elif file[-9]=='-' and file[-13:-9].isdigit() and file[-8:-4].isdigit():
+                                
+                        #        pass
+                                #wait = 1
+                                #time.sleep(60)
+                                #if self.motioncor=='Off':
+                                #   dm_frames = [x for x in dm_files if x[-9]=='-' and x[-13:-9].isdigit() and x[-8:-4].isdigit()]
+
+                        else:
+                            
+                            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
+
+                        print(file)
+                        file_set.add(file)
+                
+            running_time = time.time() - start_time
+            print('Running time : {}s'.format(round(running_time,0)))
+            if running_time>max_running_time:
+                break
+            time.sleep(10)
+            print('Looping')      
+        print('Time out reached, exiting now')
+        os.chdir(cwd)
 
 
 '''
