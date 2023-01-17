@@ -28,7 +28,8 @@ setup(
 	 'fpdf',
 	 'PyQt5',
 	 'sphinx',
-	 'sphinx_rtd_theme'],
+	 'sphinx_rtd_theme',
+	 'nbsphix'],
 	classifiers=[
 		'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
