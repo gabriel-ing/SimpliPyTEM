@@ -94,7 +94,7 @@ class Micrograph:
         self.metadata_tags =dmfile.allTags        
         #extract x and y shapes
         
-        self.image = np.flip(self.image, axis=0)
+        #self.image = np.flip(self.image, axis=0)
         self.x = self.image.shape[1]
         self.y = self.image.shape[0]
         pixelSize=dm_input['pixelSize'][-1]
@@ -146,7 +146,7 @@ class Micrograph:
 
 
         
-    def write_image(self, name=None, ftype='jpg',outdir=''):
+    def write_image(self, name=None, ftype='jpg',outdir=None):
         '''
         Saves the image in a .jpg or .tif file for display or use with other programs. 
 
@@ -166,12 +166,12 @@ class Micrograph:
         '''
 
 
-        if 'outdir':
+        if outdir:
 
             if '/' in outdir:
                 if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
                     os.mkdir(outdir)
-            elif outdir not in os.listdir('.'):
+            elif outdir not in os.listdir('.') and outdir!='':
                 print(outdir)
                 print(os.listdir('.'))
                 os.mkdir(outdir)
@@ -188,13 +188,13 @@ class Micrograph:
                     ftype='jpg'
                 elif name[-3:]=='tif':
                     ftype='tif'    
-                if len(name.split('.'))>2:
+                if len(name.split('.'))>=2 and name[-4]=='.':
                     name='.'.join(name.split('.')[:-1])
-                    print('if len name: ', name)
+                    #print('if len name: ', name)
                     print('.'.join(name.split('.')[:-1]))
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
-                print('else_name = ',name)
+                #print('else_name = ',name)
         try:
             name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
         except AttributeError:
