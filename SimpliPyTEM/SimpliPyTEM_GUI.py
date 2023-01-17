@@ -394,6 +394,7 @@ class MainApplication(QWidget):
             print(e)
 
     def process_folder(self,folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
+        start_time = time.time()
         print('Processing folder!')
         cwd = os.getcwd()
 
@@ -422,6 +423,8 @@ class MainApplication(QWidget):
             print(dm_frames)
             frames_processing(dm_frames,output_folder_name+'/Images',xybin, medfilter, gaussian_filter, video_status )
         print('All files in folder complete!')  
+        running_time = time.time()-start_time
+        print('Running time for {} files: {}'.format(len(dm_files), running_time))
         os.chdir(cwd)
 
 
