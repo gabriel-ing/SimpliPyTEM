@@ -23,7 +23,9 @@ setup(
 	 'scikit-image',
 	 'imutils',
 	 'fpdf',
-	 'PyQt5'],
+	 'PyQt5',
+	 'sphinx',
+	 'sphinx_rtd_theme'],
 	classifiers=[
 		'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',

@@ -1,5 +1,5 @@
 from SimpliPyTEM.Micrograph_class import *
-from SimpliPyTEM.MicroVideo import *
+from SimpliPyTEM.MicroVideo_class import *
 from moviepy.editor import ImageSequenceClip
 from skimage import measure
 from imutils import contours
