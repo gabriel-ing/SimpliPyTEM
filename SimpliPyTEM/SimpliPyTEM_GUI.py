@@ -156,8 +156,8 @@ class MainApplication(QWidget):
             QPushButton:hover{background-color: #D8BBEA; color:black;} \
             QPushButton{background-color:white;font-size:16pt;font-weight:500;}  \
             QPushButton.active{background-color:#502673}
-            QCheckBox{background-color:white;font-size: 14pt; } \
-            QComboBox{background-color:white;font-size:14px}\
+            QCheckBox{background-color:white;font-size: 12pt; } \
+            QComboBox{background-color:white;font-size:10px;vertical-align:text-top;}\
             QTextEdit{background-color:white;} \
             QLineEdit{background-color:white}\
             #stopButton:hover{background-color:#F2B8D5}''')
@@ -166,7 +166,7 @@ class MainApplication(QWidget):
         #define title font
         self.titlefont = QFont()
         self.titlefont.setPointSize(20)
-        self.titlefont.setBold(True)
+        self.titlefont.setBold(True)  
         # add title font to title and doc section title
         self.title.setFont(self.titlefont)
         self.doc_label1.setFont(self.titlefont)
