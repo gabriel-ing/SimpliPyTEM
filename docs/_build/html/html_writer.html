@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>html_writer module &mdash; SimpliPyTEM 0.1.0 documentation</title>
+  <title>HTML writer module &mdash; SimpliPyTEM 0.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,14 +14,12 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Particle analysis module" href="Particle_analysis.html" />
-    <link rel="prev" title="PDF_generator module" href="PDF_generator.html" /> 
+    <link rel="prev" title="PDF generator module" href="PDF_generator.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,22 +37,20 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">html_writer module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#html_writer.get_files"><code class="docutils literal notranslate"><span class="pre">get_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#html_writer.write_css"><code class="docutils literal notranslate"><span class="pre">write_css()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#html_writer.write_html"><code class="docutils literal notranslate"><span class="pre">write_html()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF generator module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HTML writer module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Previews_app.html">Previews App</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
 </ul>
 
         </div>
@@ -71,7 +67,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">html_writer module</li>
+      <li class="breadcrumb-item active">HTML writer module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/html_writer.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,7 +78,7 @@
            <div itemprop="articleBody">
              
   <section id="html-writer-module">
-<h1>html_writer module<a class="headerlink" href="#html-writer-module" title="Permalink to this heading"></a></h1>
+<h1>HTML writer module<a class="headerlink" href="#html-writer-module" title="Permalink to this headline"></a></h1>
 <p>This creates html files with the images and movies from an experiment, which can be viewed as a webpage.</p>
 <blockquote>
 <div><p>These have the advantage over pdfs when dealing with in situ data, that movies can be played. The downside is that the media files are only linked in the html file, and therefore to share the file the images and movies need to be shared as well.</p>
@@ -94,7 +90,7 @@ Experiment&gt;Media&gt;Videos</p>
 <p>Where experiment contains the raw data, media contains the html and css and Images &amp; Videos contain the .jpg (or .tif/.png) images and .mp4 videos respectively
 Then run the functions below from the media folder.</p>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
 <p>Simple usage is summed up below:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#import module</span>
 <span class="kn">from</span> <span class="nn">SimpliPyTEM.html_writer</span> <span class="kn">import</span> <span class="o">*</span>
@@ -117,8 +113,6 @@ Then run the functions below from the media folder.</p>
 <dt class="sig sig-object py" id="html_writer.get_files">
 <span class="sig-prename descclassname"><span class="pre">html_writer.</span></span><span class="sig-name descname"><span class="pre">get_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imagedir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">videodir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#html_writer.get_files" title="Permalink to this definition"></a></dt>
 <dd><p>Simple method for getting the image and video files.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>imagedir:str</dt><dd><p>Directory containing the images (jpg, png or tif format)</p>
@@ -131,7 +125,6 @@ Then run the functions below from the media folder.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -145,8 +138,6 @@ Then run the functions below from the media folder.</p>
 <span class="sig-prename descclassname"><span class="pre">html_writer.</span></span><span class="sig-name descname"><span class="pre">write_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">videos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Default_experiment_title'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#html_writer.write_html" title="Permalink to this definition"></a></dt>
 <dd><p>Writes html file containing the images and videos from an experiment so they can be viewed on a webbrowser. This can be preferable over PDFS as the videos can be played. 
 The images and videos are only linked in this html, so in order to share the page these need to be sent as well.</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Images:list</dt><dd><p>List of images (including their path from the current directory), can be made with get_files()</p>
@@ -159,13 +150,9 @@ The images and videos are only linked in this html, so in order to share the pag
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="output">
-<h3>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><p>HTML document {title}.html saved in the current working directory. This html document has the images from an experiment as well as playable videos.</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 </section>
@@ -175,7 +162,7 @@ The images and videos are only linked in this html, so in order to share the pag
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="PDF_generator.html" class="btn btn-neutral float-left" title="PDF_generator module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PDF_generator.html" class="btn btn-neutral float-left" title="PDF generator module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="Particle_analysis.html" class="btn btn-neutral float-right" title="Particle analysis module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

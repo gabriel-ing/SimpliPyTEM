@@ -1,5 +1,5 @@
-html\_writer module
-===================
+HTML writer module
+==================
 
 This creates html files with the images and movies from an experiment, which can be viewed as a webpage.
 

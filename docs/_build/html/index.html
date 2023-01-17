@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to SimpliPyTEM’s documentation! &mdash; SimpliPyTEM 0.1.0 documentation</title>
@@ -14,13 +14,11 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Micrograph Class" href="Micrograph_class.html" /> 
+    <link rel="next" title="SimpliPyTEM-GUI" href="SimpliPyTEM-GUI.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,14 +36,17 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="html_writer.html">html_writer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF generator module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_writer.html">HTML writer module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Previews_app.html">Previews App</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
 </ul>
 
         </div>
@@ -73,25 +74,50 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-simplipytem-s-documentation">
-<h1>Welcome to SimpliPyTEM’s documentation!<a class="headerlink" href="#welcome-to-simplipytem-s-documentation" title="Permalink to this heading"></a></h1>
+<h1>Welcome to SimpliPyTEM’s documentation!<a class="headerlink" href="#welcome-to-simplipytem-s-documentation" title="Permalink to this headline"></a></h1>
 <p>SimpliPyTEM is a python package to make python-based analysis of Transmission electron microscopy images easier and more approachable. Although TEM is the focus, this could also easily be adapted to other microscopy images.
 Importantly, SimpliPyTEM is designed to make automated, basic work accessible for beginners (through a simple GUI), while more complicated methods can be accessed through simple python code. This package centers around the image data being held in a Numpy array which makes the image data easy to access for further analysis.</p>
 <p>SimpliPyTEM also has a modules designed for <em>in situ</em> TEM videos, easily altering the functions to include these.</p>
 <p>This project aims to make use of the rapid automation of image analysis methods available through python while making it approachable for the user.</p>
 <p>Functions to generate pdf and html files containing images and videos are also included in this package. This allows easy viewing and sharing of all the images/videos taken in an imaging session, making experiment evaluation significantly easier.</p>
+<section id="simplipytem-gui">
+<h2>SimpliPyTEM-GUI<a class="headerlink" href="#simplipytem-gui" title="Permalink to this headline"></a></h2>
+<p>Here I introduce an easy to use interface to automatically process files to do basic post-processing following a TEM imaging session.</p>
+<p>Using this to automate basic post-processing following a TEM imaging session has huge advantages in speed. For example, using the SimpliPyTEM GUI to process 5 files, including 2 video files (one of which was &gt;2.5Gb in size) took &lt;11s too generate 5 images on my Macbook. This was faster than the time it took for the largest file to load into FIJI.</p>
+<p>Combined with this, I have also created methods to make html or pdf files containing the images (or videos) taken, allowing for rapid evaluation and sharing of experimental data.</p>
+<p>This app is designed to be simple to use for people with basic computational skills.</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="SimpliPyTEM-GUI.html#usage-section-1-image-generation">Usage - Section 1: Image generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SimpliPyTEM-GUI.html#section-2-document-generation">Section 2: Document Generation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<a class="reference internal image-reference" href="_images/App_screenshot1.png"><img alt="Figure showing the SimpliPy-GUI app" src="_images/App_screenshot1.png" style="width: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/SimpliPyTEM_figures.001.png"><img alt="Figure showing aim of SimpliPyTEM-GUI" src="_images/SimpliPyTEM_figures.001.png" style="width: 600px;" /></a>
+</section>
+<section id="simplipytem-library">
+<h2>SimpliPyTEM-Library<a class="headerlink" href="#simplipytem-library" title="Permalink to this headline"></a></h2>
+<p>While SimpliPy-GUI makes the basic post-processing simple, the SimpliPy-Library provides more powerful python-based methods, while still aiming to keep the functions simple.</p>
+<p>This library contains several modules, including those for various post-processing and analysis of micrographs as well as microscope videos (see MicroVideo_class module), basic particle analysis functions (e.g. locating particles by simple thresholding and measuring properties) writing html and pdf documents. These methods aim to be easy to use and are fully documented in the links below. However, there are also 3 jupyter-notebook tutorials available to learn how to use, and give more details about these functions. These are found in the Tutorials folder where the package is installed, or can be downloaded individually from <a href="#id1"><span class="problematic" id="id2">:ref:`the github-repo &lt;https://github.com/gabriel-ing/Micrograph-analysis-scripts&gt;`_</span></a>.</p>
+<p>Importantly, this library is especially useful for <strong>in situ</strong> TEM videos, as this is a rarer endevour but also my specific interest.</p>
+<p>This library aims to simplify python-based image analysis functions for beginner or intermediate python useds.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF_generator module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="html_writer.html">html_writer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF generator module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="html_writer.html">HTML writer module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Previews_app.html">Previews App</a></li>
+<li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
 </ul>
 </div>
+</section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/gabriel-ing/Micrograph-analysis-scripts</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">--name</span> <span class="pre">SimpliPyTEM</span> <span class="pre">python=3.10</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">SimpliPyTEM</span></code></p>
@@ -99,7 +125,7 @@ Importantly, SimpliPyTEM is designed to make automated, basic work accessible fo
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p>
 </section>
 <section id="indices">
-<h2>Indices<a class="headerlink" href="#indices" title="Permalink to this heading"></a></h2>
+<h2>Indices<a class="headerlink" href="#indices" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -107,7 +133,7 @@ Importantly, SimpliPyTEM is designed to make automated, basic work accessible fo
 </ul>
 </section>
 <section id="licensing">
-<h2>Licensing<a class="headerlink" href="#licensing" title="Permalink to this heading"></a></h2>
+<h2>Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline"></a></h2>
 <p>This project is licensed under the BSD license.</p>
 </section>
 </section>
@@ -116,7 +142,7 @@ Importantly, SimpliPyTEM is designed to make automated, basic work accessible fo
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Micrograph_class.html" class="btn btn-neutral float-right" title="Micrograph Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="SimpliPyTEM-GUI.html" class="btn btn-neutral float-right" title="SimpliPyTEM-GUI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

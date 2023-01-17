@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Micrograph Class &mdash; SimpliPyTEM 0.1.0 documentation</title>
@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -39,47 +37,12 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Micrograph Class</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-functions-in-microvideo">List of functions in MicroVideo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Micrograph_class">Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Micrograph_class.Micrograph"><code class="docutils literal notranslate"><span class="pre">Micrograph</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.Local_normalisation"><code class="docutils literal notranslate"><span class="pre">Micrograph.Local_normalisation()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.add_frames"><code class="docutils literal notranslate"><span class="pre">Micrograph.add_frames()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.bin"><code class="docutils literal notranslate"><span class="pre">Micrograph.bin()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.choose_scalebar_color"><code class="docutils literal notranslate"><span class="pre">Micrograph.choose_scalebar_color()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.choose_scalebar_size"><code class="docutils literal notranslate"><span class="pre">Micrograph.choose_scalebar_size()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.clip_contrast"><code class="docutils literal notranslate"><span class="pre">Micrograph.clip_contrast()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.convert_to_8bit"><code class="docutils literal notranslate"><span class="pre">Micrograph.convert_to_8bit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.enhance_contrast"><code class="docutils literal notranslate"><span class="pre">Micrograph.enhance_contrast()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.eqHist"><code class="docutils literal notranslate"><span class="pre">Micrograph.eqHist()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.gaussian_filter"><code class="docutils literal notranslate"><span class="pre">Micrograph.gaussian_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.get_date_time"><code class="docutils literal notranslate"><span class="pre">Micrograph.get_date_time()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.get_exposure"><code class="docutils literal notranslate"><span class="pre">Micrograph.get_exposure()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.get_mag"><code class="docutils literal notranslate"><span class="pre">Micrograph.get_mag()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.get_voltage"><code class="docutils literal notranslate"><span class="pre">Micrograph.get_voltage()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.imshow"><code class="docutils literal notranslate"><span class="pre">Micrograph.imshow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.low_pass_filter"><code class="docutils literal notranslate"><span class="pre">Micrograph.low_pass_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.make_scalebar"><code class="docutils literal notranslate"><span class="pre">Micrograph.make_scalebar()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.median_filter"><code class="docutils literal notranslate"><span class="pre">Micrograph.median_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.motioncor_frames"><code class="docutils literal notranslate"><span class="pre">Micrograph.motioncor_frames()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.motioncorrect_video"><code class="docutils literal notranslate"><span class="pre">Micrograph.motioncorrect_video()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.nlm_filter"><code class="docutils literal notranslate"><span class="pre">Micrograph.nlm_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.open_dm"><code class="docutils literal notranslate"><span class="pre">Micrograph.open_dm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.open_mrc"><code class="docutils literal notranslate"><span class="pre">Micrograph.open_mrc()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.reset_xy"><code class="docutils literal notranslate"><span class="pre">Micrograph.reset_xy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.show_metadata"><code class="docutils literal notranslate"><span class="pre">Micrograph.show_metadata()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.show_pair"><code class="docutils literal notranslate"><span class="pre">Micrograph.show_pair()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.weiner_filter"><code class="docutils literal notranslate"><span class="pre">Micrograph.weiner_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Micrograph_class.Micrograph.write_image"><code class="docutils literal notranslate"><span class="pre">Micrograph.write_image()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#Micrograph_class.default_image_pipeline"><code class="docutils literal notranslate"><span class="pre">default_image_pipeline()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Micrograph_class.default_pipeline_class"><code class="docutils literal notranslate"><span class="pre">default_pipeline_class()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Micrograph_class">Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
@@ -114,11 +77,11 @@
            <div itemprop="articleBody">
              
   <section id="micrograph-class">
-<h1>Micrograph Class<a class="headerlink" href="#micrograph-class" title="Permalink to this heading"></a></h1>
+<h1>Micrograph Class<a class="headerlink" href="#micrograph-class" title="Permalink to this headline"></a></h1>
 <p>The micrograph class is the main container for all the image processing. Micrographs are loaded into the object, including metadata and then many methods can be run with this object, including image filtering, converting to 8bit, improving contrast, plotting the image and the histogram. The image data is stored as a numpy array within the .image attribute.</p>
 <p>There is too much to write detailed documentation alongside the autodoc documentation listed below, however full explanations for all of this can be found in the jupyter tutorial (tutorials/MicrographAnalysisTutorial).</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
 <p>Here is a basic example showing a micrograph being opened, gaussian filtered, converted to 8bit, contrast enhanced, scalebar added, plotted and saved as a jpg:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#import the class</span>
 <span class="kn">from</span> <span class="nn">SimpliPyTEM.Micrograph_class</span> <span class="kn">import</span> <span class="n">Micrograph</span>
@@ -150,7 +113,7 @@
 </div>
 </section>
 <section id="list-of-functions-in-microvideo">
-<h2>List of functions in MicroVideo<a class="headerlink" href="#list-of-functions-in-microvideo" title="Permalink to this heading"></a></h2>
+<h2>List of functions in MicroVideo<a class="headerlink" href="#list-of-functions-in-microvideo" title="Permalink to this headline"></a></h2>
 <dl class="simple">
 <dt>Imports:</dt><dd><ul class="simple">
 <li><p>open_dm - Opening digital micrograph files</p></li>
@@ -202,10 +165,10 @@
 </dl>
 </section>
 <section id="module-Micrograph_class">
-<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-Micrograph_class" title="Permalink to this heading"></a></h2>
+<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-Micrograph_class" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">Micrograph</span></span><a class="headerlink" href="#Micrograph_class.Micrograph" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">Micrograph</span></span><a class="headerlink" href="#Micrograph_class.Micrograph" title="Permalink to this definition"></a></dt>
 <dd><p>A class holding the micrograph image data along with associated parameters and methods. This makes processing microscope images easier as it collects data and methods into a single place. 
 The majority of image handling methods here comes from OpenCV, the functions often have more options/parameters, as a result making them both more powerful and more complicated. 
 This package aims to simplify and automate these functions, however if more functionality is required, I recommend using OpenCV (<a class="reference external" href="https://docs.opencv.org/4.x/">https://docs.opencv.org/4.x/</a>) as a starting point for your image analysis. 
@@ -239,8 +202,6 @@ The patch (local area) is then normalised using the medians (patch = patch* glob
 <p>The patch median was chosen so there would be less effect if there is a large dark/bright particle, however if this is too large compared with the patch size it will affect the resulting contrast.</p>
 <p>Padding can be applied which will greatly reduce edge artefacts. However doing this well will greatly reduce the 
 Note: if there is a black region (eg. edge of beam or grid) in the image this may lead to bad results.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>numpatches:int</dt><dd><p>The number of patches on each axis to split the image into, ie image is split into n x n patches and these are given the same median</p>
@@ -251,69 +212,51 @@ Note: if there is a black region (eg. edge of beam or grid) in the image this ma
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>new_im: Micrograph</dt><dd><p>Copy of the object with an image that has been locally normalised</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.add_frames">
 <span class="sig-name descname"><span class="pre">add_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.add_frames" title="Permalink to this definition"></a></dt>
 <dd><p>This is used to create a sum of a series of frames where each frame is a saved in a separate .dm file.</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>frames:list</dt><dd><p>A series of frames (name or path+name) to add to the original frame</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="output">
-<h3>Output<a class="headerlink" href="#output" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><p>Adds the frames to the existing frame, self.image is now an average of all the frames.</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.bin">
 <span class="sig-name descname"><span class="pre">bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.bin" title="Permalink to this definition"></a></dt>
 <dd><p>This bins (reduces size) of the image on the x and y dimensions by the selected value (e.g. a 4000x4000 pixels image goes to 2000x2000 pixels with a value of 2)</p>
-<section id="id2">
-<h3>Parameters<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>value:int</dt><dd><p>The scale by which to reduce the image size on each dimension. This is normally kept to powers of 2 but any number (including floating point numbers) should work.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id3">
-<h3>Returns<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Binned_image:Micrograph</dt><dd><p>Copy of micrograph object with reduced image size</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.choose_scalebar_color">
 <span class="sig-name descname"><span class="pre">choose_scalebar_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.choose_scalebar_color" title="Permalink to this definition"></a></dt>
 <dd><p>Chooses the scalebar color and returns the pixelvalue and text color for the annotation. parameters are most of the outputs from choose_scalebar_size()</p>
-<section id="id4">
-<h3>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>scalebar_x: int</dt><dd><p>x coordinate for the scalebar</p>
@@ -328,15 +271,12 @@ Note: if there is a black region (eg. edge of beam or grid) in the image this ma
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.choose_scalebar_size">
 <span class="sig-name descname"><span class="pre">choose_scalebar_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.choose_scalebar_size" title="Permalink to this definition"></a></dt>
 <dd><p>Function for choosing scalebar size, called through make_scalebar(), not a standalone function.</p>
-<section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>scalebar_x: int</dt><dd><p>x coordinate for the scalebar</p>
@@ -351,7 +291,6 @@ Note: if there is a black region (eg. edge of beam or grid) in the image this ma
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -362,8 +301,6 @@ These values can be defined directly or can be automatically decided using a sat
 I.e, if there are 1,000,000 pixels in an image and the saturation value is 0.1, the method searches the value for which only 0.1% or 1000 pixels are above/below. 
 These values then become the new minimum and maximum of the image, and are scaled to between 0 and 255.</p>
 <p>This method will automatically convert to 8 bit (scale between 0 and 255), if this is an issue raise and it can be changed in future versions.</p>
-<section id="id6">
-<h3>Parameters<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>saturation: Float</dt><dd><p>The percentage cutoff above/below which the pixels are set to zero/255, default is 0.5% of pixels</p>
@@ -374,39 +311,29 @@ These values then become the new minimum and maximum of the image, and are scale
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id7">
-<h3>Returns<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Contrast_enhanced_micrograph<span class="classifier">Micrograph</span></dt><dd><p>Return a copy of the object with the contrast clipped at either end of the image</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><p>MicrographContrastClipped = micrograph.clip_contrast(saturation=1)</p>
 <p>or</p>
 <p>MicrographContrastClipped = micrograph.clip_contrast(maxvalue=220, minvalue=20)</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.convert_to_8bit">
 <span class="sig-name descname"><span class="pre">convert_to_8bit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.convert_to_8bit" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a micrograph object with the image scaled between 0 and 255 (an 8-bit image). Improves contrast and is a more usable image format than higher bits.</p>
-<section id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Micrograph8bit<span class="classifier">Micrograph</span></dt><dd><p>A copy of the micrograph object with the image scaled between 0 and 255</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -414,8 +341,6 @@ These values then become the new minimum and maximum of the image, and are scale
 <span class="sig-name descname"><span class="pre">enhance_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.enhance_contrast" title="Permalink to this definition"></a></dt>
 <dd><p>Function for enhancing contrast. This uses the OpenCV methods detailed here: <a class="reference external" href="https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html">https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html</a>. 
 There are 3 input values which define contast controls: alpha, beta and gamma, the gamma value is optional.</p>
-<section id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>alpha:float</dt><dd><p>Basic contrast control, usually in the range of 1-3. The histogram is streched.</p>
@@ -427,31 +352,24 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id10">
-<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Contrast_enhanced_micrograph<span class="classifier">Micrograph</span></dt><dd><p>Return a copy of the object with the contrast enhanced.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.eqHist">
 <span class="sig-name descname"><span class="pre">eqHist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.eqHist" title="Permalink to this definition"></a></dt>
 <dd><p>Spreads the contrast across a range of values, leading to an evened, flattened histogram. This can be very effective at enhancing midtones in images with very bright or very dark patches.</p>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Contrast_enhanced_micrograph<span class="classifier">Micrograph</span></dt><dd><p>Return a copy of the object with the contrast enhanced.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -478,8 +396,6 @@ Optional, if included image will be converted to 8 bit.</p>
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_date_time">
 <span class="sig-name descname"><span class="pre">get_date_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_date_time" title="Permalink to this definition"></a></dt>
 <dd><p>Prints and returns the aquisition date and time for the image.</p>
-<section id="id12">
-<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>AqDate:str</dt><dd><p>Date on which the micrograph was captured</p>
@@ -488,30 +404,24 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_exposure">
 <span class="sig-name descname"><span class="pre">get_exposure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_exposure" title="Permalink to this definition"></a></dt>
 <dd><p>Prints and returns the exposure time for the image.</p>
-<section id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>exposure:int</dt><dd><p>Capture time for the image</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_mag">
 <span class="sig-name descname"><span class="pre">get_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_mag" title="Permalink to this definition"></a></dt>
 <dd><p>Returns Micrograph magnifications (indicated and actual) and saves them as micrograph attributes (microscope.indicated_mag, microscope.actual_mag)</p>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>indicated_mag:float</dt><dd><p>Indicated magnification (i.e. what the microscope tells you the mag is) for the image</p>
@@ -520,37 +430,30 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.get_voltage">
 <span class="sig-name descname"><span class="pre">get_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.get_voltage" title="Permalink to this definition"></a></dt>
 <dd><p>Returns voltage and saves is as micrograph attribute</p>
-<section id="id15">
-<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Voltage:int</dt><dd><p>Microscope voltage for the image</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.imshow">
 <span class="sig-name descname"><span class="pre">imshow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.imshow" title="Permalink to this definition"></a></dt>
 <dd><p>Basic function for plotting the micrograph image</p>
-<section id="id16">
-<h3>Parameters<a class="headerlink" href="#id16" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>title:str</dt><dd><p>Optional title to be added to the plot</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -558,8 +461,6 @@ Optional, if included image will be converted to 8 bit.</p>
 <span class="sig-name descname"><span class="pre">low_pass_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.low_pass_filter" title="Permalink to this definition"></a></dt>
 <dd><p>This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
 If pixelsize is undefined the radius will refer to pixels only</p>
-<section id="id17">
-<h3>Parameters<a class="headerlink" href="#id17" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl>
 <dt>radius<span class="classifier">int (or potentially float)</span></dt><dd><dl>
@@ -575,16 +476,12 @@ If pixelsize is undefined the radius will refer to pixels only</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id18">
-<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Low_pass_filtered_object :Micrograph</dt><dd><p>Low pass filtered copy of micrograph object.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -593,8 +490,6 @@ If pixelsize is undefined the radius will refer to pixels only</p>
 <dd><p>Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
 The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
 This will work best for 8-bit images, as the scalebar will be given values of 0 or 255.</p>
-<section id="id19">
-<h3>Parameters<a class="headerlink" href="#id19" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>color<span class="classifier">str</span></dt><dd><p>The color of the scalebar, the options are ‘white’. ‘black’ or ‘grey’</p>
@@ -603,16 +498,12 @@ This will work best for 8-bit images, as the scalebar will be given values of 0 
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id20">
-<h3>Returns<a class="headerlink" href="#id20" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Micrograph_object_with_scalebar: Micrograph</dt><dd><p>Copy of the micrograph object with a scale bar.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -639,8 +530,6 @@ This will work best for 8-bit images, as the scalebar will be given values of 0 
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.motioncor_frames">
 <span class="sig-name descname"><span class="pre">motioncor_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.motioncor_frames" title="Permalink to this definition"></a></dt>
 <dd><p>Advanced method which requires editing the code to use. Uses Motioncor2 to motion correct a series of frames and output a number of motion corrected images as a micrograph object</p>
-<section id="id21">
-<h3>Parameters<a class="headerlink" href="#id21" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>frames_dict:dict</dt><dd><p>A dictionary of videos and frames in the directory which will be motion corrected, this is created by the ‘group_frames()’ function</p>
@@ -648,7 +537,6 @@ This will work best for 8-bit images, as the scalebar will be given values of 0 
 </dl>
 </div></blockquote>
 <p>This actually wont work well (will only open the final vid in the frames dictionary). Depreciated function.</p>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -696,8 +584,6 @@ By default, video dm files (dose fractionations) will be summed to create a sing
 <p>Some DM files have ‘hot pixels’ which have anomalously high signal due to detector malfunction, these often lead to contrast issues.
 To correct for this any pixel which has a higher value than the mean value + (20 x standard deviation) is set to the mean pixel value, this is on by default but can be turned off using pixel_correction=False</p>
 <p>This uses the ncempy.io.dm package to read DM files, more information can be found here: <a class="reference external" href="https://openncem.readthedocs.io/en/latest/ncempy.io.html">https://openncem.readthedocs.io/en/latest/ncempy.io.html</a></p>
-<section id="id22">
-<h3>Parameters<a class="headerlink" href="#id22" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>file<span class="classifier">str</span></dt><dd><p>The name of the dm file to open. The path to the file can also be included if it is not in the same directory.</p>
@@ -708,22 +594,18 @@ To correct for this any pixel which has a higher value than the mean value + (20
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.open_mrc">
 <span class="sig-name descname"><span class="pre">open_mrc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.open_mrc" title="Permalink to this definition"></a></dt>
 <dd><p>Imports MRC image files into the Micrograph object.</p>
-<section id="id23">
-<h3>Parameters<a class="headerlink" href="#id23" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>file<span class="classifier">str</span></dt><dd><p>The name of an MRC file to open, the path to the file can also be included.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -742,8 +624,6 @@ To correct for this any pixel which has a higher value than the mean value + (20
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.show_pair">
 <span class="sig-name descname"><span class="pre">show_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.show_pair" title="Permalink to this definition"></a></dt>
 <dd><p>Basic function for plotting pairs of images for comparison</p>
-<section id="id24">
-<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>other_image<span class="classifier">2D Numpy array</span></dt><dd><p>Second image of the plot - if using Micrograph object remember to use micrograph.image</p>
@@ -754,7 +634,6 @@ To correct for this any pixel which has a higher value than the mean value + (20
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -779,10 +658,8 @@ To correct for this any pixel which has a higher value than the mean value + (20
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Micrograph_class.Micrograph.write_image">
-<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.write_image" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.Micrograph.write_image" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the image in a .jpg or .tif file for display or use with other programs.</p>
-<section id="id25">
-<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>name: str</dt><dd><p>Filename for saved image. Ending with either .jpg or .tif will define the format of the image, alternatively ftype argument can be used. 
@@ -796,7 +673,6 @@ The final directory in the path will be made if it does not already exist.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 </dd></dl>
@@ -805,8 +681,6 @@ The final directory in the path will be made if it does not already exist.</p>
 <dt class="sig sig-object py" id="Micrograph_class.default_image_pipeline">
 <span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">default_image_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xybin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.default_image_pipeline" title="Permalink to this definition"></a></dt>
 <dd><p>Default pipeline to process image, add scalebar, filter, bin and save the image, speeding up automation.</p>
-<section id="id26">
-<h3>Parameters<a class="headerlink" href="#id26" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Filename:str</dt><dd><p>Filename of image to process</p>
@@ -827,15 +701,12 @@ The final directory in the path will be made if it does not already exist.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Micrograph_class.default_pipeline_class">
 <span class="sig-prename descclassname"><span class="pre">Micrograph_class.</span></span><span class="sig-name descname"><span class="pre">default_pipeline_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Micrograph_object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xybin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Micrograph_class.default_pipeline_class" title="Permalink to this definition"></a></dt>
 <dd><p>Default pipeline to process from a Micrograph_object, add scalebar, filter, bin and save the image, speeding up automation.</p>
-<section id="id27">
-<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Filename:str</dt><dd><p>Filename of image to process</p>
@@ -856,7 +727,6 @@ The final directory in the path will be made if it does not already exist.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 </section>

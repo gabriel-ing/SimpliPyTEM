@@ -1,9 +1,15 @@
-Previews App
-============
+SimpliPyTEM-GUI
+===============
 
 While using python will allow one to get the most out of the package, for many learning python is intimidating, and time ends up being wasted manually processing images. Here I am introducing a GUI-based pipeline to create high quality JPEGs, with a good size scale bar automatically added, minor filtering (median and gaussian filtering) available, and video (or dose-fractionation) processing options included. 
 
 Combined with this, there are options to create html or pdf documentss containing the images (and videos in the case of html) generated. These documents can be a very useful way to easily evaluate the images/videos taken in an TEM experiment. 
+
+.. image:: media/Images/SimpliPyTEM_figures.001.png
+    :width: 600
+    :alt: Figure showing aim of SimpliPyTEM-GUI
+
+
 
 Usage - Section 1: Image generation
 -----------------------------------

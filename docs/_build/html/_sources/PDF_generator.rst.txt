@@ -1,5 +1,5 @@
-PDF\_generator module
-=====================
+PDF generator module
+====================
 This module will create a pdf file containing all the images from an experiment, the sample name (prefix) of the images is used to group the images onto separate pages, and the image number is included below each image.
 
 Usage
