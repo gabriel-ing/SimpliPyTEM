@@ -74,15 +74,22 @@ Installation
 ------------
 
 
-``git clone https://github.com/gabriel-ing/Micrograph-analysis-scripts``
+To install, I recommend using miniconda, see here: https://docs.conda.io/en/latest/miniconda.html
 
-``conda create --name SimpliPyTEM python=3.10``
+Install miniconda and create a new environment, although it isn't strictly necessary to create a new environment this ensure the install doesn't create versions of libraries which conflict with the requirements of other installed libraries. 
+
+``conda create --name SimpliPyTEM python=3.8``
+
+After that you need to activate the environment, this needs to be done before every use.
 
 ``conda activate SimpliPyTEM``
 
-``cd Micrograph-analysis-scripts``
+Then you can download SimpliPyTEM using pip: 
 
-``pip install .``
+``pip install SimpliPyTEM``
+
+If you have any issues with the installation feel free to open a issue on the github repository: https://github.com/gabriel-ing/Micrograph-analysis-scripts and I can try to help. 
+
 
 
 Indices
