@@ -17,3 +17,4 @@ fpdf
 PyQt5
 sphinx
 sphinx_rtd_theme
+SimpliPyTEM
