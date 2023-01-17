@@ -1,5 +1,5 @@
 Particle analysis module
-===================
+========================
 
 This is a module for some basic analysis of particle size and shape by thresholding the particle and extracting data, this works for videos and for images. There is a tutorial for using this module in the tutorials folder on the github (thresholding)
 While this module is relatively basic, it can be very easily and effectively used. 
@@ -16,9 +16,13 @@ This can be done as follows::
       
       #import module 
       from simpliPyTEM.Particle_analysis import * 
+      from simpliPyTEM.Micrograph_class import *
 
+      micrograph = Micrograph()
+      micrograph.open_dm('My_micrograph.dm3')
+      
       #Threshold the image using pixel value 100 (for example)
-      thresh = Threshold(image, 100)
+      thresh = Threshold(micrograph.image, 100)
 
       #Find the edge of the particle from binary image, only consider particles over 200 pixels in area
       contours_im, mask = Find_contours(thresh, minsize=200)

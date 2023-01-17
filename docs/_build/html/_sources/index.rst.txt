@@ -49,7 +49,7 @@ While SimpliPy-GUI makes the basic post-processing simple, the SimpliPy-Library 
 
 This library contains several modules, including those for various post-processing and analysis of micrographs as well as microscope videos (see MicroVideo_class module), basic particle analysis functions (e.g. locating particles by simple thresholding and measuring properties) writing html and pdf documents. These methods aim to be easy to use and are fully documented in the links below. However, there are also 3 jupyter-notebook tutorials available to learn how to use, and give more details about these functions. These are found in the Tutorials folder where the package is installed, or can be downloaded individually from :ref:`the github-repo <https://github.com/gabriel-ing/Micrograph-analysis-scripts>`_.
 
-Importantly, this library is especially useful for **in situ** TEM videos, as this is a rarer endevour but also my specific interest. 
+Importantly, this library is especially useful for *in situ* TEM videos, as this is a rarer endevour but also my specific interest. 
 
 This library aims to simplify python-based image analysis functions for beginner or intermediate python useds.
 
