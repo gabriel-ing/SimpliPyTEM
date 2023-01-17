@@ -15,6 +15,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -51,6 +52,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicrographAnalysisTutorial.html">Micrograph analysis tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicrographAnalysisTutorial.html#Automating-Pipelines">Automating Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html">Analysing TEM videos with SimpliPyTEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html#Advanced-functions">Advanced functions</a></li>
 </ul>
 
         </div>
@@ -77,7 +82,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="particle-analysis-module">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="particle-analysis-module">
 <h1>Particle analysis module<a class="headerlink" href="#particle-analysis-module" title="Permalink to this headline"></a></h1>
 <p>This is a module for some basic analysis of particle size and shape by thresholding the particle and extracting data, this works for videos and for images. There is a tutorial for using this module in the tutorials folder on the github (thresholding)
 While this module is relatively basic, it can be very easily and effectively used.</p>
@@ -98,6 +127,7 @@ While this module is relatively basic, it can be very easily and effectively use
 
 <span class="n">micrograph</span> <span class="o">=</span> <span class="n">Micrograph</span><span class="p">()</span>
 <span class="n">micrograph</span><span class="o">.</span><span class="n">open_dm</span><span class="p">(</span><span class="s1">&#39;My_micrograph.dm3&#39;</span><span class="p">)</span>
+
 <span class="c1">#Threshold the image using pixel value 100 (for example)</span>
 <span class="n">thresh</span> <span class="o">=</span> <span class="n">Threshold</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 

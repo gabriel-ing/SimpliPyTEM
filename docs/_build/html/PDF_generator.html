@@ -15,11 +15,12 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="HTML writer module" href="html_writer.html" />
-    <link rel="prev" title="MicroVideo Class" href="MicroVideo_class.html" /> 
+    <link rel="prev" title="Analysing TEM videos with SimpliPyTEM" href="Tutorials/MicroVideoAnalysisTutorial.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,6 +52,10 @@
 <li class="toctree-l1"><a class="reference internal" href="html_writer.html">HTML writer module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Particle_analysis.html">Particle analysis module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicrographAnalysisTutorial.html">Micrograph analysis tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicrographAnalysisTutorial.html#Automating-Pipelines">Automating Pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html">Analysing TEM videos with SimpliPyTEM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html#Advanced-functions">Advanced functions</a></li>
 </ul>
 
         </div>
@@ -77,7 +82,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pdf-generator-module">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="pdf-generator-module">
 <h1>PDF generator module<a class="headerlink" href="#pdf-generator-module" title="Permalink to this headline"></a></h1>
 <p>This module will create a pdf file containing all the images from an experiment, the sample name (prefix) of the images is used to group the images onto separate pages, and the image number is included below each image.</p>
 <section id="usage">
@@ -182,7 +211,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="MicroVideo_class.html" class="btn btn-neutral float-left" title="MicroVideo Class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorials/MicroVideoAnalysisTutorial.html" class="btn btn-neutral float-left" title="Analysing TEM videos with SimpliPyTEM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="html_writer.html" class="btn btn-neutral float-right" title="HTML writer module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

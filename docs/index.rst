@@ -33,11 +33,11 @@ This app is designed to be simple to use for people with basic computational ski
 .. toctree::
    SimpliPyTEM-GUI
 
-.. image:: media/Images/App_screenshot1.png
+.. image:: Media/Images/App_screenshot1.png
    :width: 400
    :alt: Figure showing the SimpliPy-GUI app
 
-.. image:: media/Images/SimpliPyTEM_figures.001.png
+.. image:: Media/Images/SimpliPyTEM_figures.001.png
     :width: 600
     :alt: Figure showing aim of SimpliPyTEM-GUI
 
@@ -67,6 +67,8 @@ This library aims to simplify python-based image analysis functions for beginner
    html_writer
    Particle_analysis
    SimpliPyTEM-GUI
+   Tutorials/MicrographAnalysisTutorial
+   Tutorials/MicroVideoAnalysisTutorial
 
 Installation
 ------------

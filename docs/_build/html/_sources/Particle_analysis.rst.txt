@@ -20,6 +20,7 @@ This can be done as follows::
 
       micrograph = Micrograph()
       micrograph.open_dm('My_micrograph.dm3')
+      
       #Threshold the image using pixel value 100 (for example)
       thresh = Threshold(micrograph.image, 100)
 

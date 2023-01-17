@@ -3,7 +3,13 @@ Micrograph Class
 
 The micrograph class is the main container for all the image processing. Micrographs are loaded into the object, including metadata and then many methods can be run with this object, including image filtering, converting to 8bit, improving contrast, plotting the image and the histogram. The image data is stored as a numpy array within the .image attribute.
 
-There is too much to write detailed documentation alongside the autodoc documentation listed below, however full explanations for all of this can be found in the jupyter tutorial (tutorials/MicrographAnalysisTutorial).
+There is too much to write detailed documentation alongside the autodoc documentation listed below, however full explanations for all of this can be found in the jupyter tutorial (tutorials/MicrographAnalysisTutorial), which is also available on this site: 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   Tutorials/MicrographAnalysisTutorial
 
 Example
 -------

@@ -5,7 +5,7 @@ While using python will allow one to get the most out of the package, for many l
 
 Combined with this, there are options to create html or pdf documentss containing the images (and videos in the case of html) generated. These documents can be a very useful way to easily evaluate the images/videos taken in an TEM experiment. 
 
-.. image:: media/Images/SimpliPyTEM_figures.001.png
+.. image:: Media/Images/SimpliPyTEM_figures.001.png
     :width: 600
     :alt: Figure showing aim of SimpliPyTEM-GUI
 
@@ -22,7 +22,7 @@ Open terminal and call:
 
 The GUI should appear as follows: 
 
-.. image:: media/Images/App_screenshot1.png
+.. image:: Media/Images/App_screenshot1.png
     :width: 300
     :alt: a screenshot showing the app GUI
 

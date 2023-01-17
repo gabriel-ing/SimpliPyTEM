@@ -5,8 +5,15 @@ Module containing the class MicroVideo, this is the main tool of video analysis 
 
 The aim of this module was to make python-based analysis/basic enhancements of in situ TEM videos more simple by putting the majority of desired methods in a single package with simple commands. 
 
-This works in the same way as the Micrograph class but is designed for video data instead. As with the micrograph class, there are too many functions to include description of all here, beyond the autodoc documentation, however I recommend checking out the interactive jupyter notebook tutorial (tutorials/MicroVideoAnalysisTutorial.ipynb)
+This works in the same way as the Micrograph class but is designed for video data instead. As with the micrograph class, there are too many functions to include description of all here, beyond the autodoc documentation, however I recommend checking out the interactive jupyter notebook tutorial (docs/Tutorials/MicroVideoAnalysisTutorial.ipynb). This is also available here: 
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   Tutorials/MicroVideoAnalysisTutorial
+
+Please note that this tutorial is automatically generated from the jupyter notebook tutorial and some things have imported poorly or have errored (mainly because files are note available).
 
 Example
 -------
