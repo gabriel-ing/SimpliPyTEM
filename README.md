@@ -1,6 +1,6 @@
 # SimpliPyTEM: an open source project to simplify python-based analysis of electron microscopy data with added focus on in situ videos 
 
-![Figure](docs/media/Images/SimpliPyTEM_figures.001.png)
+[<img src=docs/media/Images/SimpliPyTEM_figures.001.png>]
 
 Please see full documentation at https://micrograph-analysis-scripts.readthedocs.io/en/latest/ 
 
