@@ -5,9 +5,9 @@ from PyQt5.QtWidgets import (QApplication, QLabel, QPushButton, QVBoxLayout, QWi
                              QFileDialog, QTextEdit, QTextBrowser, QComboBox, QCheckBox, QMainWindow,QGridLayout,QFileDialog,QLineEdit,QButtonGroup)
 from PyQt5.QtGui import QFont
 import sys
-from App_functions import * 
+from SimpliPyTEM.App_functions import * 
 from SimpliPyTEM.PDF_generator import *
-from html_writer import *
+from SimpliPyTEM.html_writer import *
 import threading 
 
 

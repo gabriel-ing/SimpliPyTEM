@@ -291,7 +291,7 @@ class MicroVideo:
         clip.to_videofile(name, fps)
     
 
-    def write_video(self, name=None, outdir=None, **kwargs):
+    def write_video(self, name=None, outdir=None, fps=None):
         '''
         This allows saving as an mp4 or a raw avi file (imageJ compatible)
 
@@ -303,6 +303,8 @@ class MicroVideo:
             outdir:str
                 The output directory for the files, if this directory doesn't exist (in the cwd) a new one will be created.
 
+            fps:int
+                Optionally the output movie frame rate can be added (in frames per second)
         Outputs
         -------
 
@@ -326,10 +328,13 @@ class MicroVideo:
                 os.mkdir(outdir)
             name = outdir+'/'+name
 
-        if 'fps' in kwargs:
-            fps= kwargs['fps']
-        else:
-            fps = 10    
+        
+            
+        
+        if not fps and hasattr(self,'fps'):
+            fps= self.fps    
+        elif not fps:
+            fps=10
 
         outvid = []
         for frame in self.frames:

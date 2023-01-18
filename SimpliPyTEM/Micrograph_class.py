@@ -96,10 +96,10 @@ class Micrograph:
         
         #self.image = np.flip(self.image, axis=0)
         self.x = self.image.shape[1]
+        pixelUnit = dm_input['pixelUnit'][-1]
         self.y = self.image.shape[0]
         pixelSize=dm_input['pixelSize'][-1]
         #print(pixelSize,type(pixelSize))
-        pixelUnit = dm_input['pixelUnit'][-1]
         self.filename = file
         self.pixelSize= float(pixelSize)
         self.pixelUnit = pixelUnit
@@ -196,7 +196,7 @@ class Micrograph:
                 name = '.'.join(self.filename.split('.')[:-1])
                 #print('else_name = ',name)
         try:
-            name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
+            name += '_'+self.scalebar_size.replace('µ','u')+'scale.{}'.format(ftype)
         except AttributeError:
             name+='.'+ftype
         #if self.foldername!='':
@@ -206,14 +206,20 @@ class Micrograph:
         #else:
         #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
         
+        if self.pixelUnit=='µm':
+            pixelUnit='um'
+        else:
+            pixelUnit=self.pixelUnit
+
         if ftype=='jpg':
             if self.image.max()!=255 or self.image.min()!=0:
                 print(self.image.max(), self.image.min())
                 self = self.convert_to_8bit()
                 print('converting to 8bit')
             cv.imwrite(name,self.image)
+
         elif ftype=='tif':
-            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
+            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':pixelUnit})
 
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')

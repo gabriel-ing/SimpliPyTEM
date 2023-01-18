@@ -14,7 +14,7 @@ setup(
 	license = 'BSD 2-clause',
 	packages =['SimpliPyTEM'],
 	install_requires=['numpy',
-	 'ncempy==1.9.0',
+	 'ncempy',
 	 'Pillow',
 	 'mrcfile',
 	 'moviepy',
@@ -29,7 +29,8 @@ setup(
 	 'PyQt5',
 	 'sphinx',
 	 'sphinx_rtd_theme',
-	 'nbsphix'],
+	 'nbsphinx'],
+	entry_points={'console_scripts':['SimpliPyTEM-GUI = SimpliPyTEM.SimpliPyTEM_GUI:main']},
 	classifiers=[
 		'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
