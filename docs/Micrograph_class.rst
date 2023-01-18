@@ -92,3 +92,5 @@ Documentation
 
 .. automodule:: Micrograph_class
         :members:
+        :undoc-members:
+        :show-inheritance:
