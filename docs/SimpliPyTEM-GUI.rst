@@ -18,7 +18,7 @@ App usage is fairly simple, and is presented in a stepwise fashion here;
 
 Open terminal and call: 
 
-```python SimpliPyTEM_app.py```  **Need to find a way to make this run from anywhere** 
+```SimpliPyTEM-GUI```
 
 The GUI should appear as follows: 
 
