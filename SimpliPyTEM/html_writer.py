@@ -24,7 +24,7 @@ def write_html(images, videos, title='Default_experiment_title', notes='', **kwa
     ------
         HTML document {title}.html saved in the current working directory. This html document has the images from an experiment as well as playable videos.
     '''
-
+    print(images)
     a =Airium()
     with a.html(lang='en'):
         with a.head():
@@ -40,21 +40,34 @@ def write_html(images, videos, title='Default_experiment_title', notes='', **kwa
                     a(notes)
             with a.h2():
                 a('Images')
-            for image in images:
-                with a.div(klass='Image_group'):
+            with a.ul(klass='Image_group'):
+                for image in images:
 
-                    with a.h3():
-                        a(image.strip('.jpg').split('/')[-1].replace('_', ' '))
-                    a.img(src=image, alt='Alt text')    
-            with a.h2():
-                a('Videos')
-            for video in videos:
-                with a.div(klass='Video_group'):
-                    with a.h3():
-                        a(video.strip('.mp4').split('/')[-1].replace('_',' '))
-                    with a.video('controls', width=500,height=460):
-                        a.source(src=video, type="video/mp4")
+                    print(image)
+                    image_name = image.strip('.jpg').split('/')[-1].replace('_', ' ')
+                    
 
+    #                    with a.h3():
+    #                        a(image.strip('.jpg').split('/')[-1].replace('_', ' '))
+                    
+                    with a.li():
+                        with a.a(href=''):
+                            a.img(src=image, alt=image_name)    
+                            with a.p():
+                                a(image_name)
+                            a.img(src=image, alt=image_name, klass='preview')    
+            if  videos:
+                with a.div(klass='Videos'):
+                    with a.h2():
+                        a('Videos')
+                    with a.ul(klass='Video_group'):
+                        for video in videos:
+                            with a.li():
+
+                                with a.video('controls', width=600,height=600):
+                                    a.source(src=video, type="video/mp4")
+                                with a.p():
+                                    a(video.strip('.mp4').split('/')[-1].replace('_',' '))
 
         if 'outdir' in kwargs:
             outdir = kwargs['outdir']
@@ -111,79 +124,169 @@ def write_css(outdir=None):
         cssname='style.css' 
     with open(cssname, 'w') as f:
         f.write('''
-* {
-    font-family: Helvetica;
+*
+{
+    border: 0;
+    margin: 0;
+    padding: 0;
 }
-html{
-    background-color: black;
-}
-h1{
-    font-size: 80px;
-    font-weight:bold;
-    text-justify: center;
-}
-.banner{
-    background-color:#D8BBEA;
-    width:100%;
-    top:0px;
-    left:0px;
-    height:200px;
 
+/* =Basic HTML, Non-essential
+----------------------------------------------------------------------*/
 
+a
+{
+    text-decoration: none;
+}
+
+body
+{
+    background: #151D35;
+    color: #777;
+    margin: 0 auto;
+    padding: 50px;
+    position: relative;
+    width: 950px;
+}
+
+h1
+{
+    background: inherit;
+    border-bottom: 2px dashed #ccc;
+    color: #BB0E5F;
+    font: 50px Georgia, serif;
+    font-weight: 700;
+    margin: 0 0 10px;
+    padding: 0 0 5px;
+    text-align: center;
 }
 h2{
-    text-align:center;
-    padding: 10px 10px;
-    font-size:40px;
-    width: 150px;
-    margin:20px auto 20px auto;
-    background-color: #95A9C1;
+    border-bottom: 1px dashed #ccc;
+    color: #D8BBEA;
+    font: 30px Georgia, serif;
+    font-weight: 700;
+    margin: 20 0 10px;
+    padding: 0 0 5px;
+    text-align: center;
 }
 
-img{
-    border:black 3px solid;
-    display:inline-block;
-    /*flex: 0 1 auto;*/
-    justify-content: center;
-    width:97%;
-    margin:10px 10px 10px 10px;
+p
+{
+    clear: both;
+    font: 15px Verdana, sans-serif;
+    padding: 15px 0;
+    text-align: center;
+    color:#BB0E5F;
+}
+
+p a
+{
+    background: inherit;
+    color: #BB0E5F;
+}
+
+p a:hover
+{
+    background: inherit;
+    color: #BB0E5F;
+}
+
+.Videos
+{
+    
+        
+    
+
+}
+
+/* =Hoverbox Code
+----------------------------------------------------------------------*/
+
+.Image_group
+{
+    cursor: default;
+    list-style: none;
+    
+}
+
+.Image_group a
+{
+    cursor: default;
+}
+
+.Image_group a .preview
+{
+    display: none;
+}
+
+.Image_group a:hover .preview
+{
+    display: block;
+    position: absolute;
+    top: -33px;
+    left: -45px;
+    z-index: 1;
+}
+
+.Image_group img
+{
+    background: #fff;
+    border-color: #aaa #ccc #ddd #bbb;
+    border-style: solid;
+    border-width: 1px;
+    color: inherit;
+    padding: 2px;
+    vertical-align: top;
+    width: 250px;
+    height: 250px;
+}
+
+.Image_group li
+{
+    background: #95A9C1;
+    border-color: #95A9C1;
+    border-style: solid;
+    border-width: 1px;
+    color: inherit;
+    display: inline;
+    float: left;
+    width: 280;
+    height: 300;
+    margin: 3px;
+    padding: 10px;
+    position: relative;
+}
+
+.Image_group .preview
+{
+    border-color: #000;
+    width: 600px;
+    height: 600px;
+}
 
 
+.Video_group li{
+    text-align: center;
+    background: #95A9C1;
+    border-color: #95A9C1;
+    border-style: solid;
+    border-width: 1px;
+    color: inherit;
+    display: inline;
+    float: left;
+    padding: 10px 10px 10px 10px;
+    position: relative;
+    margin: auto;
+
 }
-h3{
-    text-align:center;
-}
-.Image_group{
-    background-color: rgb(200, 200, 200);
-    padding:10px 10px 10px 10px;
-    margin: 0px 0px 10px 0px;
-    width:97%;
-    display:inline-block;
-    align-items: center;
-}
-video{
-    margin:auto;
-    width:90%;
-    align-items: center;
-    justify-content: center;
-}
-.Video_group{
-    margin:auto;
-    background-color:rgb(200, 200, 200) ;
-    display: inline-block;
-    align-items: center;
-    padding:10px 10px 10px 10px;
-    margin: 0px 0px 10px 0px;
-    width:97%
-})
+
 ''')
-
-
 
 if __name__=='__main__':
     directory = os.getcwd()
     title = input('Give a title for the experiment: ')
     title=title.replace(' ', '_')
-    images, videos = get_files(directory, 'Images', 'Videos')
+    images, videos = get_files('Images', 'Videos')
+    print(images)
     write_html(images, videos, title=title)
     write_css()
