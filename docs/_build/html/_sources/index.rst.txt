@@ -90,6 +90,9 @@ Then you can download SimpliPyTEM using pip:
 
 If you have any issues with the installation feel free to open a issue on the github repository: https://github.com/gabriel-ing/Micrograph-analysis-scripts and I can try to help. 
 
+Following this the library should be accessible within python or jupyter-notebook scripts with: 
+
+``from SimpliPyTEM.Micrograph_class import * #For example``
 
 
 Indices

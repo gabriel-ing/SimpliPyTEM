@@ -1,76 +1,37 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Micrograph analysis tutorial &mdash; SimpliPyTEM 0.1.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="MicroVideo Class" href="../MicroVideo_class.html" />
     <link rel="prev" title="Micrograph Class" href="../Micrograph_class.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> SimpliPyTEM
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -78,22 +39,11 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../MicroVideo_class.html">MicroVideo Class</a></li>
@@ -141,73 +91,31 @@
 <li class="toctree-l1"><a class="reference internal" href="MicroVideoAnalysisTutorial.html">Video Analysis Tutorial</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">SimpliPyTEM</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../Micrograph_class.html">Micrograph Class</a> &raquo;</li>
-        
-      <li>Micrograph analysis tutorial</li>
-    
-    
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../Micrograph_class.html">Micrograph Class</a></li>
+      <li class="breadcrumb-item active">Micrograph analysis tutorial</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/Tutorials/MicrographAnalysisTutorial.ipynb.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS for nbsphinx extension */
@@ -488,16 +396,16 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <section id="Micrograph-analysis-tutorial">
-<h1>Micrograph analysis tutorial<a class="headerlink" href="#Micrograph-analysis-tutorial" title="Permalink to this heading">¶</a></h1>
+<h1>Micrograph analysis tutorial<a class="headerlink" href="#Micrograph-analysis-tutorial" title="Permalink to this headline"></a></h1>
 <p>This is a tutorial on how to use SimpliPyTEM to simplify the analysis of electron microscopy images. This includes basic functions including filtering, converting the file to 8-bit, looking at metadata and more.</p>
 <section id="Import-dependancies">
-<h2>Import dependancies<a class="headerlink" href="#Import-dependancies" title="Permalink to this heading">¶</a></h2>
+<h2>Import dependancies<a class="headerlink" href="#Import-dependancies" title="Permalink to this headline"></a></h2>
 <p>The reason it says &lt;Figure size…&gt; is because I run plt.gray() which makes plt.imshow() show data in a grayscale image by default, this can be ignored.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>from SimpliPyTEM.Micrograph_class import *
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SimpliPyTEM.Micrograph_class</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
@@ -511,7 +419,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </section>
 <section id="Initialise-the-Micrograph-object-and-open-a-micrograph">
-<h2>Initialise the Micrograph object and open a micrograph<a class="headerlink" href="#Initialise-the-Micrograph-object-and-open-a-micrograph" title="Permalink to this heading">¶</a></h2>
+<h2>Initialise the Micrograph object and open a micrograph<a class="headerlink" href="#Initialise-the-Micrograph-object-and-open-a-micrograph" title="Permalink to this headline"></a></h2>
 <p>The Micrograph object is the heart of SimpliPyTEM for images, this contains the methods, data and metadata available with SimpliPyTEM. To use, initialise the object and then run one of the methods to open a file - open_dm for digital micrograph files, open_mrc for mrc files and open_tif for tif files.</p>
 <p>Note that if a video (or dose fractionation) dm file is provided, the micrograph object will automatically sum the frames, opening it as an image. To load video files as videos, use the MicroVideo object.</p>
 <p>An example image is included with this tutorial, and at times will be commented on itself, however you are very welcome to use your own image, hopefully very similar results will be seen.</p>
@@ -519,13 +427,13 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#initialise object called im, this currently is an empty object
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#initialise object called im, this currently is an empty object</span>
 
-micrograph = Micrograph()
+<span class="n">micrograph</span> <span class="o">=</span> <span class="n">Micrograph</span><span class="p">()</span>
 
-#open micrograph
+<span class="c1">#open micrograph</span>
 
-micrograph.open_dm(&#39;Fibrils_Example.dm3&#39;)
+<span class="n">micrograph</span><span class="o">.</span><span class="n">open_dm</span><span class="p">(</span><span class="s1">&#39;Fibrils_Example.dm3&#39;</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
@@ -538,13 +446,13 @@ Fibrils_Example.dm3 opened as a Micrograph object
 </pre></div></div>
 </div>
 <section id="Lets-familiarise-ourselves-with-the-Micrograph-object.">
-<h3>Lets familiarise ourselves with the Micrograph object.<a class="headerlink" href="#Lets-familiarise-ourselves-with-the-Micrograph-object." title="Permalink to this heading">¶</a></h3>
+<h3>Lets familiarise ourselves with the Micrograph object.<a class="headerlink" href="#Lets-familiarise-ourselves-with-the-Micrograph-object." title="Permalink to this headline"></a></h3>
 <p>This is a python object which contains the image data, metadata, and methods to handle the image. The most important thing is to access the image, this can be done through the command below:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.image
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span>
 </pre></div>
 </div>
 </div>
@@ -574,11 +482,11 @@ array([[52.089466, 39.773148, 43.41286 , ..., 35.300556, 42.331833,
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(micrograph.image.shape)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-# or, to make it easier:
+<span class="c1"># or, to make it easier:</span>
 
-print(micrograph.shape)
+<span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -596,7 +504,7 @@ print(micrograph.shape)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.imshow()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">imshow</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -611,8 +519,8 @@ print(micrograph.shape)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(micrograph.image)
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -627,15 +535,15 @@ plt.show()
 </section>
 </section>
 <section id="Other-properties-and-metadata">
-<h2>Other properties and metadata<a class="headerlink" href="#Other-properties-and-metadata" title="Permalink to this heading">¶</a></h2>
+<h2>Other properties and metadata<a class="headerlink" href="#Other-properties-and-metadata" title="Permalink to this headline"></a></h2>
 <p>Now we have the most important thing sorted, the image. However, theres lots of other useful information stored in a Micrograph object, this is particularly true when opening a digital micrograph file. We can access this as follows:</p>
 <section id="What-is-the-pixel-size-of-my-image?">
-<h3>What is the pixel size of my image?<a class="headerlink" href="#What-is-the-pixel-size-of-my-image?" title="Permalink to this heading">¶</a></h3>
+<h3>What is the pixel size of my image?<a class="headerlink" href="#What-is-the-pixel-size-of-my-image?" title="Permalink to this headline"></a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(micrograph.pixelSize)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">pixelSize</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -652,7 +560,7 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(micrograph.pixelUnit)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">pixelUnit</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -669,7 +577,7 @@ nm
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.get_mag()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">get_mag</span><span class="p">()</span>
 <br/></pre></div>
 </div>
 </div>
@@ -695,10 +603,10 @@ Actual mag: 17344.450588235293
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>&#39;&#39;&#39;This function prints the magnifications, but also returns them (as floating point numbers)
-    so you can have them for further use&#39;&#39;&#39;
-indicated_mag, actual_mag = micrograph.get_mag()
-print(indicated_mag, actual_mag)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&#39;&#39;&#39;This function prints the magnifications, but also returns them (as floating point numbers)</span>
+<span class="sd">    so you can have them for further use&#39;&#39;&#39;</span>
+<span class="n">indicated_mag</span><span class="p">,</span> <span class="n">actual_mag</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">get_mag</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">indicated_mag</span><span class="p">,</span> <span class="n">actual_mag</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -717,13 +625,13 @@ Actual mag: 17344.450588235293
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>voltage = micrograph.get_voltage()
-print(voltage)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">voltage</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">get_voltage</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">voltage</span><span class="p">)</span>
 
-exposure = micrograph.get_exposure()
-print(&#39;Exposure time: &#39;,exposure,&#39;seconds&#39;)
+<span class="n">exposure</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">get_exposure</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Exposure time: &#39;</span><span class="p">,</span><span class="n">exposure</span><span class="p">,</span><span class="s1">&#39;seconds&#39;</span><span class="p">)</span>
 
-micrograph.get_date_time()
+<span class="n">micrograph</span><span class="o">.</span><span class="n">get_date_time</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -754,10 +662,10 @@ Time 21:26:38
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(micrograph.voltage)
-print(micrograph.exposure)
-print(micrograph.AqDate, micrograph.AqTime)
-print(micrograph.indicated_mag, micrograph.actual_mag)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">voltage</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">exposure</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">AqDate</span><span class="p">,</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">AqTime</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">indicated_mag</span><span class="p">,</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">actual_mag</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -778,9 +686,9 @@ print(micrograph.indicated_mag, micrograph.actual_mag)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#micrograph.show_metadata()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#micrograph.show_metadata()</span>
 
-#This is wont appear because it would take up several pages.
+<span class="c1">#This is wont appear because it would take up several pages.</span>
 </pre></div>
 </div>
 </div>
@@ -790,7 +698,7 @@ print(micrograph.indicated_mag, micrograph.actual_mag)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.metadata_tags[&#39;.ImageList.2.ImageTags.Acquisition.Device.Name&#39;]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">metadata_tags</span><span class="p">[</span><span class="s1">&#39;.ImageList.2.ImageTags.Acquisition.Device.Name&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -808,8 +716,8 @@ print(micrograph.indicated_mag, micrograph.actual_mag)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#micrograph.Detector_model = micrograph.metadata_tags[&#39;.ImageList.2.ImageTags.Acquisition.Device.Source Model&#39;]
-#print(micrograph.Detector_model)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#micrograph.Detector_model = micrograph.metadata_tags[&#39;.ImageList.2.ImageTags.Acquisition.Device.Source Model&#39;]</span>
+<span class="c1">#print(micrograph.Detector_model)</span>
 </pre></div>
 </div>
 </div>
@@ -817,17 +725,17 @@ print(micrograph.indicated_mag, micrograph.actual_mag)
 </section>
 </section>
 <section id="Micrograph-Editing">
-<h2>Micrograph Editing<a class="headerlink" href="#Micrograph-Editing" title="Permalink to this heading">¶</a></h2>
+<h2>Micrograph Editing<a class="headerlink" href="#Micrograph-Editing" title="Permalink to this headline"></a></h2>
 <p>These are some basic functions to edit the micrograph.</p>
 <section id="Convert-to-8-bit">
-<h3>Convert to 8 bit<a class="headerlink" href="#Convert-to-8-bit" title="Permalink to this heading">¶</a></h3>
+<h3>Convert to 8 bit<a class="headerlink" href="#Convert-to-8-bit" title="Permalink to this headline"></a></h3>
 <p>Micrographs generally come as 32-bit or 16-bit images, this means the pixel values can between 0 and (2^16-1) or (2^32-1), with 32-bit having the added complication of having floating point numbers (decimals) rather than just integers. This allows much more data to be kept in an individual image, and much more contrast available in the individual image. However, most uses for images (including simple viewing with the majority of programs) require 8-bit images. Therefore, we often need to convert
 to 8-bit, so there is a simple method to do so provided in the Micrograph object:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit = micrograph.convert_to_8bit()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">convert_to_8bit</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -836,9 +744,9 @@ to 8-bit, so there is a simple method to do so provided in the Micrograph object
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&#39;Original max = {} :  8bit max =  {}&#39;.format(micrograph.image.max(), micrograph8bit.image.max()))
-print(&#39;Original min = {} :  8bit min =  {}&#39;.format(micrograph.image.min(), micrograph8bit.image.min()))
-print(&#39;Original mean= {} :  8bit mean=  {}&#39;.format(micrograph.image.mean(), micrograph8bit.image.mean()))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original max = </span><span class="si">{}</span><span class="s1"> :  8bit max =  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original min = </span><span class="si">{}</span><span class="s1"> :  8bit min =  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original mean= </span><span class="si">{}</span><span class="s1"> :  8bit mean=  </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
 </pre></div>
 </div>
 </div>
@@ -857,7 +765,7 @@ Original mean= 43.88248825073242 :  8bit mean=  70.28078226108893
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.show_pair(micrograph8bit.image, title1=&#39;Original&#39;, title2=&#39;8-bit&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph8bit</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;8-bit&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -874,12 +782,12 @@ Original mean= 43.88248825073242 :  8bit mean=  70.28078226108893
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fig, ax = plt.subplots(1,2, figsize=(20,10))
-ax[0].imshow(micrograph.image, vmax=255, vmin=0)
-ax[0].set_title(&#39;Original&#39;)
-ax[1].imshow(micrograph8bit.image, vmax=255, vmin=0)
-ax[1].set_title(&#39;8-bit&#39;)
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">micrograph8bit</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;8-bit&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -895,17 +803,17 @@ plt.show()
 </section>
 </section>
 <section id="Improving-contrast">
-<h2>Improving contrast<a class="headerlink" href="#Improving-contrast" title="Permalink to this heading">¶</a></h2>
+<h2>Improving contrast<a class="headerlink" href="#Improving-contrast" title="Permalink to this headline"></a></h2>
 <p>Contrast can be enhanced using Three different functions: micrograph.clip_contrast(), micrograph.enhance_contrast() and micrograph.eqHist(), the latter two both make use of <a class="reference external" href="https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html">functions from openCV</a>.</p>
 <p>My favourite however, is clip contrast because this will give the most consistent results.</p>
 <section id="Clip-Contrast">
-<h3>Clip Contrast<a class="headerlink" href="#Clip-Contrast" title="Permalink to this heading">¶</a></h3>
+<h3>Clip Contrast<a class="headerlink" href="#Clip-Contrast" title="Permalink to this headline"></a></h3>
 <p>A digital image is an array of pixels with values between a maximum and minimum value, which in the case of 8 bit images are 0 and 255. The number of pixels with each value can be seen in a histogram, a built in function for this is included in the micrograph object:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit.plot_histogram()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -921,8 +829,8 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.imshow(micrograph8bit.image, vmax=255, vmin=0)
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">micrograph8bit</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -939,7 +847,7 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit_enhanced = micrograph8bit.clip_contrast(maxvalue=150, minvalue=50)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit_enhanced</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">clip_contrast</span><span class="p">(</span><span class="n">maxvalue</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">minvalue</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -947,7 +855,7 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit_enhanced.plot_histogram(sidebyside=True)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit_enhanced</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">sidebyside</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -965,9 +873,9 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit_clipped05 = micrograph8bit.clip_contrast()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit_clipped05</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">clip_contrast</span><span class="p">()</span>
 
-micrograph8bit_clipped05.plot_histogram(sidebyside=True)
+<span class="n">micrograph8bit_clipped05</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">sidebyside</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -993,22 +901,22 @@ Minimum value :  33
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>saturations = [0.1, 0.5,1, 5,10,25]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">saturations</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">25</span><span class="p">]</span>
 
-fig, ax = plt.subplots(2,3, figsize=(30,15
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">15</span>
 
-                                    ))
-for i in range(len(saturations)):
-    sat = saturations[i]
-    clipped = micrograph8bit.clip_contrast(saturation = sat)
-    j=0
-    if i&gt;2:
-        j=1
-        i=i-3
-    ax[j, i].imshow(clipped.image)
-    ax[j, i].set_title(&#39;Saturation = {}&#39;.format(sat), fontsize=30)
+                                    <span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">saturations</span><span class="p">)):</span>
+    <span class="n">sat</span> <span class="o">=</span> <span class="n">saturations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">clipped</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">clip_contrast</span><span class="p">(</span><span class="n">saturation</span> <span class="o">=</span> <span class="n">sat</span><span class="p">)</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="n">i</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">j</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">clipped</span><span class="o">.</span><span class="n">image</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Saturation = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sat</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 
-plt.show()
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1040,7 +948,7 @@ Minimum value :  61
 </div>
 </section>
 <section id="Enhance_contrast">
-<h3>Enhance_contrast<a class="headerlink" href="#Enhance_contrast" title="Permalink to this heading">¶</a></h3>
+<h3>Enhance_contrast<a class="headerlink" href="#Enhance_contrast" title="Permalink to this headline"></a></h3>
 <p>Takes either 2 or 3 inputted values, these are alpha, beta and gamma (optional). - Alpha controls contrast, and is normally used in ranges of 1-3. - Beta is a brightness control and simply adds this value to every pixel in the image. This will only have a major affect with 8-bit images and is best used with values between -100 and +100 (negative is making the image darker. - Gamma controls contrast in a non-linear way. Values between 0-1 makes the image brighter (particularly dark pixels) whilst
 values &gt;1 darken the image. Gamma requires an 8bit image and if included will automatically convert the image to 8bit.</p>
 <p>For more information on these I recommend the link above.</p>
@@ -1049,8 +957,8 @@ values &gt;1 darken the image. Gamma requires an 8bit image and if included will
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph_alpha2 = micrograph8bit.enhance_contrast(alpha=2)
-micrograph8bit.show_pair(micrograph_alpha2.image, title1=&#39;Original&#39;, title2=&#39;Alpha=2&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph_alpha2</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">enhance_contrast</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">micrograph8bit</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph_alpha2</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Alpha=2&#39;</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
@@ -1065,8 +973,8 @@ micrograph8bit.show_pair(micrograph_alpha2.image, title1=&#39;Original&#39;, tit
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph_beta50 = micrograph8bit.enhance_contrast(alpha=1, beta=50)
-micrograph8bit.show_pair(micrograph_beta50.image, title1=&#39;Original&#39;, title2=&#39;Beta=50&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph_beta50</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">enhance_contrast</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">micrograph8bit</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph_beta50</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Beta=50&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1081,8 +989,8 @@ micrograph8bit.show_pair(micrograph_beta50.image, title1=&#39;Original&#39;, tit
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph_gamma05 = micrograph8bit.enhance_contrast(alpha=1, beta=0, gamma=0.4)
-micrograph8bit.show_pair(micrograph_gamma05.image, title1=&#39;Original&#39;, title2=&#39;Gamma=0.4&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph_gamma05</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">enhance_contrast</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">micrograph8bit</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph_gamma05</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Gamma=0.4&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1103,7 +1011,7 @@ Gamma adjusted...
 </div>
 </section>
 <section id="Histogram-equalisation">
-<h3>Histogram equalisation<a class="headerlink" href="#Histogram-equalisation" title="Permalink to this heading">¶</a></h3>
+<h3>Histogram equalisation<a class="headerlink" href="#Histogram-equalisation" title="Permalink to this headline"></a></h3>
 <p>Histogram equalisation is a method to ensure the pixel values spread the possible values much evenly, flattening the histogram of pixel values. This process can be very effective at enhancing features, particularly with in images with a very dark patch or a very bright patch, the contrast in the midtones can be massively enhanced.</p>
 <p>This again only works on 8bit images, and thus the method in the micrograph object automatically converts it to 8bit using the function detailed above.</p>
 <p>This implementation also uses openCV and more information on the process can be <a class="reference external" href="https://docs.opencv.org/3.4/d4/d1b/tutorial_histogram_equalization.html">found here</a>.</p>
@@ -1111,8 +1019,8 @@ Gamma adjusted...
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrographHistEQ = micrograph.eqHist()
-micrograph.show_pair(micrographHistEQ.image, title1=&#39;Original&#39;, title2=&#39;Histogram equalised&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrographHistEQ</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">eqHist</span><span class="p">()</span>
+<span class="n">micrograph</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrographHistEQ</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Histogram equalised&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1126,7 +1034,7 @@ micrograph.show_pair(micrographHistEQ.image, title1=&#39;Original&#39;, title2=&
 </section>
 </section>
 <section id="Micrograph-Filters!">
-<h2>Micrograph Filters!<a class="headerlink" href="#Micrograph-Filters!" title="Permalink to this heading">¶</a></h2>
+<h2>Micrograph Filters!<a class="headerlink" href="#Micrograph-Filters!" title="Permalink to this headline"></a></h2>
 <p>Now we are getting to the fun bit. Micrographs can look a bit rubbish as raw files, lets see if we can use the micrograph object to improve it a bit!</p>
 <p>These filters have been implemented to make them as simple as possible to use. I encourage users to familiarise yourselves with the filter and the code behind it (see Image filters section of Micrograph_class.py), as there may be settings which I have not made available for simplicity’s sake but could be useful for you. However, for normal analysis, these should be perfectly effective.</p>
 <p>In SimpliPyTEM, filters return a new micrograph object with a filtered image, this allows trying different filters/parameters without risking overwriting the image.</p>
@@ -1135,7 +1043,7 @@ micrograph.show_pair(micrographHistEQ.image, title1=&#39;Original&#39;, title2=&
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.imshow(title=&#39;Original image&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original image&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1148,14 +1056,14 @@ micrograph.show_pair(micrographHistEQ.image, title1=&#39;Original&#39;, title2=&
 </div>
 <p>Looks quite noisy, lets try to filter it a bit…</p>
 <section id="Gaussian-filter">
-<h3>Gaussian filter<a class="headerlink" href="#Gaussian-filter" title="Permalink to this heading">¶</a></h3>
+<h3>Gaussian filter<a class="headerlink" href="#Gaussian-filter" title="Permalink to this headline"></a></h3>
 <p>This is one of the most common image filters and is used to smooth an image. Here I use OpenCV’s image function within the Micrograph_class, keeping only one setting: the kernal, this needs to be an odd integer. A bigger kernal leads to a stronger blurring effect.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>#this is the syntax for image filters:
-MicrographGaussian = micrograph.gaussian_filter(7)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#this is the syntax for image filters:</span>
+<span class="n">MicrographGaussian</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
 <br/></pre></div>
 </div>
 </div>
@@ -1164,10 +1072,10 @@ MicrographGaussian = micrograph.gaussian_filter(7)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>MicrographGaussian.show_pair(micrograph.image, title1=&#39;Gaussian filter&#39;, title2=&#39;Original&#39;) #
-# this is a built in function to view a pair of images side by side using plt.subplots
-# you this can be improved by making your own function, but this works for a quick check
-# here the first
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MicrographGaussian</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Gaussian filter&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span> <span class="c1">#</span>
+<span class="c1"># this is a built in function to view a pair of images side by side using plt.subplots</span>
+<span class="c1"># you this can be improved by making your own function, but this works for a quick check</span>
+<span class="c1"># here the first</span>
 <br/><br/></pre></div>
 </div>
 </div>
@@ -1180,14 +1088,14 @@ MicrographGaussian = micrograph.gaussian_filter(7)
 </div>
 </section>
 <section id="Median-Filter">
-<h3>Median Filter<a class="headerlink" href="#Median-Filter" title="Permalink to this heading">¶</a></h3>
+<h3>Median Filter<a class="headerlink" href="#Median-Filter" title="Permalink to this headline"></a></h3>
 <p>This is another common filter, and can effectively reduce ‘salt-and-pepper’ noise (anomalously low or high pixel values), this replaces each pixel with the median of the pixels around it in an n*n square, where n is the kernal size. Again, the kernal size has to be odd, and a larger number gives a stonger effect.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>MicrographMedian = micrograph.median_filter(3)
-MicrographMedian.show_pair(micrograph.image, title1=&#39;Median filter&#39;,title2=&#39;Original&#39; )
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">MicrographMedian</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">median_filter</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">MicrographMedian</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Median filter&#39;</span><span class="p">,</span><span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1200,14 +1108,14 @@ MicrographMedian.show_pair(micrograph.image, title1=&#39;Median filter&#39;,titl
 </div>
 </section>
 <section id="Weiner-filter">
-<h3>Weiner filter<a class="headerlink" href="#Weiner-filter" title="Permalink to this heading">¶</a></h3>
+<h3>Weiner filter<a class="headerlink" href="#Weiner-filter" title="Permalink to this headline"></a></h3>
 <p>This is a more complex filter, which can filter out noise from corrupted signal. It can be effective for TEM images. This is implemented using the scipy.signal library.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrographWeiner = micrograph.weiner_filter(5)
-micrographWeiner.show_pair(micrograph.image, title1=&#39;Median filter&#39;, title2 = &#39;Original&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrographWeiner</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">weiner_filter</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">micrographWeiner</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Median filter&#39;</span><span class="p">,</span> <span class="n">title2</span> <span class="o">=</span> <span class="s1">&#39;Original&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1220,7 +1128,7 @@ micrographWeiner.show_pair(micrograph.image, title1=&#39;Median filter&#39;, tit
 </div>
 </section>
 <section id="Low-pass-filtering">
-<h3>Low pass filtering<a class="headerlink" href="#Low-pass-filtering" title="Permalink to this heading">¶</a></h3>
+<h3>Low pass filtering<a class="headerlink" href="#Low-pass-filtering" title="Permalink to this headline"></a></h3>
 <p>This filters the image based on the fourier transform of the image, allowing one to filter it to a required resolution. While this generally produces patterned artefacts, it can greatly enhance the contrast while sacrificing the higher resolution features. I have found this to be very effective at enhancing large, low contrast features.</p>
 <p>Assuming your micrograph object has a pixel size defined, the filter works by removing any features smaller than the size you input as a parameter (the unit is the same as the pixelsize). Therefore, a larger number yields a stronger filter. Beware because if it is too large, you won’t see any features. Effective filter sizes depends on features and magnification, but maybe start with something like 5 and tune it to your needs.</p>
 <p>If your micrograph is missing a pixelsize (maybe because you are not using a micrograph file, but a regular tif), then the size input will be the radius of a circle kept in the power spectrum. The result of this is the input number does the inverse - a smaller number leads to stronger filter. In this case, much larger numbers will be needed, so maybe start with 50 and from there.</p>
@@ -1228,8 +1136,8 @@ micrographWeiner.show_pair(micrograph.image, title1=&#39;Median filter&#39;, tit
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrographLowPass_5nm = micrograph.low_pass_filter(5) #filtering to 5nm
-micrographLowPass_5nm.show_pair(micrograph.image, title1=&#39;5nm Low pass Filter&#39;, title2=&#39;Original&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrographLowPass_5nm</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">low_pass_filter</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1">#filtering to 5nm</span>
+<span class="n">micrographLowPass_5nm</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;5nm Low pass Filter&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1244,9 +1152,9 @@ micrographLowPass_5nm.show_pair(micrograph.image, title1=&#39;5nm Low pass Filte
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrographLowPass_1nm = micrograph.low_pass_filter(1) #filtering to 1nm
-micrographLowPass_10nm = micrograph.low_pass_filter(10)
-micrographLowPass_1nm.show_pair(micrographLowPass_10nm.image, title1=&#39;1nm Low pass Filter&#39;, title2=&#39;10nm Low Pass Filter&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrographLowPass_1nm</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">low_pass_filter</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#filtering to 1nm</span>
+<span class="n">micrographLowPass_10nm</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">low_pass_filter</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">micrographLowPass_1nm</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrographLowPass_10nm</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;1nm Low pass Filter&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;10nm Low Pass Filter&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1260,7 +1168,7 @@ micrographLowPass_1nm.show_pair(micrographLowPass_10nm.image, title1=&#39;1nm Lo
 <p>Here the 5nm LP filter greatly enhances the fibre in the image, while the 1nm shows a much more subtle, but still noticable improvement. 10nm is too strong however, and only artefacts remain.</p>
 </section>
 <section id="Non-local-means-filter">
-<h3>Non-local means filter<a class="headerlink" href="#Non-local-means-filter" title="Permalink to this heading">¶</a></h3>
+<h3>Non-local means filter<a class="headerlink" href="#Non-local-means-filter" title="Permalink to this headline"></a></h3>
 <p>This is a filter implemented using the openCV library, and <a class="reference external" href="https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html">their description of the process</a> is pretty good. It denoises by comparing and averaging over different areas of the image. This can be effective, even if it does not appear so in this example.</p>
 <p>There are a few parameters allowed by openCV but I have only included one in this implementation - h, h controls the strength of the filter, with a bigger number leading to better noise removal but also more removal of the image.</p>
 <p>I don’t find this filter amazing but I’m sure in certain circumstances it will be effective.</p>
@@ -1268,8 +1176,8 @@ micrographLowPass_1nm.show_pair(micrographLowPass_10nm.image, title1=&#39;1nm Lo
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrographNLM = micrograph.nlm_filter(20)
-micrographNLM.show_pair(micrograph.image, title1=&#39;Non-Local means filter&#39;, title2=&#39;Original&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrographNLM</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">nlm_filter</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">micrographNLM</span><span class="o">.</span><span class="n">show_pair</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="n">title1</span><span class="o">=</span><span class="s1">&#39;Non-Local means filter&#39;</span><span class="p">,</span> <span class="n">title2</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1283,7 +1191,7 @@ micrographNLM.show_pair(micrograph.image, title1=&#39;Non-Local means filter&#39
 </section>
 </section>
 <section id="Add-a-scalebar">
-<h2>Add a scalebar<a class="headerlink" href="#Add-a-scalebar" title="Permalink to this heading">¶</a></h2>
+<h2>Add a scalebar<a class="headerlink" href="#Add-a-scalebar" title="Permalink to this headline"></a></h2>
 <p>Every microscopist knows an micrograph means nothing without a scalebar, so I’ve made the process very easy. With a single command, it will choose a scalebar length, position and color (either black or white depending on contrast in local area).</p>
 <p>I recommend adding the scalebar as a final step to the analysis process, because the scale bar perminently changes the pixel values to the max or min value, which will mess with any contrast enhancement (particularly scaling the image to the max and min). Also the filters will blur the scalebar.</p>
 <p>Unlike all the other adjustments, this doesnt return a new image, but will simply modify the image present, this is because it should be the final step and there are no real parameters to adjust to get it right. If you want to keep the original I recommend using deepcopy() to copy the micrograph object, as I have below.</p>
@@ -1291,8 +1199,8 @@ micrographNLM.show_pair(micrograph.image, title1=&#39;Non-Local means filter&#39
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span>micrographSB = micrograph.make_scalebar()
-micrographSB.imshow()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">micrographSB</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">make_scalebar</span><span class="p">()</span>
+<span class="n">micrographSB</span><span class="o">.</span><span class="n">imshow</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1308,9 +1216,9 @@ micrographSB.imshow()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit=micrograph.convert_to_8bit()
-micrograph8bit = micrograph8bit.make_scalebar()
-micrograph8bit.imshow()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit</span><span class="o">=</span><span class="n">micrograph</span><span class="o">.</span><span class="n">convert_to_8bit</span><span class="p">()</span>
+<span class="n">micrograph8bit</span> <span class="o">=</span> <span class="n">micrograph8bit</span><span class="o">.</span><span class="n">make_scalebar</span><span class="p">()</span>
+<span class="n">micrograph8bit</span><span class="o">.</span><span class="n">imshow</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1323,7 +1231,7 @@ micrograph8bit.imshow()
 </div>
 </section>
 <section id="Saving-the-image">
-<h2>Saving the image<a class="headerlink" href="#Saving-the-image" title="Permalink to this heading">¶</a></h2>
+<h2>Saving the image<a class="headerlink" href="#Saving-the-image" title="Permalink to this headline"></a></h2>
 <p>The image can be easily saved from the micrograph object using the method write_image(). This can be used with no input at all, and will create an .jpg image named based on the original filename in the directory you are currently in. You can also specify the name of the output file by adding an input.</p>
 <p>Ending the name with .tif will save it as a tif file, this will by default be a 32-bit tif file unless you have previously converted the image to 8bit, and will have the pixel size included as a tag.</p>
 <p>You can specify a directory to output the files in with the keyword argument outdir=‘Directory’. This will create the new directory if it doesn’t already exist.</p>
@@ -1331,7 +1239,7 @@ micrograph8bit.imshow()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph.write_image()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph</span><span class="o">.</span><span class="n">write_image</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1350,7 +1258,7 @@ Fibrils_Example.jpg Done!
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>micrograph8bit.write_image(&#39;Tutorial_image.tif&#39;,outdir=&#39;images&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">micrograph8bit</span><span class="o">.</span><span class="n">write_image</span><span class="p">(</span><span class="s1">&#39;Tutorial_image.tif&#39;</span><span class="p">,</span><span class="n">outdir</span><span class="o">=</span><span class="s1">&#39;images&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1368,14 +1276,14 @@ images/Tutorial_image_100nmscale.tif Done!
 </section>
 </section>
 <section id="Automating-Pipelines">
-<h1>Automating Pipelines<a class="headerlink" href="#Automating-Pipelines" title="Permalink to this heading">¶</a></h1>
+<h1>Automating Pipelines<a class="headerlink" href="#Automating-Pipelines" title="Permalink to this headline"></a></h1>
 <p>One big advantage of using python is how easy it is to automate repeat analysis with different files. This can be easily achived using a simple for loop:</p>
 <p>Firstly collect the digital micrograph files (e.g. by using os.listdir to collect all the files in the directory, and list comprehension to find only the .dm* files):</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>dm_files = [x for x in os.listdir(&#39;.&#39;) if x[-4:-1]==&#39;.dm&#39;]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dm_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;.dm&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1383,14 +1291,14 @@ images/Tutorial_image_100nmscale.tif Done!
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for file in dm_files:
-    print(file)
-    micrograph = Micrograph()
-    micrograph.open_dm(file)
-    micrograph = micrograph.median_filter()
-    micrograph = micrograph.convert_to_8bit()
-    micrograph = micrograph.make_scalebar()
-    micrograph.imshow()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">dm_files</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">micrograph</span> <span class="o">=</span> <span class="n">Micrograph</span><span class="p">()</span>
+    <span class="n">micrograph</span><span class="o">.</span><span class="n">open_dm</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="n">micrograph</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">median_filter</span><span class="p">()</span>
+    <span class="n">micrograph</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">convert_to_8bit</span><span class="p">()</span>
+    <span class="n">micrograph</span> <span class="o">=</span> <span class="n">micrograph</span><span class="o">.</span><span class="n">make_scalebar</span><span class="p">()</span>
+    <span class="n">micrograph</span><span class="o">.</span><span class="n">imshow</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1464,8 +1372,8 @@ gold_growth_video_holder_test_070921.dm4 opened as a Micrograph object
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>for file in dm_files:
-    default_image_pipeline(file) #There are more settings in this: medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color=&#39;Auto&#39;,**kwargs)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">dm_files</span><span class="p">:</span>
+    <span class="n">default_image_pipeline</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="c1">#There are more settings in this: medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color=&#39;Auto&#39;,**kwargs)</span>
 </pre></div>
 </div>
 </div>
@@ -1502,13 +1410,13 @@ gold_growth_video_holder_test_070921_25nmscale.jpg Done!
 </pre></div></div>
 </div>
 <section id="Getting-more-information">
-<h2>Getting more information<a class="headerlink" href="#Getting-more-information" title="Permalink to this heading">¶</a></h2>
+<h2>Getting more information<a class="headerlink" href="#Getting-more-information" title="Permalink to this headline"></a></h2>
 <p>Need help? You can always try the help() method, this shows the details of the function as annotated:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>help(micrograph)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">micrograph</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1952,7 +1860,7 @@ class Micrograph(builtins.object)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>help(micrograph.make_scalebar)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">make_scalebar</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1987,7 +1895,7 @@ make_scalebar(texton=True, color=&#39;Auto&#39;) method of SimpliPyTEM.Micrograp
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>help(micrograph.gaussian_filter)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">micrograph</span><span class="o">.</span><span class="n">gaussian_filter</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2015,57 +1923,40 @@ gaussian_filter(kernal=3) method of SimpliPyTEM.Micrograph_class.Micrograph inst
 </div>
 </section>
 <section id="Any-more-questions?">
-<h2>Any more questions?<a class="headerlink" href="#Any-more-questions?" title="Permalink to this heading">¶</a></h2>
+<h2>Any more questions?<a class="headerlink" href="#Any-more-questions?" title="Permalink to this headline"></a></h2>
 <p>Try raising an issue on github, or email me (Gabriel Ing) at <a class="reference external" href="mailto:ucbtgrb&#37;&#52;&#48;ucl&#46;ac&#46;uk">ucbtgrb<span>&#64;</span>ucl<span>&#46;</span>ac<span>&#46;</span>uk</a> for more help!</p>
 </section>
 </section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="../MicroVideo_class.html" class="btn btn-neutral float-right" title="MicroVideo Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../Micrograph_class.html" class="btn btn-neutral float-left" title="Micrograph Class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../MicroVideo_class.html" class="btn btn-neutral float-right" title="MicroVideo Class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2022, Gabriel Ing.
-
-    </p>
+    <p>&#169; Copyright 2022, Gabriel Ing.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

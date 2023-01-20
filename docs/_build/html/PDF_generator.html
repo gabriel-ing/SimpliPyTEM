@@ -1,74 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>PDF generator module &mdash; SimpliPyTEM 0.1.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="HTML writer module" href="html_writer.html" />
     <link rel="prev" title="Video Analysis Tutorial" href="Tutorials/MicroVideoAnalysisTutorial.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> SimpliPyTEM
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -76,33 +37,16 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MicroVideo_class.html">MicroVideo Class</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PDF generator module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#PDF_generator.find_number"><code class="docutils literal notranslate"><span class="pre">find_number()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PDF_generator.group_images"><code class="docutils literal notranslate"><span class="pre">group_images()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PDF_generator.pdf_generator"><code class="docutils literal notranslate"><span class="pre">pdf_generator()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PDF_generator.return_coords"><code class="docutils literal notranslate"><span class="pre">return_coords()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="html_writer.html">HTML writer module</a></li>
@@ -113,71 +57,30 @@
 <li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html">Video Analysis Tutorial</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">SimpliPyTEM</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>PDF generator module</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">PDF generator module</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/PDF_generator.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -203,10 +106,10 @@
 }
 </style>
 <section id="pdf-generator-module">
-<h1>PDF generator module<a class="headerlink" href="#pdf-generator-module" title="Permalink to this heading">¶</a></h1>
+<h1>PDF generator module<a class="headerlink" href="#pdf-generator-module" title="Permalink to this headline"></a></h1>
 <p>This module will create a pdf file containing all the images from an experiment, the sample name (prefix) of the images is used to group the images onto separate pages, and the image number is included below each image.</p>
 <section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h2>
 <p>The simple usage of this is summed up below:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SimpliPyTEM.PDF_generator</span> <span class="kn">import</span> <span class="n">pdf_generator</span>
 <span class="c1">#This generator gives a list of the images</span>
@@ -219,19 +122,14 @@
 <p>PDF files generated from this can be easily shared. However, if movies are required consider using html_writer</p>
 <span class="target" id="module-PDF_generator"></span><dl class="py function">
 <dt class="sig sig-object py" id="PDF_generator.find_number">
-<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">find_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.find_number" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">find_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.find_number" title="Permalink to this definition"></a></dt>
 <dd><p>Function to find the idenfication number of the images so they can be  labelled in the pdf.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>string: str</dt><dd><p>Filename which contains the image number</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>im_id:str</dt><dd><p>The ID number of the image</p>
@@ -240,39 +138,30 @@
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="PDF_generator.group_images">
-<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">group_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.group_images" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">group_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.group_images" title="Permalink to this definition"></a></dt>
 <dd><p>Sorts a number of images into a dictionary with images separated by the sample name, these can then be separated onto different pages.</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>images:list</dt><dd><p>List of images (by filename)</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id2">
-<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>organised_dict:dict</dt><dd><p>Dictionary containing the sample names (image prefixes) as the keys and a list of images with  that name as the value.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="PDF_generator.pdf_generator">
-<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">pdf_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.pdf_generator" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">pdf_generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">images</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.pdf_generator" title="Permalink to this definition"></a></dt>
 <dd><p>Function for generating a pdf file showing images, this aims to make it easier to examine, evaluate and share images from a TEM session by putting them in a single document.</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>images: list</dt><dd><p>A list of images to place in the pdf document. This can be easily created with a generator function, eg. images = [x for x in os.listdir(‘PATH/TO/DIRECTORY’) if x[-3:]==’jpg’]</p>
@@ -287,30 +176,21 @@
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="output">
-<h3>Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>Saves a pdf document under the name {title}.pdf with the images contained within the list.</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="PDF_generator.return_coords">
-<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">return_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_num</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.return_coords" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">PDF_generator.</span></span><span class="sig-name descname"><span class="pre">return_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_num</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PDF_generator.return_coords" title="Permalink to this definition"></a></dt>
 <dd><p>Gives the coordinates for the images &amp; captions, and the size of the images depending on the number per page.</p>
-<section id="id4">
-<h3>Parameters<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>max_num:int</dt><dd><p>The number of images per page.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id5">
-<h3>Returns<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Image_coords:list</dt><dd><p>The coordinates for each image on the page</p>
@@ -321,7 +201,6 @@
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 </section>
@@ -329,50 +208,33 @@
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="html_writer.html" class="btn btn-neutral float-right" title="HTML writer module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Tutorials/MicroVideoAnalysisTutorial.html" class="btn btn-neutral float-left" title="Video Analysis Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="html_writer.html" class="btn btn-neutral float-right" title="HTML writer module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2022, Gabriel Ing.
-
-    </p>
+    <p>&#169; Copyright 2022, Gabriel Ing.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

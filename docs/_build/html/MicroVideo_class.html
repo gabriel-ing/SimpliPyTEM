@@ -1,74 +1,35 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>MicroVideo Class &mdash; SimpliPyTEM 0.1.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Video Analysis Tutorial" href="Tutorials/MicroVideoAnalysisTutorial.html" />
     <link rel="prev" title="Micrograph analysis tutorial" href="Tutorials/MicrographAnalysisTutorial.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> SimpliPyTEM
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -76,73 +37,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="SimpliPyTEM-GUI.html">SimpliPyTEM-GUI</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Micrograph_class.html">Micrograph Class</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">MicroVideo Class</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html">Video Analysis Tutorial</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#list-of-functions-in-microvideo">List of functions in MicroVideo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-MicroVideo_class">Documentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#MicroVideo_class.MicroVideo"><code class="docutils literal notranslate"><span class="pre">MicroVideo</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.Average_frames"><code class="docutils literal notranslate"><span class="pre">MicroVideo.Average_frames()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.NLM_filter"><code class="docutils literal notranslate"><span class="pre">MicroVideo.NLM_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.Normalise_video"><code class="docutils literal notranslate"><span class="pre">MicroVideo.Normalise_video()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.Running_average"><code class="docutils literal notranslate"><span class="pre">MicroVideo.Running_average()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.Sidebyside"><code class="docutils literal notranslate"><span class="pre">MicroVideo.Sidebyside()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.bin"><code class="docutils literal notranslate"><span class="pre">MicroVideo.bin()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.choose_scalebar_color"><code class="docutils literal notranslate"><span class="pre">MicroVideo.choose_scalebar_color()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.choose_scalebar_size"><code class="docutils literal notranslate"><span class="pre">MicroVideo.choose_scalebar_size()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.clip_contrast"><code class="docutils literal notranslate"><span class="pre">MicroVideo.clip_contrast()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.convert_to_8bit"><code class="docutils literal notranslate"><span class="pre">MicroVideo.convert_to_8bit()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.enhance_contrast"><code class="docutils literal notranslate"><span class="pre">MicroVideo.enhance_contrast()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.eqHist"><code class="docutils literal notranslate"><span class="pre">MicroVideo.eqHist()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.gaussian_filter"><code class="docutils literal notranslate"><span class="pre">MicroVideo.gaussian_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.get_date_time"><code class="docutils literal notranslate"><span class="pre">MicroVideo.get_date_time()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.get_exposure"><code class="docutils literal notranslate"><span class="pre">MicroVideo.get_exposure()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.get_mag"><code class="docutils literal notranslate"><span class="pre">MicroVideo.get_mag()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.get_voltage"><code class="docutils literal notranslate"><span class="pre">MicroVideo.get_voltage()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.imshow"><code class="docutils literal notranslate"><span class="pre">MicroVideo.imshow()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.imshow_pair"><code class="docutils literal notranslate"><span class="pre">MicroVideo.imshow_pair()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.low_pass_filter"><code class="docutils literal notranslate"><span class="pre">MicroVideo.low_pass_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.make_scalebar"><code class="docutils literal notranslate"><span class="pre">MicroVideo.make_scalebar()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.median_filter"><code class="docutils literal notranslate"><span class="pre">MicroVideo.median_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.motioncorrect_vid"><code class="docutils literal notranslate"><span class="pre">MicroVideo.motioncorrect_vid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.open_array"><code class="docutils literal notranslate"><span class="pre">MicroVideo.open_array()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.open_dm"><code class="docutils literal notranslate"><span class="pre">MicroVideo.open_dm()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.open_series"><code class="docutils literal notranslate"><span class="pre">MicroVideo.open_series()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.open_video"><code class="docutils literal notranslate"><span class="pre">MicroVideo.open_video()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.pixel_size"><code class="docutils literal notranslate"><span class="pre">MicroVideo.pixel_size</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.plot_histogram"><code class="docutils literal notranslate"><span class="pre">MicroVideo.plot_histogram()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.reset_xy"><code class="docutils literal notranslate"><span class="pre">MicroVideo.reset_xy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.save_tif_sequence"><code class="docutils literal notranslate"><span class="pre">MicroVideo.save_tif_sequence()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.save_tif_stack"><code class="docutils literal notranslate"><span class="pre">MicroVideo.save_tif_stack()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.show_metadata"><code class="docutils literal notranslate"><span class="pre">MicroVideo.show_metadata()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.show_video"><code class="docutils literal notranslate"><span class="pre">MicroVideo.show_video()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.toMicrograph"><code class="docutils literal notranslate"><span class="pre">MicroVideo.toMicrograph()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.weiner_filter"><code class="docutils literal notranslate"><span class="pre">MicroVideo.weiner_filter()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.write_image"><code class="docutils literal notranslate"><span class="pre">MicroVideo.write_image()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#MicroVideo_class.MicroVideo.write_video"><code class="docutils literal notranslate"><span class="pre">MicroVideo.write_video()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#MicroVideo_class.default_video_pipeline"><code class="docutils literal notranslate"><span class="pre">default_video_pipeline()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-MicroVideo_class">Documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="PDF_generator.html">PDF generator module</a></li>
@@ -154,71 +60,30 @@
 <li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html">Video Analysis Tutorial</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">SimpliPyTEM</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
-      <li>MicroVideo Class</li>
-    
-    
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">MicroVideo Class</li>
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/MicroVideo_class.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   
 <style>
 /* CSS overrides for sphinx_rtd_theme */
@@ -244,19 +109,19 @@
 }
 </style>
 <section id="microvideo-class">
-<h1>MicroVideo Class<a class="headerlink" href="#microvideo-class" title="Permalink to this heading">¶</a></h1>
+<h1>MicroVideo Class<a class="headerlink" href="#microvideo-class" title="Permalink to this headline"></a></h1>
 <p>Module containing the class MicroVideo, this is the main tool of video analysis within the SimpliPyTEM package. The videos are loaded using one of the loading methods (open_dm or open_video), at which point the MicroVideo object contains the video data as a numpy array within the .frames attribute.  Many methods can be run with this object, including image filtering, converting to 8bit, improving contrast, plotting the image and the histogram.</p>
 <p>The aim of this module was to make python-based analysis/basic enhancements of in situ TEM videos more simple by putting the majority of desired methods in a single package with simple commands.</p>
 <p>This works in the same way as the Micrograph class but is designed for video data instead. As with the micrograph class, there are too many functions to include description of all here, beyond the autodoc documentation, however I recommend checking out the interactive jupyter notebook tutorial (docs/Tutorials/MicroVideoAnalysisTutorial.ipynb). This is also available here:</p>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Tutorials/MicroVideoAnalysisTutorial.html">Video Analysis Tutorial</a></li>
 </ul>
 </div>
 <p>Please note that this tutorial is automatically generated from the jupyter notebook tutorial and some things have imported poorly or have errored (mainly because files are note available).</p>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
 <p>Basic example including many of the functions</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#Import module</span>
 <span class="kn">from</span> <span class="nn">SimpliPyTEM.MicroVideo_class</span> <span class="kn">import</span> <span class="n">MicroVideo</span>
@@ -298,7 +163,7 @@
 <p>Note that in each of these function examples I am overwriting the previous copy of the video by running (e.g.) video=video.bin() , can be desireable to reduce memorey use but you can also save them as separate to ensure you  keep the originals.</p>
 </section>
 <section id="list-of-functions-in-microvideo">
-<h2>List of functions in MicroVideo<a class="headerlink" href="#list-of-functions-in-microvideo" title="Permalink to this heading">¶</a></h2>
+<h2>List of functions in MicroVideo<a class="headerlink" href="#list-of-functions-in-microvideo" title="Permalink to this headline"></a></h2>
 <dl class="simple">
 <dt>Imports:</dt><dd><ul class="simple">
 <li><p>open_dm - Opening digital micrograph files</p></li>
@@ -358,16 +223,14 @@
 </dl>
 </section>
 <section id="module-MicroVideo_class">
-<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-MicroVideo_class" title="Permalink to this heading">¶</a></h2>
+<span id="documentation"></span><h2>Documentation<a class="headerlink" href="#module-MicroVideo_class" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MicroVideo_class.</span></span><span class="sig-name descname"><span class="pre">MicroVideo</span></span><a class="headerlink" href="#MicroVideo_class.MicroVideo" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">MicroVideo_class.</span></span><span class="sig-name descname"><span class="pre">MicroVideo</span></span><a class="headerlink" href="#MicroVideo_class.MicroVideo" title="Permalink to this definition"></a></dt>
 <dd><dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.Average_frames">
-<span class="sig-name descname"><span class="pre">Average_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groupsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_remainder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Average_frames" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Average_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groupsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_remainder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Average_frames" title="Permalink to this definition"></a></dt>
 <dd><p>Sums frames in groups, reducing the number of frames and the time resolution but increases contrast.</p>
-<section id="parameters">
-<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Groupsize:int</dt><dd><p>Number of frames per group to average. Best as a multiple of the number of frames, else the final group will be the remainder (ie a 25 frame video split into groups of 10 will have 3 output frames: 1-10,11-20, 21-25 ).</p>
@@ -376,21 +239,17 @@
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="returns">
-<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>SummedMicroVideo: Microvideo</dt><dd><p>Copy of the original video object with frames averaged in groups of {groupsize}</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.NLM_filter">
-<span class="sig-name descname"><span class="pre">NLM_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.NLM_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">NLM_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.NLM_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a non-local means filtered copy of the Microvideo, filter strength is defined in the call. 
 More information on non-local means filtering can be found here: <a class="reference external" href="https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html">https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html</a></p>
 <blockquote>
@@ -411,119 +270,93 @@ More information on non-local means filtering can be found here: <a class="refer
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.Normalise_video">
-<span class="sig-name descname"><span class="pre">Normalise_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Normalise_video" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Normalise_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Normalise_video" title="Permalink to this definition"></a></dt>
 <dd><p>Normalises the video frames to have equal contrast, either through  mean or median normalisation</p>
-<section id="id1">
-<h3>Parameters<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>normtype:str</dt><dd><p>options are mean or median - changes the type of normalisation, either the mean of each frame  is equal or the median of each frame is equal.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id2">
-<h3>Returns<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Normalised_microvideo: MicroVideo</dt><dd><p>Returns  a normalised copy of the original object.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.Running_average">
-<span class="sig-name descname"><span class="pre">Running_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groupsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Running_average" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Running_average</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">groupsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Running_average" title="Permalink to this definition"></a></dt>
 <dd><p>Sums frames in group of {groupsize} in a running or rolling average fashion - in this case these groups overlap with only a single frame offset, meaning the resulting video has (n - groupsize) frames.</p>
-<section id="id3">
-<h3>Parameters<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Groupsize:int</dt><dd><p>Number of frames per group to average. Best as a multiple of the number of frames, else the final group will be the remainder (ie a 25 frame video split into groups of 10 will have 3 output frames: 1-10,11-20, 21-25 ).</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id4">
-<h3>Returns<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>RunningAveragedMicrovideo:Microvideo</dt><dd><p>Copy of the original video object with frames averaged into groups of {groupsize} with a 1 frame offset between frames</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.Sidebyside">
-<span class="sig-name descname"><span class="pre">Sidebyside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Video2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Sidebyside" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">Sidebyside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Video2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.Sidebyside" title="Permalink to this definition"></a></dt>
 <dd><p>Joins a second video (in the form of a numpy array) to the original video, allowing them to be played side by side.</p>
-<section id="id5">
-<h3>Parameters<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Video2:np array</dt><dd><p>The second video to add to the original video</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id6">
-<h3>Returns<a class="headerlink" href="#id6" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>sidebyside:MicroVideo</dt><dd><p>Copy of the original video with the second video grafted onto the side.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.bin">
-<span class="sig-name descname"><span class="pre">bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.bin" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.bin" title="Permalink to this definition"></a></dt>
 <dd><p>This function applies binning to the frames in a micrograph object, reducing their size by a specified factor.</p>
-<section id="id7">
-<h3>Parameters<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>value<span class="classifier">int</span></dt><dd><p>The factor by which to reduce the size of the frames. The default value is 2.</p>
 </dd>
 </dl>
-</section>
-<section id="id8">
-<h3>Returns<a class="headerlink" href="#id8" title="Permalink to this heading">¶</a></h3>
 <dl class="simple">
 <dt>Microvideo_binned: MicroVideo</dt><dd><p>A new microvideo object with the binned frames.</p>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.choose_scalebar_color">
-<span class="sig-name descname"><span class="pre">choose_scalebar_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.choose_scalebar_color" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">choose_scalebar_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.choose_scalebar_color" title="Permalink to this definition"></a></dt>
 <dd><p>Function for choosing the scalebar color and returns the pixelvalue and text color for the annotation.
 Called through make_scalebar(), not a standalone function</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.choose_scalebar_size">
-<span class="sig-name descname"><span class="pre">choose_scalebar_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.choose_scalebar_size" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">choose_scalebar_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.choose_scalebar_size" title="Permalink to this definition"></a></dt>
 <dd><p>Function for choosing scalebar size, called through make_scalebar(), not a standalone function.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.clip_contrast">
-<span class="sig-name descname"><span class="pre">clip_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.clip_contrast" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">clip_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saturation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minvalue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.clip_contrast" title="Permalink to this definition"></a></dt>
 <dd><p>Function for enhancing the contrast in an image by clipping the histogram between two values. 
 These values can be defined directly or can be automatically decided using a saturation value, which the is percentage of the pixels above or below this value.
 I.e, if there are 1,000,000 pixels in an image and the saturation value is 0.1, the method searches the value for which only 0.1% or 1000 pixels are above/below. 
 These values then become the new minimum and maximum of the image, and are scaled to between 0 and 255.</p>
 <p>This method will automatically convert to 8 bit (scale between 0 and 255), if this is an issue raise and it can be changed in future versions.</p>
-<section id="id9">
-<h3>Parameters<a class="headerlink" href="#id9" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>saturation: Float</dt><dd><p>The percentage cutoff above/below which the pixels are set to zero/255, default is 0.5% of pixels</p>
@@ -534,48 +367,36 @@ These values then become the new minimum and maximum of the image, and are scale
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id10">
-<h3>Returns<a class="headerlink" href="#id10" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Contrast_enhanced_microvideo<span class="classifier">Microvideo</span></dt><dd><p>Return a copy of the object with the contrast clipped at either end of the image</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>MicrovideoContrastClipped = video.clip_contrast(saturation=1)</p>
 <p>or</p>
 <p>MicrovideoContrastClipped = video.clip_contrast(maxvalue=220, minvalue=20)</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.convert_to_8bit">
-<span class="sig-name descname"><span class="pre">convert_to_8bit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.convert_to_8bit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">convert_to_8bit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.convert_to_8bit" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a microvideo object with the image scaled between 0 and 255 (an 8-bit image). Improves contrast, reduces data size and is a more usable image format than higher bit rates.</p>
-<section id="id11">
-<h3>Returns<a class="headerlink" href="#id11" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>MicroVideo8bit<span class="classifier">MicroVideo</span></dt><dd><p>A copy of the microvideo object with the image scaled between 0 and 255</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.enhance_contrast">
-<span class="sig-name descname"><span class="pre">enhance_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.enhance_contrast" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">enhance_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.enhance_contrast" title="Permalink to this definition"></a></dt>
 <dd><p>Function for enhancing contrast. This uses the OpenCV methods detailed here: <a class="reference external" href="https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html">https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html</a>. 
 There are 3 input values which define contast controls: alpha, beta and gamma, the gamma value is optional.</p>
-<section id="id12">
-<h3>Parameters<a class="headerlink" href="#id12" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>alpha:float</dt><dd><p>Basic contrast control, usually in the range of 1-3. The histogram is streched.</p>
@@ -587,36 +408,29 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id13">
-<h3>Returns<a class="headerlink" href="#id13" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Contrast_enhanced_microvidoe<span class="classifier">MicroVideo</span></dt><dd><p>Return a copy of the object with the contrast enhanced.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.eqHist">
-<span class="sig-name descname"><span class="pre">eqHist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.eqHist" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">eqHist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.eqHist" title="Permalink to this definition"></a></dt>
 <dd><p>Spreads the contrast across complete range of values, leading to an evened, flattened histogram. This can be very effective at enhancing midtones in images with very bright or very dark patches.</p>
-<section id="id14">
-<h3>Returns<a class="headerlink" href="#id14" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Contrast_enhanced_microvideo<span class="classifier">MicroVideo</span></dt><dd><p>Return a copy of the object with the contrast enhanced.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.gaussian_filter">
-<span class="sig-name descname"><span class="pre">gaussian_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.gaussian_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">gaussian_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.gaussian_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a Gaussian filtered copy of the micrograph object, kernal size defined in the call (default is 3)</p>
 <blockquote>
 <div><blockquote>
@@ -636,10 +450,8 @@ Optional, if included image will be converted to 8 bit.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.get_date_time">
-<span class="sig-name descname"><span class="pre">get_date_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_date_time" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_date_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_date_time" title="Permalink to this definition"></a></dt>
 <dd><p>Prints and returns the aquisition date and time for the image.</p>
-<section id="id15">
-<h3>Returns<a class="headerlink" href="#id15" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>AqDate:str</dt><dd><p>Date on which the micrograph was captured</p>
@@ -648,15 +460,12 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.get_exposure">
-<span class="sig-name descname"><span class="pre">get_exposure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_exposure" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_exposure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_exposure" title="Permalink to this definition"></a></dt>
 <dd><p>Prints and returns the frame rate, exposure time per frame, imaging time and number of frames.</p>
-<section id="id16">
-<h3>Returns<a class="headerlink" href="#id16" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>fps:int</dt><dd><p>Frame rate of the video in frames per second</p>
@@ -665,15 +474,12 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.get_mag">
-<span class="sig-name descname"><span class="pre">get_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_mag" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_mag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_mag" title="Permalink to this definition"></a></dt>
 <dd><p>Returns Micrograph magnifications (indicated and actual) and saves them as microvideo attributes (microscope.indicated_mag, microscope.actual_mag)</p>
-<section id="id17">
-<h3>Returns<a class="headerlink" href="#id17" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>indicated_mag:float</dt><dd><p>Indicated magnification (i.e. what the microscope tells you the mag is) for the image</p>
@@ -682,31 +488,25 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.get_voltage">
-<span class="sig-name descname"><span class="pre">get_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_voltage" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.get_voltage" title="Permalink to this definition"></a></dt>
 <dd><p>Returns voltage and saves is as micrograph attribute</p>
-<section id="id18">
-<h3>Returns<a class="headerlink" href="#id18" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Voltage:int</dt><dd><p>Microscope voltage for the image</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.imshow">
-<span class="sig-name descname"><span class="pre">imshow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.imshow" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">imshow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.imshow" title="Permalink to this definition"></a></dt>
 <dd><p>Method to view the video as a static image. This method completely uses matplotlib’s imshow function to show the image, however this allows control of display with a single command.</p>
 <p>This method allows control of the title, whether the image is averaged, which frame is plotted and the maximum and minimum values plotted.</p>
-<section id="id19">
-<h3>Parameters<a class="headerlink" href="#id19" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>title:str</dt><dd><p>This gives a title to the plot.</p>
@@ -721,22 +521,19 @@ Optional, if included image will be converted to 8 bit.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.imshow_pair">
-<span class="sig-name descname"><span class="pre">imshow_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.imshow_pair" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">imshow_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.imshow_pair" title="Permalink to this definition"></a></dt>
 <dd><p>Basic function for plotting 2 stills from videos side by side. this</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.low_pass_filter">
-<span class="sig-name descname"><span class="pre">low_pass_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.low_pass_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">low_pass_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.low_pass_filter" title="Permalink to this definition"></a></dt>
 <dd><p>This low pass filters the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
 If pixelsize is undefined the radius will refer to pixels only</p>
-<section id="id20">
-<h3>Parameters<a class="headerlink" href="#id20" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl>
 <dt>radius<span class="classifier">int (or potentially float)</span></dt><dd><dl>
@@ -752,26 +549,20 @@ If pixelsize is undefined the radius will refer to pixels only</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id21">
-<h3>Returns<a class="headerlink" href="#id21" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Low_pass_filtered_object :MicroVideo</dt><dd><p>Low pass filtered copy of the microvideo object.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.make_scalebar">
-<span class="sig-name descname"><span class="pre">make_scalebar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.make_scalebar" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">make_scalebar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texton</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.make_scalebar" title="Permalink to this definition"></a></dt>
 <dd><p>Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
 The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
 This will work best for 8-bit images, as the scalebar will be given values of 0 or 255.</p>
-<section id="id22">
-<h3>Parameters<a class="headerlink" href="#id22" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>color<span class="classifier">str</span></dt><dd><p>The color of the scalebar, the options are ‘white’. ‘black’ or ‘grey’</p>
@@ -780,21 +571,17 @@ This will work best for 8-bit images, as the scalebar will be given values of 0 
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id23">
-<h3>Returns<a class="headerlink" href="#id23" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>Micrograph_object_with_scalebar: Micrograph</dt><dd><p>Copy of the micrograph object with a scale bar.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.median_filter">
-<span class="sig-name descname"><span class="pre">median_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.median_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">median_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.median_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a median filtered copy of the Microvideo object, kernal size defined in the call (default is 3)</p>
 <blockquote>
 <div><blockquote>
@@ -814,7 +601,7 @@ This will work best for 8-bit images, as the scalebar will be given values of 0 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.motioncorrect_vid">
-<span class="sig-name descname"><span class="pre">motioncorrect_vid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.motioncorrect_vid" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">motioncorrect_vid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.motioncorrect_vid" title="Permalink to this definition"></a></dt>
 <dd><p>This is tricky to use but can be incredibly effective, motioncorrecting LTEM videos can dramatically improve the signal to noise ratio of outputted averages. 
 Here I use the publically available software motioncor2, which can be downloaded from here: <a class="reference external" href="https://emcore.ucsf.edu/ucsf-software">https://emcore.ucsf.edu/ucsf-software</a> which can correct for motion within the video.</p>
 <p>In order to use this function, you need to download this software, and then set a path to the executable, note that several versions will be downloaded so ensure you use the correct one for your CUDA setup, I believe CUDA is required for this.</p>
@@ -833,30 +620,25 @@ Here I use the publically available software motioncor2, which can be downloaded
 video.open_dm(‘myfile.dm4’)
 motioncorrected_vid = video.motioncorrect_vid()</p>
 </div></blockquote>
-<section id="id24">
-<h3>Returns<a class="headerlink" href="#id24" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>MotionCorrected_video_object:</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.open_array">
-<span class="sig-name descname"><span class="pre">open_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelunit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Loaded_array'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_array" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">open_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelunit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Loaded_array'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_array" title="Permalink to this definition"></a></dt>
 <dd><p>Loads a numpy array into the microvideo object, allowing use of all the other available methods. Filename, pixel size and pixel unit should be given in the call, defaults of 1nm/pixel allow this to be avoided but correct pixel size should be loaded if a scalebar is required (as well as certain other functions)</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.open_dm">
-<span class="sig-name descname"><span class="pre">open_dm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelcorrection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_dm" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">open_dm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelcorrection</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_dm" title="Permalink to this definition"></a></dt>
 <dd><p>Imports digital micrograph files into the micrograph object, initialising all the default attributes required, including saving the metadata into self.metadata_tags. 
 By default, video dm files (dose fractionations) will be summed to create a single image file, there is also an option (video_average) to use the first frame only.</p>
 <p>Some DM files have ‘hot pixels’ which have anomalously high signal due to detector malfunction, these often lead to contrast issues.
 To correct for this any pixel which has a higher value than the mean value + (20 x standard deviation) is set to the mean pixel value, this is on by default but can be turned off using pixel_correction=False</p>
 <p>This uses the ncempy.io.dm package to read DM files, more information can be found here: <a class="reference external" href="https://openncem.readthedocs.io/en/latest/ncempy.io.html">https://openncem.readthedocs.io/en/latest/ncempy.io.html</a></p>
-<section id="id25">
-<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>file<span class="classifier">str</span></dt><dd><p>The name of the dm file to open. The path to the file can also be included if it is not in the same directory.</p>
@@ -865,37 +647,35 @@ To correct for this any pixel which has a higher value than the mean value + (20
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.open_series">
-<span class="sig-name descname"><span class="pre">open_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_series" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">open_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_series" title="Permalink to this definition"></a></dt>
 <dd><p>Hasn’t exactly been tested but should work!</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.open_video">
-<span class="sig-name descname"><span class="pre">open_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelunit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_video" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">open_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixelunit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nm'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.open_video" title="Permalink to this definition"></a></dt>
 <dd><p>Loads video files (eg. mp4 and avi, unsure if others will work) into microvideo object.
 The pixel size is not taken from the video by default, and so it should be included in the command, else the default of 1nm/pixel is used. This can be addedd later using video.pixelSize= {new pixel size}</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.pixel_size">
-<span class="sig-name descname"><span class="pre">pixel_size</span></span><a class="headerlink" href="#MicroVideo_class.MicroVideo.pixel_size" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>can be imported as dm3, dm4, mrc, <a href="#id26"><span class="problematic" id="id27">**</span></a>numpy array or tifs ** add the tifs 
+<span class="sig-name descname"><span class="pre">pixel_size</span></span><a class="headerlink" href="#MicroVideo_class.MicroVideo.pixel_size" title="Permalink to this definition"></a></dt>
+<dd><p>SECTION: IMPORT IMAGES</p>
+<blockquote>
+<div><p>can be imported as dm3, dm4, mrc, <a href="#id1"><span class="problematic" id="id2">**</span></a>numpy array or tifs ** add the tifs 
 need to add numpy and tif functionality</p>
 </div></blockquote>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.plot_histogram">
-<span class="sig-name descname"><span class="pre">plot_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sidebyside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imAverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histAverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.plot_histogram" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sidebyside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imAverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histAverage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.plot_histogram" title="Permalink to this definition"></a></dt>
 <dd><p>Plots the histogram of the video (or average of the video), this an be accompanied by either the first frame of the video or the sum of the video frames.</p>
-<section id="id28">
-<h3>Parameters<a class="headerlink" href="#id28" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl>
 <dt>sidebyside:bool</dt><dd><p>plots the histogram beside a still image of the video - either first frame or image sum</p>
@@ -914,28 +694,22 @@ need to add numpy and tif functionality</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="output">
-<h3>Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>Plots the histogram of the video, can have a video still beside the histogram.</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.reset_xy">
-<span class="sig-name descname"><span class="pre">reset_xy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.reset_xy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reset_xy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.reset_xy" title="Permalink to this definition"></a></dt>
 <dd><p>Resets the image attributes for the x, y and shape of the image. Used by the binning method and is also useful following cropping of the micrograph</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.save_tif_sequence">
-<span class="sig-name descname"><span class="pre">save_tif_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.save_tif_sequence" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_tif_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.save_tif_sequence" title="Permalink to this definition"></a></dt>
 <dd><p>Saves each frame of the video as a tif, this is saved in the current format, so if an 8bit tif is required, run video.convert_to_8bit() before use.
 nameand outdir can be included to give a name (prefix) and  the output directory.</p>
-<section id="id29">
-<h3>Parameters<a class="headerlink" href="#id29" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>name:str</dt><dd><p>Prefix for the outputted filenames.</p>
@@ -944,22 +718,16 @@ nameand outdir can be included to give a name (prefix) and  the output directory
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="outputs">
-<h3>Outputs<a class="headerlink" href="#outputs" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>Saves a sequence of Tif files into the output directory listed (cwd is default)</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.save_tif_stack">
-<span class="sig-name descname"><span class="pre">save_tif_stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.save_tif_stack" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">save_tif_stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.save_tif_stack" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the video as a single, multi-image tif file (stack). Files saved in current condition so if an 8bit tif is required, run video.convert_to_8bit() before use.
 These can be useful for viewing editted video in imageJ</p>
-<section id="id30">
-<h3>Parameters<a class="headerlink" href="#id30" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>name:str</dt><dd><p>Prefix for the outputted filename.</p>
@@ -968,27 +736,21 @@ These can be useful for viewing editted video in imageJ</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id31">
-<h3>Outputs<a class="headerlink" href="#id31" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>Saves a multi-image tif stack into the output directory listed (cwd is default)</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.show_metadata">
-<span class="sig-name descname"><span class="pre">show_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.show_metadata" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">show_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.show_metadata" title="Permalink to this definition"></a></dt>
 <dd><p>prints the metadata tags, this can be useful for finding the names of metadata features within the metadata.tags file.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.show_video">
-<span class="sig-name descname"><span class="pre">show_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.show_video" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">show_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduce_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.show_video" title="Permalink to this definition"></a></dt>
 <dd><p>Method to show the video within a jupyter notebook.</p>
-<section id="id32">
-<h3>Parameters<a class="headerlink" href="#id32" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>fps: int</dt><dd><p>The frame rate of the video show (in frames per second), default is to take it from the metadata, and failing that show it at 10fps.</p>
@@ -1001,27 +763,23 @@ These can be useful for viewing editted video in imageJ</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.toMicrograph">
-<span class="sig-name descname"><span class="pre">toMicrograph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.toMicrograph" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">toMicrograph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.toMicrograph" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a micrograph object with the average of the image so the video average can be treated as a single image</p>
-<section id="id33">
-<h3>Returns<a class="headerlink" href="#id33" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>micrograph:Micrograph</dt><dd><p>Micrograph object with the same metadata and an average of all the image frames.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.weiner_filter">
-<span class="sig-name descname"><span class="pre">weiner_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.weiner_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">weiner_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kernal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.weiner_filter" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a Weiner filtered copy of the Microvideo object, kernal size defined in the call (default is 5)</p>
 <blockquote>
 <div><blockquote>
@@ -1041,10 +799,8 @@ These can be useful for viewing editted video in imageJ</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.write_image">
-<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.write_image" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'jpg'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framenumber</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.write_image" title="Permalink to this definition"></a></dt>
 <dd><p>Saves the image in a .jpg or .tif file for display or use with other programs.</p>
-<section id="id34">
-<h3>Parameters<a class="headerlink" href="#id34" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>name: str</dt><dd><p>Filename for saved image. Ending with either .jpg or .tif will define the format of the image, alternatively ftype argument can be used. 
@@ -1062,15 +818,12 @@ The final directory in the path will be made if it does not already exist.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MicroVideo_class.MicroVideo.write_video">
-<span class="sig-name descname"><span class="pre">write_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.write_video" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.MicroVideo.write_video" title="Permalink to this definition"></a></dt>
 <dd><p>This allows saving as an mp4 or a raw avi file (imageJ compatible)</p>
-<section id="id35">
-<h3>Parameters<a class="headerlink" href="#id35" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>name:str</dt><dd><p>Output filename. Outputted files can be in mp4 or uncompressed avi (imageJ readable) filetypes (mp4 by default), this is denoted by the suffix of the name.</p>
@@ -1081,24 +834,18 @@ The final directory in the path will be made if it does not already exist.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id36">
-<h3>Outputs<a class="headerlink" href="#id36" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>Saves a sequence of Tif files into the output directory listed (cwd is default)</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="MicroVideo_class.default_video_pipeline">
-<span class="sig-prename descclassname"><span class="pre">MicroVideo_class.</span></span><span class="sig-name descname"><span class="pre">default_video_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xybin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Average_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.default_video_pipeline" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">MicroVideo_class.</span></span><span class="sig-name descname"><span class="pre">default_video_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">medfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussfilter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scalebar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xybin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Average_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MicroVideo_class.default_video_pipeline" title="Permalink to this definition"></a></dt>
 <dd><p>Use to automate default filtering, scalebar adding, binning,frame averaging and saving.</p>
 <p>From a coding point of view this function is a bit of a mess with if…elif…else statements so I should clear it up at some point.</p>
-<section id="id37">
-<h3>Parameters<a class="headerlink" href="#id37" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><dl class="simple">
 <dt>filename: str</dt><dd><p>The filename of the .dm3 or .dm4 file to open</p>
@@ -1117,13 +864,9 @@ The final directory in the path will be made if it does not already exist.</p>
 </dd>
 </dl>
 </div></blockquote>
-</section>
-<section id="id38">
-<h3>Outputs<a class="headerlink" href="#id38" title="Permalink to this heading">¶</a></h3>
 <blockquote>
 <div><p>Performs filtering etc as parameters suggest, saves it in format defined in output_type.</p>
 </div></blockquote>
-</section>
 </dd></dl>
 
 </section>
@@ -1131,50 +874,33 @@ The final directory in the path will be made if it does not already exist.</p>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="Tutorials/MicroVideoAnalysisTutorial.html" class="btn btn-neutral float-right" title="Video Analysis Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Tutorials/MicrographAnalysisTutorial.html" class="btn btn-neutral float-left" title="Micrograph analysis tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Tutorials/MicroVideoAnalysisTutorial.html" class="btn btn-neutral float-right" title="Video Analysis Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2022, Gabriel Ing.
-
-    </p>
+    <p>&#169; Copyright 2022, Gabriel Ing.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>
