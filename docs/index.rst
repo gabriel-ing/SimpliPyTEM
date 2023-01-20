@@ -106,4 +106,4 @@ Indices
 
 Licensing
 ---------
-This project is licensed under the BSD license.
+This project is licensed under the GPL-3.0 license.

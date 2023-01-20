@@ -16,9 +16,13 @@ Usage - Section 1: Image generation
 
 App usage is fairly simple, and is presented in a stepwise fashion here;
 
-Open terminal and call: 
+Open terminal and first call: 
 
-```SimpliPyTEM-GUI```
+``conda activate SimpliPyTEM``
+
+To activate the python environment in which you installed the SimpliPyTEM package, followed by : 
+
+``SimpliPyTEM-GUI``
 
 The GUI should appear as follows: 
 
