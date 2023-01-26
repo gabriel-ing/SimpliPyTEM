@@ -1492,6 +1492,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             aved = aved.make_scalebar()
         if xybin!=0 and xybin!=1:
             aved = aved.bin(xybin)
+        MicroVideo_object = MicroVideo_object.clip_contrast()
         if 'outdir' in kwargs:
             aved.write_image(name, outdir=kwargs['outdir']+'/Images')
         else:
@@ -1525,7 +1526,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             MicroVideo_object.convert_to_8bit()
             MicroVideo_object = MicroVideo_object.clip_contrast()
             if scalebar==True:
-                MicroVideo_object.make_scalebar(texton=texton, color=color)
+                MicroVideo_object=MicroVideo_object.make_scalebar(texton=texton, color=color)
             name = name+output_type[-4:]
             if 'outdir' in kwargs:
                 MicroVideo_object.write_video(name=name,outdir=kwargs['outdir']+'/Videos')
@@ -1534,7 +1535,9 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
                 
         elif output_type=='Save Tif Stack':
             if scalebar==True:
-                MicroVideo_object.make_scalebar(texton=texton, color=color)
+                MicroVideo_object=MicroVideo_object.make_scalebar(texton=texton, color=color)
+                #MicroVideo_object = MicroVideo_object.clip_contrast()
+
             if 'outdir' in kwargs:
                 MicroVideo_object.save_tif_stack(name=name, outdir=kwargs['outdir']+'/Videos')
             else: 
@@ -1542,7 +1545,8 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
         elif output_type=='Save Tif Sequence':
             if scalebar==True:
-                MicroVideo_object.make_scalebar(texton=texton, color=color)
+                MicroVideo_object= MicroVideo_object.make_scalebar(texton=texton, color=color)
+                #MicroVideo_object = MicroVideo_object.clip_contrast()
             if 'outdir' in kwargs:
                 MicroVideo_object.save_tif_sequence(name=name, outdir=kwargs['outdir']+'/Videos')
             else: 
