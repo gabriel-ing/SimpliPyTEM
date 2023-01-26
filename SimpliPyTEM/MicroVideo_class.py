@@ -1479,7 +1479,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
     if 'name' in kwargs:
         name=kwargs['name']
     else:
-        name = '.'.join(MicroVideo_object.filename.split('.')[:1])
+        name = '.'.join(MicroVideo_object.filename.split('.')[:-1])
 
     if output_type=='Save MotionCorrected Average':
         MCor_vid = MicroVideo_object.motioncorrect_vid()
