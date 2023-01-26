@@ -31,6 +31,8 @@ Combined with this, I have also created methods to make html or pdf files contai
 This app is designed to be simple to use for people with basic computational skills.
 
 .. toctree::
+   :caption: GUI 
+
    SimpliPyTEM-GUI
 
 .. image:: Media/Images/App_screenshot1.png
@@ -59,7 +61,7 @@ This library aims to simplify python-based image analysis functions for beginner
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Python Library
 
    Micrograph_class
    MicroVideo_class
