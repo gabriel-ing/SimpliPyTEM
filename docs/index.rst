@@ -68,7 +68,6 @@ This library aims to simplify python-based image analysis functions for beginner
    PDF_generator
    html_writer
    Particle_analysis
-   SimpliPyTEM-GUI
    Tutorials/MicrographAnalysisTutorial
    Tutorials/MicroVideoAnalysisTutorial
 
