@@ -130,6 +130,7 @@ class Micrograph:
         voxel_size = mrc.voxel_size
         self.pixelSize = float(str(voxel_size).split(',')[0].strip('('))
         self.image = mrc.data
+        self.image.setflags(write=1)
         self.x = self.image.shape[1]
         self.y = self.image.shape[0]
         self.pixelUnit='nm'

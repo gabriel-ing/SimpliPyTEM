@@ -106,7 +106,9 @@ class MicroVideo:
 
         self.pixelSize = float(str(voxel_size).split(',')[0].strip('('))
         self.frames = mrc.data
+        self.frames.setflags(write=1)
         self.frames = np.flip(self.frames, axis=1)
+
         self.x = self.frames.shape[1]
         self.y = self.frames.shape[0]
         self.pixelUnit='nm'
