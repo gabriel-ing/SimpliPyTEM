@@ -308,7 +308,7 @@ class MainApplication(QWidget):
             print('The Images folder was not found, please make sure that the output folder defined above has a folder of images called images.')
             os.chdir(cwd)
             return 1
-        print(images)
+        print(image_files)
 
         write_html(image_files, video_files, title, notes)
         write_css()
