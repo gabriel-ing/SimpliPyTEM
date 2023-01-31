@@ -68,6 +68,10 @@ This library aims to simplify python-based image analysis functions for beginner
    PDF_generator
    html_writer
    Particle_analysis
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorials
    Tutorials/MicrographAnalysisTutorial
    Tutorials/MicroVideoAnalysisTutorial
 
