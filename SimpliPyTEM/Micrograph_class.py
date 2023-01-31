@@ -808,7 +808,7 @@ class Micrograph:
     used for plotting images using matplotlib. Functions very basic so only meant for rapid use, for better figures write own function or use save command
 
     '''
-    def imshow(self, title=''):
+    def imshow(self, title='', vmax=None, vmin=None):
         '''
         Basic function for plotting the micrograph image
 
@@ -817,10 +817,22 @@ class Micrograph:
 
             title:str
                 Optional title to be added to the plot 
-
+            
+            vmax: int/float
+                The 'white value' when plotting the image, such that anything above this value is set to white.
+            
+            vmin: int/float
+                The 'black value' when plotting the image, such that anything below this value is set to black.
         '''
         plt.subplots(figsize=(30,20))
-        plt.imshow(self.image)
+
+        if not vmax:
+            vmax = self.image.max()
+        if not vmin:
+            vmin = self.image.min()
+
+
+        plt.imshow(self.image, vmax=vmax, vmin=vmin)
         if title!='':
             plt.title(title, fontsize=30)
         plt.show()
@@ -839,6 +851,7 @@ class Micrograph:
                 Title for the second image - Optional 
 
         '''
+
         if str(type(other_image))=="<class 'SimpliPyTEM.Micrograph_class.Micrograph'>":
             other_image = other_image.image
         fig, ax = plt.subplots(1,2, figsize=(30,20))
@@ -851,24 +864,51 @@ class Micrograph:
             ax[1].set_title(title2, fontsize=30)
         plt.show()
 
-    def plot_histogram(self, sidebyside=False):
+    def plot_histogram(self, sidebyside=False, vmax=None, vmin=None):
+        '''
+        Function to plot a histogram of the image values. This can be done on its own or side by side with the image.
+        
+        Parameters
+        ----------
+            sidebyside:bool
+                Show the image next to the histogram? True or False (default is False)
+
+            vmax: int/float
+                The 'white value' when plotting the image, such that anything above this value is set to white.
+            
+            vmin: int/float
+                The 'black value' when plotting the image, such that anything below this value is set to black.
+
+    
+        '''
         if sidebyside:
+
+            if not vmax:
+                vmax = self.image.max()
+            if not vmin:
+                vmin = self.image.min()
+
             fig, ax = plt.subplots(1,2, figsize=(30,10))
-            ax[0].imshow(self.image)
+            ax[0].imshow(self.image, vmax=vmax, vmin=vmin)
+            ax[0].tick_params(axis='x', labelsize=25)
+            ax[0].tick_params(axis='y', labelsize=25)
             if self.image.dtype == 'unit8':
                 ax[1].hist(self.image.ravel(), 256, [0,256])
             else:
                 ax[1].hist(self.image.ravel(), 100)
             ax[1].set_xlabel('Pixel Values', fontsize=20)
             ax[1].set_ylabel('Frequency',fontsize=20)
+            ax[1].tick_params(axis='x', labelsize=25)
+            ax[1].tick_params(axis='y', labelsize=25)
         else:
             plt.figure(figsize=(8,5))
             if self.image.dtype == 'unit8':
                 plt.hist(self.image.ravel(), 256, [0,256])
             else:
                 plt.hist(self.image.ravel(), 100)
-            plt.xlabel('Pixel Values', fontsize=20)
-            plt.ylabel('Frequency',fontsize=20)
+            plt.xlabel('Pixel Values', fontsize=15)
+            plt.ylabel('Frequency',fontsize=15)
+
         plt.show()
 
 
@@ -887,7 +927,7 @@ class Micrograph:
                 The 'white value' when plotting the power spectrum, such that anything above this value is set to white.
             
             vmin: int/float
-                The 'black value' when plotting the power spectrum, such that anything above this value is set to black.
+                The 'black value' when plotting the power spectrum, such that anything below this value is set to black.
             
             ret: bool 
                 Set to true if you want to return a copy of the fft as a numpy array. 
