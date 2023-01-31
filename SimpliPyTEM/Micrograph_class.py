@@ -870,6 +870,69 @@ class Micrograph:
             plt.xlabel('Pixel Values', fontsize=20)
             plt.ylabel('Frequency',fontsize=20)
         plt.show()
+
+
+    def display_fft(self,sidebyside=False, vmax=None,vmin=None, ret=False):
+        '''
+        Function to display or return the power-spectrum, or 2D fourier transform of the image. This can be useful to observe any periodic features, eg lattace lines, or Thon rings resulting from the contrast transfer function in the microscope.
+
+
+        Parameters
+        ----------
+
+            sidebyside:bool 
+                Do you want to display the power spectrum next to the image? default is yes (True), change to False to see fft only
+
+            vmax: int/float
+                The 'white value' when plotting the power spectrum, such that anything above this value is set to white.
+            
+            vmin: int/float
+                The 'black value' when plotting the power spectrum, such that anything above this value is set to black.
+            
+            ret: bool 
+                Set to true if you want to return a copy of the fft as a numpy array. 
+
+        Returns
+        -------
+
+            If ret==True, a new micrograph object is returned with the power spectrum as the image, from here the same functions can be used 
+
+        '''
+        fft = np.fft.fft2(self.image)
+        fshift = np.fft.fftshift(fft)
+        magnitude_spectrum = np.log(np.abs(fshift))
+        magnitude_spectrum = magnitude_spectrum.astype(np.float32)
+
+
+        if not vmax:
+            vmax = magnitude_spectrum.max()
+        if not vmin:
+            vmin = magnitude_spectrum.min()
+        #print(magnitude_spectrum.dtype)
+
+        if ret==True: 
+            magnitude_spectrum = magnitude_spectrum.astype(np.float32)
+            fft_ob = Micrograph()
+            fft_ob.image = magnitude_spectrum
+            filename = self.filename.split('.')[:-1]
+            filename.append('_FFT')
+            fft_ob.filename = filename
+            return fft_ob
+
+        if sidebyside:
+            fig,ax= plt.subplots(1,2, figsize=(30,20))
+            ax[0].imshow(self.image)
+            ax[0].set_title('Image')
+            ax[1].imshow(magnitude_spectrum, vmin=vmin, vmax=vmax)
+            ax[1].set_title('Power spectrum')
+            plt.show()
+        else:
+            plt.figure(figsize=(20,20))
+            plt.imshow(magnitude_spectrum, vmin=vmin, vmax=vmax)
+            plt.show()
+
+
+
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 
