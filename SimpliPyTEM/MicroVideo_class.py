@@ -1535,10 +1535,75 @@ class MicroVideo:
         return MC_vid
 
 
-    
+    def display_fft(self, average=True, ret=False,vmax=None, vmin=None):
+        '''
+        Function to see the 2D Fourier transform of the video. 
+
+        Parameters
+        ----------
+
+            Average:bool 
+                Do you want to see a powerspectrum for the average of the video? True or False (default=True) if true, it will be displayed automatically unless the `ret` paraameter is used to return it as a new micrograph object. 
 
 
+            vmax: int/float
+                The 'white value' when plotting the power spectrum, such that anything above this value is set to white.
+            
+            vmin: int/float
+                The 'black value' when plotting the power spectrum, such that anything below this value is set to black.
+            
+            ret: bool 
+                Set to true if you want to return a copy of the fft as a micrograph object. Only works if average=True, if average=False, a new object will always be returned.
 
+        Returns
+        -------
+
+            If ret==True and average=True, a new micrograph object is returned with the power spectrum of the average of the video as the micrograph.image attribute, from here the same functions can be used 
+            
+            if Average==False, a new MicroVideo object is returned with the powerspectrum of each frame sa the .frames attribute. 
+
+
+        '''
+        if average:
+            av = np.sum(self.frames, axis=0)
+            fft = np.fft.fft2(av)
+            fshift=np.fft.fftshift(fft)
+            magnitude_spectrum=np.log(np.abs(fshift))
+            magnitude_spectrum= magnitude_spectrum.astype(np.float32)
+            
+            if not vmax:
+                vmax = magnitude_spectrum.max()
+            if not vmin:
+                vmin = magnitude_spectrum.min()
+
+            if ret:
+             
+                fft_ob = Micrograph()
+                fft_ob.image = magnitude_spectrum
+                fft_ob.reset_xy()
+                filename = self.filename.split('.')[:-1]
+                filename.append('_FFT')
+                fft_ob.filename = filename
+                return fft_ob
+            else:
+                plt.figure(figsize=(20,20))
+                plt.imshow(magnitude_spectrum, vmin=vmin, vmax=vmax)
+                plt.show()
+        else:
+            fft_frames = [] 
+            for frame in self.frames:
+                fft=np.fft.fft2(frame)
+                fshift=np.fft.fftshift(fft)
+                magnitude_spectrum=np.log(np.abs(fshift))
+                magnitude_spectrum=magnitude_spectrum.astype(np.float32)
+                fft_frames.append(magnitude_spectrum)
+            fft_ob = MicroVideo()
+            fft_ob.frames = np.array(fft_frames)
+            fft_ob.reset_xy()
+            filename = self.filename.split('.')[:-1]
+            filename.append('_FFT')
+            fft_ob.filename = filename
+            return fft_ob
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
 def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True,  xybin=2, color='Auto',Average_frames=2, **kwargs):

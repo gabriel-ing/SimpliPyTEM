@@ -42,7 +42,7 @@ class Micrograph:
     image: np array
         The image data
 
-    
+
     List of Functions
     -----------------
     Imports:
@@ -999,7 +999,7 @@ class Micrograph:
                 The 'black value' when plotting the power spectrum, such that anything below this value is set to black.
             
             ret: bool 
-                Set to true if you want to return a copy of the fft as a numpy array. 
+                Set to true if you want to return a copy of the fft as a micrograph object (with the fft as the .image parameter)
 
         Returns
         -------
@@ -1020,7 +1020,7 @@ class Micrograph:
         #print(magnitude_spectrum.dtype)
 
         if ret==True: 
-            magnitude_spectrum = magnitude_spectrum.astype(np.float32)
+
             fft_ob = Micrograph()
             fft_ob.image = magnitude_spectrum
             filename = self.filename.split('.')[:-1]
