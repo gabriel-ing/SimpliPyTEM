@@ -78,8 +78,10 @@ Here are tutorials on how the python library can be used to process images and v
 .. toctree::
    :maxdepth: 1
    :caption: Tutorials
+   
    Tutorials/MicrographAnalysisTutorial
    Tutorials/MicroVideoAnalysisTutorial
+
 
 Installation
 ------------
