@@ -426,7 +426,7 @@ class Micrograph:
         return enhanced_object
 
 
-    def Local_normalisation(self,numpatches, padding=0, pad=False):
+    def Local_normalisation(self,numpatches, padding=15, pad=False):
         """
         Normalises contrast across the image, ensuring even contrast throughout. 
         Image is taken and split into patches, following which the median of the patches ('local median') is compared to the median of the image ('global median').
@@ -434,7 +434,7 @@ class Micrograph:
 
         The patch median was chosen so there would be less effect if there is a large dark/bright particle, however if this is too large compared with the patch size it will affect the resulting contrast. 
         
-        Padding can be applied which will greatly reduce edge artefacts. However doing this well will greatly reduce the 
+        Padding can be applied which will greatly reduce edge artefacts. However doing this well will greatly increase the run time.
         Note: if there is a black region (eg. edge of beam or grid) in the image this may lead to bad results.
 
         Parameters
@@ -459,6 +459,8 @@ class Micrograph:
         new_im = deepcopy(self)
         if pad:
             arrs = []
+        else:
+            padding=0
         xconst = int(new_im.image.shape[0]/numpatches)
         yconst = int(new_im.image.shape[1]/numpatches)
         x_coords = [i*xconst for i in range(numpatches)]
@@ -468,9 +470,9 @@ class Micrograph:
         for coord in patch_coords:
             
             x_low = coord[0]
-            x_high = coord[0]+xconst+int(padding*xconst)
+            x_high = coord[0]+xconst+int((padding/100)*xconst)
             y_low = coord[1]
-            y_high = coord[1]+yconst+int(padding*yconst)
+            y_high = coord[1]+yconst+int((padding/100)*yconst)
             
             #local_mean = new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)].mean()
             #.mean()
@@ -824,7 +826,7 @@ class Micrograph:
             vmin: int/float
                 The 'black value' when plotting the image, such that anything below this value is set to black.
         '''
-        plt.subplots(figsize=(30,20))
+        plt.subplots(figsize=(20,10))
 
         if not vmax:
             vmax = self.image.max()
@@ -834,7 +836,7 @@ class Micrograph:
 
         plt.imshow(self.image, vmax=vmax, vmin=vmin)
         if title!='':
-            plt.title(title, fontsize=30)
+            plt.title(title, fontsize=20)
         plt.show()
 
     def show_pair(self,other_image, title1='', title2=''):
@@ -854,14 +856,14 @@ class Micrograph:
 
         if str(type(other_image))=="<class 'SimpliPyTEM.Micrograph_class.Micrograph'>":
             other_image = other_image.image
-        fig, ax = plt.subplots(1,2, figsize=(30,20))
+        fig, ax = plt.subplots(1,2, figsize=(20,10))
         ax[0].imshow(self.image)
         if title1!='':
-            ax[0].set_title(title1, fontsize=30)
+            ax[0].set_title(title1, fontsize=20)
 
         ax[1].imshow(other_image)
         if title2!='':
-            ax[1].set_title(title2, fontsize=30)
+            ax[1].set_title(title2, fontsize=20)
         plt.show()
 
     def plot_histogram(self, sidebyside=False, vmax=None, vmin=None):
@@ -888,18 +890,18 @@ class Micrograph:
             if not vmin:
                 vmin = self.image.min()
 
-            fig, ax = plt.subplots(1,2, figsize=(30,10))
+            fig, ax = plt.subplots(1,2, figsize=(20,10))
             ax[0].imshow(self.image, vmax=vmax, vmin=vmin)
-            ax[0].tick_params(axis='x', labelsize=25)
-            ax[0].tick_params(axis='y', labelsize=25)
+            ax[0].tick_params(axis='x', labelsize=20)
+            ax[0].tick_params(axis='y', labelsize=20)
             if self.image.dtype == 'unit8':
                 ax[1].hist(self.image.ravel(), 256, [0,256])
             else:
                 ax[1].hist(self.image.ravel(), 100)
             ax[1].set_xlabel('Pixel Values', fontsize=20)
             ax[1].set_ylabel('Frequency',fontsize=20)
-            ax[1].tick_params(axis='x', labelsize=25)
-            ax[1].tick_params(axis='y', labelsize=25)
+            ax[1].tick_params(axis='x', labelsize=20)
+            ax[1].tick_params(axis='y', labelsize=20)
         else:
             plt.figure(figsize=(8,5))
             if self.image.dtype == 'unit8':
