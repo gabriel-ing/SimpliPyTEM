@@ -39,6 +39,73 @@ class Micrograph:
         The size of the x axis in the image
     y:int    
         The size of the y axis in the image
+    image: np array
+        The image data
+
+    
+    List of Functions
+    -----------------
+    Imports:
+        open_dm - Opening digital micrograph files
+
+        open_mrc - Opening an mrc file
+
+    Saving:
+        write_image - save video frame or video average as an image
+
+    Basic functions:
+        reset_xy - reset the object x, y and shape attributes upon change of video, useful if video is cropped.
+
+        bin - reduce size of xy axis by binning pixels, factor is specified in call
+
+        convert_to_8bit - converts to 8bit video by scaling pixel values between 0-255.
+
+        make_scalebar - creates suitably sized scalebar
+
+        Average_frames - averages frames in groups of n
+
+        Running_average - performs a running average of the video
+
+    Contrast enhancement:
+        clip_contrast - enhances contrast by making a percentage of values saturated (absolute black/white) and scaling the rest of the pixels between these (my preferred contrast enhancement)
+
+        enhance_contrast - enhances contrast based on alpha (contrast), beta (brightness) and gamma (non-linear contrast) values
+
+        eqHist - equalises histogram, ensuring even converage of pixel values from 0-255
+
+        Local_normalisation - Evens out contrast across the image
+
+    Metadata (currently relies on dm3/dm4 metadata):
+        show_metadata - shows all metadata tags and values
+
+        get_mag - prints and returns magnification (indicated and actual)
+
+        get_voltage - prints and returns voltage
+
+        get_exposure - prints and returns frame rate, exposure time
+
+        get_date_time - prints aquisition date and time
+
+    Image filters:
+        gaussian_filter
+
+        median_filter
+
+        low_pass_filter
+
+        weiner_filter
+
+        non_local_means_filter
+
+    Plotting:
+        imshow - plots image
+
+        plot_histogram - plots the histogram of the image
+
+        show_pair - plots two images side by side
+
+    Others:
+        display_fft - get the 2D fourier transform of the image.
 
 
     '''

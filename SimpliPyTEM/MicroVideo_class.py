@@ -20,6 +20,105 @@ plt.gray()
 
 class MicroVideo: 
     '''
+    A class holding video data and various methods to edit the frames. 
+
+    Attributes
+    ----------
+    filename:str
+        The file name opened (blank if not opened in object)
+    pixelSize:float
+        The pixel size in the image, should be initialised when opening data assuming the pixel size is included, if not can easily be altered
+    pixelUnit:str
+        The unit of the pixel size
+    metadata_tags:dict
+        The metadata of the file should be stored in this dictionary (works with digital micrograph files)
+    shape:tuple
+        The shape of the video (nframes, y, x) 
+    x:int
+        The size of the x axis in the image
+    y:int    
+        The size of the y axis in the image
+    frames:numpy array
+        The video data
+
+
+    List of functions in MicroVideo
+    -------------------------------
+    Imports:
+        open_dm - Opening digital micrograph files
+
+        open_video - Opening a .mp4 or .avi video files
+
+        open_array - Loading a numpy array
+
+    Saving:
+        save_tif_stack
+
+        save_tif_sequence
+
+        write_video - save .mp4 or .avi version of the video
+
+        write_image - save video frame or video average as an image
+
+    Basic functions:
+        bin - reduce size of xy axis by binning pixels, factor is specified in call
+
+        convert_to_8bit - converts to 8bit video by scaling pixel values between 0-255.
+
+        make_scalebar - creates suitably sized scalebar
+
+        Average_frames - averages frames in groups of n
+
+        Running_average - performs a running average of the video
+
+        reset_xy - reset the object x, y and shape attributes upon change of video, useful if video is cropped.
+
+    Contrast enhancement:
+        clip_contrast - enhances contrast by making a percentage of values saturated (absolute black/white) and scaling the rest of the pixels between these (my preferred contrast enhancement)
+
+        enhance_contrast - enhances contrast based on alpha (contrast), beta (brightness) and gamma (non-linear contrast) values
+
+        eqHist - equalises histogram, ensuring even converage of pixel values from 0-255
+
+        Normalise_video - normalises contrast between frames of the video
+
+    Metadata (currently relies on dm3/dm4 metadata):
+        show_metadata - shows all metadata tags and values
+
+        get_mag - prints and returns magnification (indicated and actual)
+
+        get_voltage - prints and returns voltage
+
+        get_exposure - prints and returns frame rate, exposure time
+
+        get_date_time - prints aquisition date and time
+
+    Image filters:
+        gaussian_filter
+
+        median_filter
+
+        low_pass_filter
+
+        weiner_filter
+
+        non_local_means_filter
+
+    Plotting:
+        imshow - plots still image (either single frame or average) of video
+
+        plot_histogram - plots the histogram of the video
+
+        show_video - shows video in a jupyter notebook (very slow)
+
+    Other functions:
+        Sidebyside - Sticks two videos together so they play side by side.
+
+        motioncorrect_vid - Uses motioncor2 to align the video frames (requires motioncor exectutable to be set)
+
+        
+
+
     '''
     def __init__(self):
         self.filename = ''
