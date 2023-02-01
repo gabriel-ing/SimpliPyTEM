@@ -69,6 +69,12 @@ This library aims to simplify python-based image analysis functions for beginner
    html_writer
    Particle_analysis
 
+Tutorials
+---------
+
+Here are tutorials on how the python library can be used to process images and videos. 
+
+
 .. toctree::
    :maxdepth: 1
    :caption: Tutorials
