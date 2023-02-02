@@ -17,7 +17,7 @@ class MainApplication(QWidget):
         #Qt.AlignHCenter
 
         self.setGeometry(500, 500, 100,400)
-        self.setWindowTitle('Micrograph Previews App')
+        self.setWindowTitle('SimpliPyTEM-GUI')
         
         self.title = QLabel('Make Preview Images',self)
         #app.setStyleSheet("QLabel, QCheckBox{font-size: 16pt;}")
