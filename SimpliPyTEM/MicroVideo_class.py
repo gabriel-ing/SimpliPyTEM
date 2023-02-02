@@ -1344,7 +1344,7 @@ class MicroVideo:
                 plt.hist(self.frames.ravel(), 100)
         plt.show()
 
-    def show_video(self, fps=None, loop=True,reduce_size=1, vmax=None, vmin=None):
+    def show_video(self, width=500, fps=None, loop=0):
         '''
         Method to show the video within a jupyter notebook. 
         
@@ -1354,48 +1354,27 @@ class MicroVideo:
             fps: int
                 The frame rate of the video show (in frames per second), default is to take it from the metadata, and failing that show it at 10fps. 
 
-            vmax:int or float
-                The maximum value in the image such that any value above vmax is white. 
+            width:int  
+                The width of the video shown  
             
-            vmin: int or float
-                The minimum value in the image such that any value below vmin is black.
-            
-            reduce size: int
-                Factor to reduce size when plotting the video, this is important to add for large videos to reduce the time to plot the video. 
-
+            loop:int
+                Set to 1 to make the video automatically loop. 
+    
 
 
         '''
-
-        from IPython.display import HTML
         if not fps and hasattr(self, 'fps'):
             fps=self.fps
         elif not fps and not hasattr(self, 'fps'):
             fps=10
 
-        if not vmax:
-            vmax = np.max(self.frames)
-        if not vmin:
-            vmin = np.min(self.frames)
-
-        figsize = tuple(x/(100*reduce_size) for x in self.frames.shape[1:])
-        print(figsize)
-        fig, ax = plt.subplots(figsize=figsize)
-        
-
-        ax.set_xticks([])
-        ax.set_yticks([])
-        frames = []
-        fig.tight_layout()
-        def animate(frame_number):
-            ax.imshow(self.frames[frame_number], vmax=vmax, vmin=vmin)
-            if frame_number%5==0:
-                print(str(frame_number) + '  Done!')
-            return ax
-
-        ani = animation.FuncAnimation(fig,animate,interval=1000/fps, repeat_delay=2, blit=False,repeat=loop, frames=len(self.frames), cache_frame_data=False)
-
-        return HTML(ani.to_html5_video())
+        outvid = [] 
+        for frame in self.frames:
+            frame=cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
+            outvid.append(frame)
+        outvid = np.array(outvid)
+        clip = ImageSequenceClip(list(outvid), fps=fps)
+        return clip.ipython_display(width=width, loop=loop)
 
     '''------------------------------------------
     SECTION: VIDEO SPECIFIC METHODS
