@@ -29,7 +29,9 @@ setup(
 	 'PyQt5',
 	 'sphinx',
 	 'sphinx_rtd_theme',
-	 'nbsphinx'],
+	 'nbsphinx',
+	 'pandas',
+	 'seaborn'],
 	entry_points={'console_scripts':['SimpliPyTEM-GUI = SimpliPyTEM.SimpliPyTEM_GUI:main']},
 	classifiers=[
 		'Development Status :: 4 - Beta',
