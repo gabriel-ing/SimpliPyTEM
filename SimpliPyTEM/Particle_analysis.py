@@ -10,7 +10,7 @@ import math
 MAIN FUNCTIONS
 '''
 
-def Threshold(image, threshold):
+def Threshold(image, threshold, brightfield=True):
     '''
     Threshold the image to a particular value, such that below that value goes to black and above that value goes to white.
     
@@ -28,27 +28,17 @@ def Threshold(image, threshold):
             The thresholded image 
 
     '''
+
+
     imG=cv.GaussianBlur(image, (5,5),0)
     #croppedThresh[croppedThresh<90] = 0
     #croppedThresh[croppedThresh>90]=255
-    ret, cvThresh = cv.threshold(imG, threshold, 255, cv.THRESH_BINARY)
-    cvThresh = cv.erode(cvThresh, None,iterations=1)
-    cvThresh = cv.dilate(cvThresh, None,iterations=1)
-    cvThresh = cvThresh.astype('uint8')
-    #print(cvThresh.dtype)plt.imshow(mask)
-    #print(des)
-    #print(des)
-    #plt.imshow(des)
-    #contour, hier = cv.findContours(cvThresh, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
-    #for cont in contour:
-     #   cv.drawContours(des,[cont], 0, 255,-1)
-    #plt.imshow(cvThresh[0])
-    thresh = cvThresh
-    thresh=cv.bitwise_not(thresh)
-    #new lines
-    #kernal  = cv.getStructuringElement(cv.MORPH_ELLIPSE, (3,3))
-    #res=cv.morphologyEx(thresh, cv.MORPH_OPEN,kernal)
-   
+    ret, thresh = cv.threshold(imG, threshold, 255, cv.THRESH_BINARY)
+    thresh = cv.erode(thresh, None,iterations=1)
+    thresh = cv.dilate(thresh, None,iterations=1)
+    thresh = thresh.astype('uint8')
+    if brightfield==True:
+        thresh=cv.bitwise_not(thresh)
     return thresh#,res
 
 
@@ -176,11 +166,12 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
     #area_particle = np.zeros([num_particle, 1], dtype=float)
     area_particle=[]
     # this parameter computes the center of the mass of  particles
-    centroid_particle = np.zeros([num_particle, 2], dtype=float)
+    centroid_x_particle =[]
+    centroid_y_particle = []
     # this parameter computes the ratio between maximum and minimum length of a particle
-    aspect_ratio_particle = np.zeros([num_particle, 1], dtype=float)
+    aspect_ratio_particle = []
     # this parameter computes the perimeter of particles
-    perimeter_particle = np.zeros([num_particle, 1], dtype=float)
+    perimeter_particle = []
     # this parameter computes the perimeter of particles
     #circularity_particle = np.zeros([num_particle, 1], dtype=float)
     circularity_particle=[]
@@ -201,15 +192,16 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
     for (i, c) in enumerate(contours_im):
         #print(i,c)
         moment_contour = cv.moments(c)
-        centroid_particle[i, 0] = moment_contour['m10']/moment_contour['m00']
-        centroid_particle[i, 1] = moment_contour['m01']/moment_contour['m00']
-
+        centroid_x=(moment_contour['m10']/moment_contour['m00'])
+        centroid_y=(moment_contour['m01']/moment_contour['m00'])
+        centroid_x_particle.append(centroid_x)
+        centroid_y_particle.append(centroid_y)
         area = cv.contourArea(c)*pixelSize**2
         area_particle.append(area)
         #meanradius_particle = area__particle[i, 0]
 
 
-        perimeter_particle[i, 0] = cv.arcLength(c, True)*pixelSize
+        perimeter_particle.append(cv.arcLength(c, True)*pixelSize)
         min_rectangle = cv.minAreaRect(c)
         #print(min_rectangle)
         #circularity_particle = 
@@ -225,22 +217,21 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False):
         MajorMinorRatio.append(MajMinRat)
         ((cx, cy), radius) = cv.minEnclosingCircle(c)
         radius_particle.append(radius*pixelSize)
-        circularity_particle.append(area/(np.pi*radius*radius))
-        aspect_ratio_particle[i, 0] = width/height
+        circularity_particle.append(area/(np.pi*radius*radius*pixelSize**2))
         box = cv.boxPoints(min_rectangle)
         box=np.int0(box)
 
         if multimeasure: 
-            dists,coords = multiMeasure_particle(c, centroid_particle[i])
-            maxlength.append(max(dists))
-            minlength.append(min(dists))
-            meanlength.append(np.mean(dists))
-            stddev_length.append(np.std(dists))
+            dists,coords = multiMeasure_particle(c, (centroid_x,centroid_y))
+            maxlength.append(max(dists)*pixelSize)
+            minlength.append(min(dists)*pixelSize)
+            meanlength.append(np.mean(dists)*pixelSize)
+            stddev_length.append(np.std(dists)*pixelSize)
             measurements.append(len(dists))
     
 
-    particle_data = { 'Area':area_particle, 'Centroid':centroid_particle, 
-                     'Aspect_ratio':aspect_ratio_particle, 'Perimeter':perimeter_particle, 'Circularity':circularity_particle, 
+    particle_data = { 'Area':area_particle, 'Centroid_x':centroid_x_particle, 'Centroid_y':centroid_y_particle,
+                      'Perimeter':perimeter_particle, 'Circularity':circularity_particle, 
                      'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle, 'Major-Minor Ratio':MajorMinorRatio}  
     if multimeasure:
         particle_data['Min diameter'] = minlength
@@ -275,6 +266,47 @@ def Flatten_list(l):
     '''
     return [x for i in l for x in i]
     
+def Convert_to_single_dict(l, combine_data=False):
+    '''
+    Take a list of dictionaries and convert to a single dictionary. This can keep data per image or combine the data from each image, as per requirements
+
+    Parameters
+    ----------
+
+        l: list
+            List of dictionaries containing particle data for each image
+
+        combine_data:bool
+            Do you want the data from each frame separated or together? True for together
+    '''
+    # make an new empty dictionary
+    alldata_dict = {}
+    
+    # Get the keys of the dictionaries
+    
+    keys = list(l[0].keys())
+    
+    #Create empty options for each key value
+    for key in l[0].keys():
+            alldata_dict[key]= [] 
+    
+    #Append the data from each dataset into the new dictionary
+    for dset in l:
+        for key in dset:
+            alldata_dict[key].append(dset[key])
+            
+    alldata_dict['Image number']=[]
+    for x in range(len(l)):
+         alldata_dict['Image number'].append(([x for i in range(len(l[x][key]))]))
+    if combine_data:
+        
+        for key in alldata_dict.keys():
+            alldata_dict[key] = Flatten_list(alldata_dict[key])
+
+
+
+    return alldata_dict
+
 
 def Sidebyside(Video1, Video2):
 
