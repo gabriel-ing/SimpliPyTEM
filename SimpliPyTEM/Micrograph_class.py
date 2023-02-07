@@ -261,7 +261,33 @@ class Micrograph:
             self.pixelUnit=pixelUnit
 
 
+    def open_array(self, array, pixelSize=None, pixelUnit=None, name='Default_image_name'):
+        '''
+        Opens np array into micrograph object. 
         
+        Parameters
+        ----------
+
+            array:  numpy array
+                The image data in the form of a numpy array 
+
+            pixelSize: float
+                The pixel size in the image, not necessary but can be included here, can also be loaded with set_scale()
+            pixelUnit: str
+                The unit for the pixel size included.
+            name: str
+                The name for the image (becomes micrograph.filename attribute)     
+        '''
+
+        self.image = array 
+        self.reset_xy()
+        self.filename = name
+        if pixelSize:
+            self.pixelSize=pixelSize
+        if pixelUnit:
+            self.pixelUnit=pixelUnit
+
+
 
 
     def write_image(self, name=None, ftype='jpg',outdir=None):
