@@ -594,7 +594,7 @@ class Micrograph:
 
         '''
         if new_unit==self.pixelUnit:
-            
+
             print('The unit is already {}! Skipping file.'.format(new_unit))
         elif new_unit=='nm' and self.pixelUnit=='µm':
             self.pixelSize*=1000
@@ -620,7 +620,24 @@ class Micrograph:
             print('Not sure how we got here! Check inputs and try again - if genuine error, raise an issue on github!')
 
 
+    def set_scale(self, pixels, dist, unit):
+        '''
+        Set the scale in the image with a measurement (number of pixels and size, with unit)
+        
+        Parameters
+        ----------
+        
+            pixels : int/float
+                Number of pixels measured
 
+            dist : int/float
+                Distance measured
+            unit : str
+                Unit of measurement
+
+        '''
+        self.pixelSize=dist/pixels
+        self.pixelUnit=unit
 
     def choose_scalebar_size(self):
         '''
