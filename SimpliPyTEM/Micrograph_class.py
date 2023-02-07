@@ -579,6 +579,49 @@ class Micrograph:
 
 
     '''
+    def change_scale_unit(self, new_unit, scaling_factor=None):
+        '''
+        Function to change the unit of the scale in the image. The method is built to allow easy transfer between nanometers ('nm') and microns ('µm'), however can be used to give any new unit providing a scaling factor to multiply the current value by is included. 
+
+        Parameters
+        ----------
+
+            new_unit : str
+                The new unit for the scale, commonly 'nm' or 'µm'
+
+            scaling_factor: int/float
+                The value to multiply the current value by to give the new scale. This isnt necessary with 'µm'/'nm' transitions, but without it any other change will change unit only.
+
+        '''
+        if new_unit==self.pixelUnit:
+            
+            print('The unit is already {}! Skipping file.'.format(new_unit))
+        elif new_unit=='nm' and self.pixelUnit=='µm':
+            self.pixelSize*=1000
+            self.pixelUnit='nm'
+        elif new_unit!='nm' and new_unit!='µm':
+            self.pixelUnit=new_unit
+
+            if scaling_factor !=None:
+                self.pixelSize*=scaling_factor
+            else:
+                print('Setting new scale unit but not changing the value, please include a scaling factor to also change the value.')
+        elif new_unit=='µm' and self.pixelUnit=='nm':
+            self.pixelSize= self.pixelSize/1000
+            self.pixelUnit='µm'
+
+        elif self.pixelUnit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor==None:
+            print("Error! You want to switch to {} but the transition from {} is not naturally supported, please include a scaling factor (even if its just 1) to ensure correct conversion.".format(new_unit,self.pixelUnit))
+        elif self.pixelUnit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor!=None:
+            self.pixelSize*=scaling_factor
+            self.pixelUnit=new_unit
+
+        else:
+            print('Not sure how we got here! Check inputs and try again - if genuine error, raise an issue on github!')
+
+
+
+
     def choose_scalebar_size(self):
         '''
         Function for choosing scalebar size, called through make_scalebar(), not a standalone function.
@@ -605,7 +648,7 @@ class Micrograph:
         #print(x,scalebar_x)
         #possible scalebar sizes are given here, if its >500nm it should be in unit micron, hopefully this should only fail with very extreme examples
         
-        possible_sizes = [0.5, 1,2,5,10,25,50,100,250,500]
+        possible_sizes = [0.5, 1,2,5,10,25,50,100,250,500,1000]
         
         #to select sizes, iterate through possible sizes, if the width of the resulting scalebar (n*pixelsize) 
         #is over 15% of the image size, the size is chose, if none are over 15% of image size
