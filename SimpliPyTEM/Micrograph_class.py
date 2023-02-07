@@ -211,9 +211,59 @@ class Micrograph:
 
     ##write a hyperspy opening function 
 
+    def open_image(self, filename, pixelSize=None, pixelUnit=None):
+        '''
+        Open a jpg, png or tif file into the micrograph object. If the tif has any metadata tags, these should be saved into the metadata_tags and will then be accessible with .show_metadata()
+        The pixel size is likely to be included somewhere within the metadata and may be loaded, but the name of the tags are not always constant, and so this may need to be searched in  the .show_metadata output.
+        
+        Parameters
+        ----------
+
+            filename: str
+                Name of image file to load into the object
+            pixelSize: float
+                The pixel size in the image, not necessary but can be included here, can also be loaded with set_scale()
+            pixelUnit: str
+                The unit for the pixel size included.
+        '''
+
+        if filename[-3:].lower()=='jpg' or filename[-3:]=='png':
+            #Load file as grayscale image
+            self.image = cv.imread(filename, 0)
+
+        if filename[-3:] in ['tiff', 'tif', 'TIF', 'TIFF']:
+            with tifffile.TiffFile(filename) as tif:
+                self.metadata_tags = {}
+                self.image = tif.asarray()
+                for page in tif.pages:
+                    for tag in page.tags:
+                        self.metadata_tags[tag.name] = tag.value
+
+        if 'XResolution' in self.metadata_tags:
+            if self.metadata_tags['XResolution']==self.metadata_tags['YResolution']:
+                try:
+                    self.pixelSize = 1/(self.metadata_tags['XResolution'][0] / self.metadata_tags['XResolution'][1])
+                except:
+                    pass
+
+        if 'unit' in self.metadata_tags:
+            if self.metadata_tags['unit']=='micron':
+                self.pixelUnit = 'µm'
+            elif self.metadata_tags['unit']=='nm':
+                self.pixelUnit='nm'
+
+        self.filename=filename
+        self.reset_xy()
+
+        if pixelSize:
+            self.pixelSize=pixelSize
+        if pixelUnit:
+            self.pixelUnit=pixelUnit
 
 
         
+
+
     def write_image(self, name=None, ftype='jpg',outdir=None):
         '''
         Saves the image in a .jpg or .tif file for display or use with other programs. 
