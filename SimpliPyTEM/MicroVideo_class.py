@@ -723,7 +723,7 @@ class MicroVideo:
 
         '''
         enhanced_object=deepcopy(self)
-        enhanced_object.convert_to_8bit()
+        enhanced_object = enhanced_object.convert_to_8bit()
         for i in range(len(enhanced_object.frames)):
             enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
         return enhanced_object
