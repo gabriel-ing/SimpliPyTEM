@@ -186,7 +186,7 @@ class MicroVideo:
         #This line removes any giant outliers (bright pixels) from the images
         #print(self.frames[self.frames>self.frames.mean()+self.frames.std()*50])
         
-        self.frames = np.flip(self.frames,axis=0)
+        #self.frames = np.flip(self.frames,axis=1)
         if pixelcorrection:
             self.frames[self.frames>self.frames.mean()+self.frames.std()*8]=0
         
