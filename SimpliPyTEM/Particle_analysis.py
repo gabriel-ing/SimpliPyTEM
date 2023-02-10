@@ -42,7 +42,7 @@ def Threshold(image, threshold, brightfield=True):
     return thresh#,res
 
 
-def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000):
+def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, remove_edges=True):
     '''
     Finds the contours (or edges) of the particles in the image 
 
@@ -93,7 +93,9 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000):
         #if num_pixels>min_size:
         #    mask = cv.add(mask, label_mas
         coords = np.where(label_mask>0)
-        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1],num_pixels<minsize, num_pixels>maxsize]):
+
+        #Filter out anything touching the edges:
+        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1],num_pixels<minsize, num_pixels>maxsize]) and if remove_edges:
                 
                 mask = cv.add(mask, label_mask)
     if complex_coords:
@@ -115,7 +117,7 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000):
 
 
     
-def Collect_particle_data(contours_im, pixelSize, multimeasure=False):    
+def Collect_particle_data(contours_im, pixelSize, multimeasure=False ):    
     '''
     This collects a number of data sets from the contours_im outputted by the find_contours function. Complex measurement of particle size can be done with multimeasure (it measures the distance across each particle at multiple points and then includes max, min, mean and std of these measurements)
 
