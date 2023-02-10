@@ -1471,6 +1471,7 @@ class MicroVideo:
         if len(self.frames)%groupsize!=0 and not keep_remainder:
             newframes=newframes[:-1]
         averaged_object.frames=np.array(newframes)
+        averaged_object.reset_xy()
         return averaged_object
 
 
@@ -1494,6 +1495,7 @@ class MicroVideo:
             averaged_video.append(av_frame_group)
         averaged_object = deepcopy(self)
         averaged_object.frames=np.array(averaged_video)    
+        averaged_object.reset_xy()
         return averaged_object
 
     '''---------------------------------
