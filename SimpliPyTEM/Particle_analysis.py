@@ -94,9 +94,14 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, rem
         #    mask = cv.add(mask, label_mas
         coords = np.where(label_mask>0)
 
-        #Filter out anything touching the edges:
-        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1],num_pixels<minsize, num_pixels>maxsize]) and if remove_edges:
-                
+        #Filter out anything touching the edges
+        #if remove_edges and not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1]]):
+
+        if not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1],num_pixels<minsize, num_pixels>maxsize]) and remove_edges:
+                #print(coords)
+                mask = cv.add(mask, label_mask)
+        elif remove_edges==False and num_pixels> minsize and num_pixels<maxsize:
+                #print(coords)
                 mask = cv.add(mask, label_mask)
     if complex_coords:
         contours_im = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
