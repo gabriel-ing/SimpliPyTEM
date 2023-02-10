@@ -1357,13 +1357,11 @@ class MicroVideo:
 
 
         '''
+            #evalute the vmaxes depending on imAverage
+        if imAverage or histAverage:
+            av =  np.sum(self.frames, axis=0)
 
         if sidebyside:
-            #evalute the vmaxes depending on imAverage
-            if imAverage:
-                av =  np.sum(self.frames, axis=0)
-
-
             if not vmax:
                 if not imAverage:
                     vmax = np.max(self.frames)
@@ -1379,10 +1377,13 @@ class MicroVideo:
             ax[1].tick_params(axis='x', labelsize=25)
             ax[1].tick_params(axis='y', labelsize=25)
             
+            #plot image
             if imAverage:
                 ax[0].imshow(av, vmax=vmax,vmin=vmin) 
             else:
                 ax[0].imshow(self.frames[0],vmax=vmax,vmin=vmin)
+
+
             if histAverage:
                 ax[1].hist(av.ravel(),100)
             else:
@@ -1398,11 +1399,16 @@ class MicroVideo:
             fig,ax = plt.subplots(1,1, figsize=(5,5))
             #ax.tick_params(axis='x', labelsize=25)
             #ax.tick_params(axis='y', labelsize=25)
-            if self.frames.dtype == 'unit8':
-                plt.hist(self.frames.ravel(), 256, [0,256])
-                plt.set_
-            else:
-                plt.hist(self.frames.ravel(), 100)
+            if histAverage:
+                plt.hist(av.ravel(),100)
+            else: 
+                if self.frames.dtype == 'unit8':
+                        plt.hist(self.frames.ravel(), 256, [0,256])
+                    
+                else:
+                    plt.hist(self.frames.ravel(), 100)
+
+
         plt.show()
 
     def show_video(self, width=500, fps=None, loop=0):
