@@ -647,7 +647,7 @@ class MicroVideo:
         
         if not maxvalue:
             #print(maxvalue)
-            print('Satauration = ',saturation)
+            print('Saturation = ',saturation)
             for maxvalue in range(int(new_vid.frames.mean()+np.std(new_vid.frames)), 255):
                 #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
                 if 100*(len(new_vid.frames[new_vid.frames>maxvalue])/new_vid.frames.size)<saturation:
@@ -1313,7 +1313,7 @@ class MicroVideo:
                 Copy of the original video with the second video grafted onto the side.
         '''
         #Add video as numpy stack (Z,Y,X ) 
-        print(Video1.shape)
+        #print(Video1.shape)
         z1,y1,x1 = self.frames.shape
         z2, y2, x2=Video2.shape
         sidebyside = np.zeros((max(z1,z2), max(y1,y2), x1+x2),dtype='uint8')
