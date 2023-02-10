@@ -487,22 +487,15 @@ class Micrograph:
 
         """
         new_im  = self.convert_to_8bit()
-        #print('Satauration = ',saturation)
+        
         if not maxvalue:
-            #print(maxvalue)
-            for maxvalue in range(int(new_im.image.mean()), 255):
-                #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
-                if 100*(len(new_im.image[new_im.image>maxvalue])/new_im.image.size)<saturation:
-                    #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
-                    print('Maxmium value : ',maxvalue)
-                    break
-            #print(maxvalue)
+
+            print('Saturation = ',saturation)
+            maxvalue = np.percentile(new_im.image, 100-saturation)
+            print('Maxmium value : ',maxvalue)
         if not minvalue:
-            for minvalue in range(int(new_im.image.mean()), 0,-1):
-                if 100*(len(new_im.image[new_im.image<minvalue])/new_im.image.size)<saturation:
-                    print('Minimum value : ',minvalue)
-                    break
-            #print('Minimum value : ',minvalue)    
+            minvalue = np.percentile(new_im.image, saturation)
+            print('Minimum value : ', minvalue)
         image =new_im.image.astype(np.int16)    
         new_im.image = (image - minvalue)*(255/(maxvalue-minvalue))
         new_im.image[new_im.image>255]=255

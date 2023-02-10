@@ -646,21 +646,12 @@ class MicroVideo:
         #print(new_vid.frames)
         
         if not maxvalue:
-            #print(maxvalue)
             print('Saturation = ',saturation)
-            for maxvalue in range(int(new_vid.frames.mean()+np.std(new_vid.frames)), 255):
-                #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
-                if 100*(len(new_vid.frames[new_vid.frames>maxvalue])/new_vid.frames.size)<saturation:
-                    #print(maxvalue, len(new_im.image[new_im.image>maxvalue]),new_im.image.size)
-                    print('Maxmium value : ',maxvalue)
-                    break
-            #print(maxvalue)
+            maxvalue=np.percentile(new_vid.frames, 100-saturation)
+            print('Maxmium value : ',maxvalue)
         if not minvalue:
-            for minvalue in range(int(new_vid.frames.mean()), -1,-1):
-                if 100*(len(new_vid.frames[new_vid.frames<minvalue])/new_vid.frames.size)<saturation:
-                    print('Minimum value : ',minvalue)
-                    break
-            #print('Minimum value : ',minvalue)    
+            minvalue= np.percentile(new_vid.frames, saturation)
+            print('Minimum value : ',minvalue)
         frames =new_vid.frames.astype(np.int16)    
         print(maxvalue, minvalue)
         new_vid.frames = (frames - minvalue)*(255/(maxvalue-minvalue))
@@ -1529,7 +1520,7 @@ class MicroVideo:
 
             ```export MOTIONCOR2_PATH='/home/Gabriel/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021'```
 
-
+        You can also set the executable directly from an ipython workbook by running `os.environ['MOTIONCOR2_PATH']='~/Downloads/MotionCor2_1.4.4/MotionCor2_1.4.4_Cuda113-08-11-2021'`
 
         To avoid needing to do this for every new terminal opened, add this line to your .bashrc file in your home directory (you can use the terminal text editor nano for this: ```nano ~/.bashrc```)
 
@@ -1572,7 +1563,10 @@ class MicroVideo:
             return 1
         MC_vid = deepcopy(self)
         inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
-        MC_vid.open_mrc(inname)
+        try:
+            MC_vid.open_mrc(inname)
+        except FileNotFoundError:
+            print("The file isn't found - this usually appears to be a motioncor2 issue, sometimes it fails to save an image as a stack for some unknown reason (likely to do with filesize), maybe try decreasing the size by binning/averaging?")
         MC_vid.metadata_tags = self.metadata_tags
         MC_vid.pixelSize = self.pixelSize
         MC_vid.pixelUnit=self.pixelUnit
