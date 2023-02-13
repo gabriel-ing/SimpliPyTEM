@@ -810,7 +810,7 @@ class MicroVideo:
                 except:
                     print('Sorry, indicated mag could not be found, try searching for it manually with the show_metadata method')
         
-        if hasattr(self, actual_mag) and hasattr(self, indicated_mag):
+        if hasattr(self, 'actual_mag') and hasattr(self, 'indicated_mag'):
             print('Indicated mag: {}'.format(self.indicated_mag))
             print('Actual mag: {}'.format(self.actual_mag))
             return self.indicated_mag, self.actual_mag
