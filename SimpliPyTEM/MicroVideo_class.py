@@ -124,7 +124,7 @@ class MicroVideo:
         self.filename = ''
         #self.image='Undefined'
         self.pixel_size= 'Undefined'
-
+        self.log = []
         '''-------------------------------------------------------------------------------------------------------------------------------------------
         SECTION: IMPORT IMAGES
 
@@ -571,6 +571,7 @@ class MicroVideo:
         #print(self.frames.dtype)
         #for i in range(len(self.frames)):
         #    self.frames[i] = ((self.frames[i] - self.frames.min()) * (1/(self.frames.max() - self.frames[i].min()) * 255)).astype('uint8')
+        vid8bit.log.append('convert_to_8bit()')
         return vid8bit
     
     def bin(self, value=2):
@@ -599,6 +600,7 @@ class MicroVideo:
         #print(self.frames.shape)
         binned.pixelSize= self.pixelSize*value
         binned.reset_xy()
+        binned.log.append('binned()')
         return binned
 
 
@@ -658,6 +660,7 @@ class MicroVideo:
         new_vid.frames[new_vid.frames>255]=255
         new_vid.frames[new_vid.frames<0]=0
         new_vid.frames = new_vid.frames.astype(np.uint8)
+        new_vid.log.append('clip_contrast()')
         return new_vid
 
 
@@ -701,6 +704,7 @@ class MicroVideo:
             print('Gamma adjusted...')
             enhanced_object.frames = res
         #enhanced_object.image = enhanced_image
+        enhanced_object.log.append('enhance_contrast()')
         return enhanced_object
 
     def eqHist(self):
@@ -717,6 +721,7 @@ class MicroVideo:
         enhanced_object = enhanced_object.convert_to_8bit()
         for i in range(len(enhanced_object.frames)):
             enhanced_object.frames[i] = cv.equalizeHist(enhanced_object.frames[i])
+        enhanced_object.log.append('eqHist()')
         return enhanced_object
 
     def __len__(self):
@@ -762,6 +767,7 @@ class MicroVideo:
             #frame_median = np.median(self.frames)
             norm_frames.append(frame*vid_norm/frame_norm)
         norm_object.frames =  np.array(norm_frames)
+        norm_object.log.append('Normalise_video()')
         return norm_object
 
 
@@ -918,6 +924,8 @@ class MicroVideo:
         else:
             print('Not sure how we got here! Check inputs and try again - if genuine error, raise an issue on github!')
 
+        self.log.append('change_scale_unit({},{})'.format(new_unit, scaling_factor))
+
     def set_scale(self, pixels, dist, unit):
         '''
         Set the scale in the image with a measurement (number of pixels and size, with unit)
@@ -1055,6 +1063,7 @@ class MicroVideo:
 
                 draw.text(textposition, vidSB.text, anchor ='mb', fill=vidSB.textcolor, font=font, stroke_width=1)
                 vidSB.frames[i] = np.array(pil_image)    
+        vidSB.log.append('make_scalebar()')
         return vidSB
 
 
@@ -1120,7 +1129,7 @@ class MicroVideo:
             inv_image = np.fft.ifft2(f_filtered_shifted)
             filtered_object.frames[i] = np.abs(inv_image)
             filtered_object.frames[i] -= filtered_object.frames[i].min()
-            
+        filtered_object.log.append('low_pass_filter({})'.format(radius))
         return filtered_object
 
     def median_filter(self, kernal=3):
@@ -1140,6 +1149,7 @@ class MicroVideo:
         filtered_object = deepcopy(self)
         for i in range(len(filtered_object.frames)):
             filtered_object.frames[i] = cv.medianBlur(filtered_object.frames[i],kernal)
+        filtered_object.log.append('median_filter({})'.format(kernal))
         return filtered_object
 
     def weiner_filter(self, kernal=5):
@@ -1163,6 +1173,7 @@ class MicroVideo:
         filtered_object = deepcopy(self)
         for i in range(len(filtered_object.frames)):
             filtered_object.frames[i] = wiener(filtered_object.frames[i], (kernal, kernal))
+        weiner_filter.log.append('weiner_filter({})'.format(kernal))
         return filtered_object
 
     def NLM_filter(self, h=5):
@@ -1185,7 +1196,7 @@ class MicroVideo:
         for i in range(len(filtered_object.frames)):
             filtered_object.frames[i] = cv.fastNlMeansDenoising(np.uint8(filtered_object.frames[i]), h)
         
-        
+        filtered_object.log.append('NLM_filter({})'.format(h))
         return filtered_object
 
     def gaussian_filter(self, kernal=3):
@@ -1202,6 +1213,9 @@ class MicroVideo:
                 Gaussian_filtered_object :Micrograph
                     Gaussian filtered copy of micrograph object with gaussian filtered image
         '''
+        if len(self.frames.shape)!=3:
+
+            raise Exception('There should be 3 axis for this, erroring here.')
         swapped = np.swapaxes(self.frames, 0,2)
         #print(kernal)
         swapped = cv.GaussianBlur(swapped, (kernal,kernal), 0)
@@ -1209,6 +1223,7 @@ class MicroVideo:
 
         filtered_object = deepcopy(self)        
         filtered_object.frames = swapped
+        filtered_object.log.append('gaussian_filter({})'.format(kernal))
         return filtered_object
 
 
@@ -1469,6 +1484,7 @@ class MicroVideo:
             newframes=newframes[:-1]
         averaged_object.frames=np.array(newframes)
         averaged_object.reset_xy()
+        averaged_object.log.append('Average_frames({})'.format(groupsize))
         return averaged_object
 
 
@@ -1493,6 +1509,7 @@ class MicroVideo:
         averaged_object = deepcopy(self)
         averaged_object.frames=np.array(averaged_video)    
         averaged_object.reset_xy()
+        averaged_object.log.append('Running_average({})'.format(groupsize))
         return averaged_object
 
     '''---------------------------------
@@ -1582,6 +1599,7 @@ class MicroVideo:
         MC_vid.filename = self.filename+'_MotionCorrected'
         os.remove('OutIntermediateTiff.tif')
         os.chdir(original_cwd)
+        MC_vid.log.append('motioncorrect_vid()')
         return MC_vid
 
 
@@ -1745,7 +1763,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             MicroVideo_object.convert_to_8bit()
             MicroVideo_object = MicroVideo_object.clip_contrast()
             if scalebar==True:
-                MicroVideo_object=MicroVideo_object.make_scalebar(texton=texton, color=color)
+                MicroVideo_object=MicroVideo_object.make_scalebar(color=color)
             name = name+output_type[-4:]
             if 'outdir' in kwargs:
                 MicroVideo_object.write_video(name=name,outdir=kwargs['outdir']+'/Videos')
@@ -1754,7 +1772,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
                 
         elif output_type=='Save Tif Stack':
             if scalebar==True:
-                MicroVideo_object=MicroVideo_object.make_scalebar(texton=texton, color=color)
+                MicroVideo_object=MicroVideo_object.make_scalebar(color=color)
                 #MicroVideo_object = MicroVideo_object.clip_contrast()
 
             if 'outdir' in kwargs:
@@ -1764,7 +1782,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
         elif output_type=='Save Tif Sequence':
             if scalebar==True:
-                MicroVideo_object= MicroVideo_object.make_scalebar(texton=texton, color=color)
+                MicroVideo_object= MicroVideo_object.make_scalebar(color=color)
                 #MicroVideo_object = MicroVideo_object.clip_contrast()
             if 'outdir' in kwargs:
                 MicroVideo_object.save_tif_sequence(name=name, outdir=kwargs['outdir']+'/Videos')
