@@ -1696,11 +1696,12 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             aved= aved.median_filter(medfilter)
         if gaussfilter!=0:
             aved = aved.gaussian_filter(gaussfilter)
-        if scalebar==True:
-            aved = aved.make_scalebar()
+
         if xybin!=0 and xybin!=1:
             aved = aved.bin(xybin)
         MicroVideo_object = MicroVideo_object.clip_contrast()
+        if scalebar==True:
+            aved = aved.make_scalebar()
         if 'outdir' in kwargs:
             aved.write_image(name, outdir=kwargs['outdir']+'/Images')
         else:
