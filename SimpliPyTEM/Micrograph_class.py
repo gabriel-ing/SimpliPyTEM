@@ -167,6 +167,7 @@ class Micrograph:
         self.y = self.image.shape[0]
         pixelSize=dm_input['pixelSize'][-1]
         #print(pixelSize,type(pixelSize))
+        self.original_image = self.image
         self.filename = file
         self.pixelSize= float(pixelSize)
         self.pixelUnit = pixelUnit
@@ -207,7 +208,7 @@ class Micrograph:
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
         self.shape=self.image.shape
-
+        self.original_image = self.image
 
     ##write a hyperspy opening function 
 
@@ -260,6 +261,8 @@ class Micrograph:
         if pixelUnit:
             self.pixelUnit=pixelUnit
 
+        self.original_image = self.image
+
 
     def open_array(self, array, pixelSize=None, pixelUnit=None, name='Default_image_name'):
         '''
@@ -287,7 +290,7 @@ class Micrograph:
         if pixelUnit:
             self.pixelUnit=pixelUnit
 
-
+        self.original_image = self.image
 
 
     def write_image(self, name=None, ftype='jpg',outdir=None):
@@ -380,8 +383,13 @@ class Micrograph:
         self.y = self.image.shape[0]
         self.shape = self.image.shape
 
-    
-
+    def revert_to_original(self):
+        '''
+        When an image is loaded, the original image is saved as a separate attribute, this function resets the image to original.
+        
+        '''
+        self.image = self.original_image
+        self.reset_xy()
         
     '''-----------------------------------------------------------------------------------------------------------------------
         SECTION: BASIC FUNCTIONS
