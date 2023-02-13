@@ -56,15 +56,14 @@ class Micrograph:
     Basic functions:
         reset_xy - reset the object x, y and shape attributes upon change of video, useful if video is cropped.
 
+        revert_to_original - return the main image to the original, discarding all the changes.
+
         bin - reduce size of xy axis by binning pixels, factor is specified in call
 
         convert_to_8bit - converts to 8bit video by scaling pixel values between 0-255.
 
         make_scalebar - creates suitably sized scalebar
 
-        Average_frames - averages frames in groups of n
-
-        Running_average - performs a running average of the video
 
     Contrast enhancement:
         clip_contrast - enhances contrast by making a percentage of values saturated (absolute black/white) and scaling the rest of the pixels between these (my preferred contrast enhancement)
@@ -113,7 +112,7 @@ class Micrograph:
         self.filename = ''
         self.image='Undefined'
         self.pixel_size= 'Undefined'
-
+        self.log = []
 
 
 
@@ -509,6 +508,8 @@ class Micrograph:
         new_im.image[new_im.image>255]=255
         new_im.image[new_im.image<0]=0
         new_im.image = new_im.image.astype(np.uint8)
+
+        new_im.log.append('clip_contrast()')
         return new_im
 
 
@@ -552,6 +553,8 @@ class Micrograph:
             print('Gamma adjusted...')
         if self.image.dtype=='uint8':
             enhanced_image[enhanced_image>255]=255
+
+        enhanced_object.log.append('enhanced_object()')
         return enhanced_object
 
     def eqHist(self):
@@ -567,6 +570,7 @@ class Micrograph:
         enhanced_object = deepcopy(self)
         enhanced_object = enhanced_object.convert_to_8bit()
         enhanced_object.image = cv.equalizeHist(enhanced_object.image)
+        eqHist.log.append('eqHist()')
         return enhanced_object
 
 
@@ -630,7 +634,7 @@ class Micrograph:
                 arrs.append(empty_arr)
             else:    
                 new_im.image[x_low:x_high, y_low:y_high]=local_patch
-            
+        new_im.log.append('Local_normalisation')
         if pad:
             arrs = np.array(arrs)
             empty_arr = np.zeros_like(new_im.image)
@@ -695,7 +699,7 @@ class Micrograph:
 
         else:
             print('Not sure how we got here! Check inputs and try again - if genuine error, raise an issue on github!')
-
+        self.log.append('change_scale_unit({}, {})'.format(new_unit, scaling_factor))
 
     def set_scale(self, pixels, dist, unit):
         '''
@@ -715,6 +719,7 @@ class Micrograph:
         '''
         self.pixelSize=dist/pixels
         self.pixelUnit=unit
+        self.log.append('set_scale({},{},{})'.format(pixels, dist, unit))
 
     def choose_scalebar_size(self):
         '''
@@ -859,6 +864,7 @@ class Micrograph:
             draw.text(textposition, micrograph_SB.scalebar_size, anchor ='mb', fill=textcolor, font=font, stroke_width=1)
             micrograph_SB.image = np.array(pil_image)    
 
+        micrograph_SB.log.append('make_scalebar()')
         return micrograph_SB
 
 
@@ -925,6 +931,8 @@ class Micrograph:
         filtered_image -= filtered_image.min()
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
+
+        filtered_object.log.append('low_pass_filter({})'.format(radius))
         return filtered_object
 
     def median_filter(self, kernal=3):
@@ -944,6 +952,7 @@ class Micrograph:
         filtered_image = cv.medianBlur(self.image,kernal)
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
+        filtered_object.log.append('median_filter()')
         return filtered_object
 
     def weiner_filter(self, kernal=5):
@@ -965,6 +974,7 @@ class Micrograph:
         filtered_image = wiener(self.image, (kernal, kernal))
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
+        filtered_object.log.append('weiner_filter()')
         return filtered_object
 
     def nlm_filter(self, h=5):
@@ -984,6 +994,7 @@ class Micrograph:
         filtered_image = cv.fastNlMeansDenoising(np.uint8(self.image), h)
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
+        filtered_object.log.append('nlm_filter()')
         return filtered_object
 
     def gaussian_filter(self, kernal=3):
@@ -1003,6 +1014,8 @@ class Micrograph:
         filtered_image = cv.GaussianBlur(self.image, (kernal,kernal),0)
         filtered_object = deepcopy(self)
         filtered_object.image = filtered_image
+        filtered_object.log.append('gaussian_filter()')
+
         return filtered_object
 
 
