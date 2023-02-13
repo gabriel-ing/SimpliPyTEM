@@ -1497,8 +1497,6 @@ class MicroVideo:
 
     '''---------------------------------
     SECTION MOTION CORRECTION
-
-    NOT GONNA DEAL WITH THIS NOW!
     
     This defines using motioncor2 to align video frames, these frames either need to be saved individually, in which case the function group_frames is needed on the image set before use
     Motioncorrect_video works on a dm4 file, converts it to mrc and then runs motioncor on this image stack. 
@@ -1506,7 +1504,7 @@ class MicroVideo:
 
     '''        
 
-    def motioncorrect_vid(self):
+    def motioncorrect_vid(self, vid_output=False):
         '''
         This is tricky to use but can be incredibly effective, motioncorrecting LTEM videos can dramatically improve the signal to noise ratio of outputted averages. 
         Here I use the publically available software motioncor2, which can be downloaded from here: https://emcore.ucsf.edu/ucsf-software which can correct for motion within the video. 
@@ -1530,6 +1528,13 @@ class MicroVideo:
             video.open_dm('myfile.dm4')
             motioncorrected_vid = video.motioncorrect_vid()
 
+
+        Parameters
+        ----------
+
+            vid_output:bool
+                Do you want to output a video or just an average image? Image (False) is used for SimpliPyTEM-GUI, Video (True) produces far more data but gives more useful results.
+
         Returns
         -------
 
@@ -1551,18 +1556,21 @@ class MicroVideo:
         print('cwd = ', os.getcwd())
         MCor_path = os.environ.get('MOTIONCOR2_PATH')
         if MCor_path:
-
-            command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixelSize*10)
-            print(command)
-            print('dir = ',directory)
+            if vid_output:
+                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixelSize*10)
+                MC_vid=deepcopy(self)
+                inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
+            else:
+                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {}'.format(MCor_path, tifname, outname, self.pixelSize*10)
+                MC_vid = Micrograph()
+                inname = '.'.join(outname.split('.')[:-1])+'.mrc'
             self.save_tif_stack(name=tifname)
-
             sb.call(command, shell=True, cwd=os.getcwd())
         else:
             print('Sorry, the motioncor2 exectuable is not defined and so cannot be run. Please give the executable using "export MOTIONCOR2_PATH=\'PATH/TO/EXECUTABLE\'" (or on windows: "setx MY_EXECUTABLE_PATH \'path/to/executable\'") for more info, please see documentation  ')
             return 1
-        MC_vid = deepcopy(self)
-        inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
+
+       
         try:
             MC_vid.open_mrc(inname)
         except FileNotFoundError:
@@ -1646,6 +1654,8 @@ class MicroVideo:
             filename.append('_FFT')
             fft_ob.filename = filename
             return fft_ob
+
+
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
 def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True,  xybin=2, color='Auto',Average_frames=2, **kwargs):
@@ -1691,7 +1701,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
     if output_type=='Save MotionCorrected Average':
         MCor_vid = MicroVideo_object.motioncorrect_vid()
-        aved =  MCor_vid.toMicrograph()
+        #aved =  MCor_vid.toMicrograph()
         if medfilter!=0:
             aved= aved.median_filter(medfilter)
         if gaussfilter!=0:
