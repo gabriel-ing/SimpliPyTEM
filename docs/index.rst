@@ -85,7 +85,7 @@ Here are tutorials on how the python library can be used to process images and v
 
 Installation
 ------------
-
+Please note, I have tested the package on Mac and Linux only, not Windows. Feel free to try using Windows, I imagine the python-library will be fine, however I don't have a windows computer to test the system on so am unsure if there will be issues.
 
 To install, I recommend using miniconda, see here: https://docs.conda.io/en/latest/miniconda.html
 
@@ -107,6 +107,34 @@ Following this the library should be accessible within python or jupyter-noteboo
 
 ``from SimpliPyTEM.Micrograph_class import * #For example``
 
+Installation Troubleshooting
+----------------------------
+
+I've come across some errors when installing the package, particularly in linux computers, one in particular relating to `qt.qpa.plugin`, it looks as follows
+..
+   QObject::moveToThread: Current thread (0x26b9850) is not the object's thread (0x41d2cb0).
+   Cannot move to target thread (0x26b9850)
+
+   qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/anaconda3/envs/New_test/lib/python3.8/site-packages/cv2/qt/plugins" even though it was found.
+   This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+   Available platform plugins are: xcb, eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl.
+
+   Aborted (core dumped)
+
+The solution I have found to fix this error is simply to delete the file `libqxcb.so` which is in /home/anaconda3/envs/New_test/lib/python3.8/site-packages/cv2/qt/plugins/platforms/ this pathway will be specific to your system and apart from the platforms directory is found on the third line of the error.
+
+to remove this you can simply run 
+
+   `rm /home/anaconda3/envs/New_test/lib/python3.8/site-packages/cv2/qt/plugins/platforms/libqxcb.so`
+
+If there is still an error but it has changed after doing this, try uninstalling and reinstalling pyQT5: 
+
+   `pip uninstall pyQT5`
+
+   `pip install pyQT5==5.14`
+
+If this fix still doesn't work, I don't immediately have a solution, try googling parts of the error message,  and raise an issue on the SimpliPyTEM github page and I will can you debug. 
 
 Indices
 -------
