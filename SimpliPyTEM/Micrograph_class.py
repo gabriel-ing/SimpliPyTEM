@@ -12,7 +12,7 @@ import mrcfile
 import subprocess as sb
 from copy import deepcopy
 from scipy.signal import wiener
-
+import pandas as pd
 import tifffile
 import itertools
 plt.gray()
@@ -113,7 +113,8 @@ class Micrograph:
         self.image='Undefined'
         self.pixel_size= 'Undefined'
         self.log = []
-
+        self.video=False
+        self.nframes=1
 
 
 
@@ -148,14 +149,16 @@ class Micrograph:
 
         # at the moment it automatically averages a video into a single image. This will be changed soon to allow for video analysis.
         elif len(dm_input['data'].shape)==3:
-            print('File is an image stack, averaging frames together, if you would open as a video, please us MicroVideo object')
+            print('{} is an image stack, averaging frames together, if you would open as a video, please us MicroVideo object'.format(self.filename))
+            self.nframes=dm_input['data'].shape[0]
             if video_average:
 
                 images = dm_input['data']
                 self.image= np.sum(images, axis=0)
             else:
                 self.image=dm_input['data'][0]
-        
+            self.video=True
+
         dmfile = nci.dm.fileDM(file)
         self.metadata_tags =dmfile.allTags        
         #extract x and y shapes
@@ -1243,8 +1246,8 @@ class Micrograph:
 
         #self.indicated_mag = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Indicated Magnification']
         if hasattr(self, 'indicated_mag') and hasattr(self, 'actual_mag'):
-            print('Indicated mag: {}'.format(self.indicated_mag))
-            print('Actual mag: {}'.format(self.actual_mag))
+            #print('Indicated mag: {}'.format(self.indicated_mag))
+            #print('Actual mag: {}'.format(self.actual_mag))
             return self.indicated_mag, self.actual_mag
 
     def get_voltage(self):
@@ -1272,7 +1275,7 @@ class Micrograph:
         '''
         #print('Frame rate : {}fps'.format(self.fps))
         #print('Exposure time per frame: {}s '.format(1/self.fps))
-        print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
+        #print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
         self.exposure = self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']
         return self.exposure
 
@@ -1291,9 +1294,27 @@ class Micrograph:
 
         self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
         self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
-        print('Date: {} '.format(self.AqDate))
-        print('Time {} '.format(self.AqTime))
+        #print('Date: {} '.format(self.AqDate))
+        #print('Time {} '.format(self.AqTime))
         return self.AqDate, self.AqTime
+
+
+    def export_metadata(self,name=None, outdir='.'):
+        if not name:
+            name='metadata.csv'
+        if outdir!='.':
+            if outdir not in os.listdir('.'):
+                os.mkdir(outdir)
+           
+                
+        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':self.get_date_time()[0],'Time':self.get_date_time()[1], 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(), 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[0]),'Video':self.video, 'Frame Rate (fps)':False,  'Number of frames':self.nframes}        
+        df = pd.DataFrame(metadata, index=[0])
+        if name in os.listdir(outdir):
+            old_df = pd.read_csv(outdir+'/'+name)
+            new_df = pd.concat([old_df, df], ignore_index=True)
+            new_df.to_csv(outdir+'/'+name, index=False)
+        else:
+            df.to_csv(outdir+'/'+name,index=False)
 
     '''---------------------------------
     SECTION MOTION CORRECTION

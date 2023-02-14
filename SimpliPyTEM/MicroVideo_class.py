@@ -15,6 +15,7 @@ from copy import deepcopy
 from moviepy.editor import ImageSequenceClip
 from SimpliPyTEM.Micrograph_class import *
 import matplotlib.animation as animation
+import pandas as pd
 
 plt.gray()
 
@@ -125,6 +126,7 @@ class MicroVideo:
         #self.image='Undefined'
         self.pixel_size= 'Undefined'
         self.log = []
+        self.video=True
         '''-------------------------------------------------------------------------------------------------------------------------------------------
         SECTION: IMPORT IMAGES
 
@@ -817,8 +819,8 @@ class MicroVideo:
                     print('Sorry, indicated mag could not be found, try searching for it manually with the show_metadata method')
         
         if hasattr(self, 'actual_mag') and hasattr(self, 'indicated_mag'):
-            print('Indicated mag: {}'.format(self.indicated_mag))
-            print('Actual mag: {}'.format(self.actual_mag))
+            #print('Indicated mag: {}'.format(self.indicated_mag))
+            #print('Actual mag: {}'.format(self.actual_mag))
             return self.indicated_mag, self.actual_mag
 
     def get_voltage(self):
@@ -834,7 +836,7 @@ class MicroVideo:
         self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
         return self.voltage
 
-    def get_exposure(self):
+    def get_exposure(self, print_values=True):
         '''
         Prints and returns the frame rate, exposure time per frame, imaging time and number of frames.
 
@@ -849,10 +851,11 @@ class MicroVideo:
         '''
         #print('Frame rate : {}fps'.format(self.fps))
         #print('Exposure time per frame: {}s '.format(1/self.fps))
-        print('Frame rate : {}fps'.format(self.fps))
-        print('Exposure time per frame: {}s '.format(1/self.fps))
-        print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
-        print('Number of frames: {}'.format(self.frames.shape[0]))
+        if print_values==True:
+            print('Frame rate : {}fps'.format(self.fps))
+            print('Exposure time per frame: {}s '.format(1/self.fps))
+            print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
+            print('Number of frames: {}'.format(self.frames.shape[0]))
         return self.fps, self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']
 
     def get_date_time(self): 
@@ -869,11 +872,28 @@ class MicroVideo:
         '''
         self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
         self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
-        print('Date: {} '.format(self.AqDate))
-        print('Time {} '.format(self.AqTime))
+        #print('Date: {} '.format(self.AqDate))
+        #print('Time {} '.format(self.AqTime))
         return self.AqDate, self.AqTime
 
-
+    def export_metadata(self,name=None, outdir='.'):
+        if not name:
+            name='metadata.csv'
+        if outdir!='.':
+            if outdir not in os.listdir('.'):
+                os.mkdir(outdir)
+           
+        
+        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':self.get_date_time()[0],'Time':self.get_date_time()[1], 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(print_values=False)[1], 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[2]),'Video':self.video, 'Frame Rate (fps)':self.fps,  'Number of frames':self.frames.shape[0]}        
+        #print(metadata)
+        df = pd.DataFrame(metadata, index=[0])
+        
+        if name in os.listdir(outdir):
+            old_df = pd.read_csv(outdir+'/'+name)
+            new_df = pd.concat([old_df, df], ignore_index=True)
+            new_df.to_csv(outdir+'/'+name, index=False)
+        else:
+            df.to_csv(outdir+'/'+name,index=False)
     '''-----------------------------------------------------------------------------------------------------------------------
     SECTION: SCALEBAR
 
@@ -1711,6 +1731,8 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
     MicroVideo_object = MicroVideo()
     MicroVideo_object.open_dm(filename)
+
+    
     #print(MicroVideo_object)
     if 'name' in kwargs:
         name=kwargs['name']
