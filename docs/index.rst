@@ -134,7 +134,9 @@ If there is still an error but it has changed after doing this, try uninstalling
 
    `pip install pyQT5==5.14`
 
-If this fix still doesn't work, I don't immediately have a solution, try googling parts of the error message,  and raise an issue on the SimpliPyTEM github page and I will can you debug. 
+Unfortunately making pyQT5==5.14 th default leads to the program not running on macs (at least on my computer running python3.10), so I have not made this the default. 
+
+If this fix still doesn't work, I don't immediately have a solution, try googling parts of the error message,  and raise an issue on the SimpliPyTEM github page and I can you debug. 
 
 Indices
 -------
