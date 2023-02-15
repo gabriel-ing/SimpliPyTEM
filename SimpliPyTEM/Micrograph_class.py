@@ -565,7 +565,7 @@ class Micrograph:
         return enhanced_object
 
 
-    def Local_normalisation(self,numpatches, padding=15, pad=False):
+    def Local_normalisation(self,numpatches, padding=15, pad=True):
         """
         Normalises contrast across the image, ensuring even contrast throughout. 
         Image is taken and split into patches, following which the median of the patches ('local median') is compared to the median of the image ('global median').
@@ -621,6 +621,7 @@ class Micrograph:
 
             if pad:
                 empty_arr = np.zeros_like(new_im.image)
+                empty_arr[:]=np.nan
                 empty_arr[x_low:x_high, y_low:y_high]=local_patch
                 arrs.append(empty_arr)
             else:    
@@ -628,13 +629,8 @@ class Micrograph:
         new_im.log.append('Local_normalisation')
         if pad:
             arrs = np.array(arrs)
-            empty_arr = np.zeros_like(new_im.image)
-            with np.nditer(empty_arr, flags=['multi_index'], op_flags=['writeonly']) as it:
-                for pix in it:
-                    a = arrs[:, it.multi_index[0], it.multi_index[1]]
-                    #print(a.shape)
-                    pix[...]=np.mean(a[np.nonzero(a)])
-            new_im.image= empty_arr
+            new_arr = np.nanmean(arrs, axis=0)
+            new_im.image= new_arr
             return new_im
             #new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)]= new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)]*(image.mean()/new_im[coord[0]-xconst:int(coord[0]+xconst*padding), coord[1]-yconst:int(coord[1]+yconst*padding)].mean())
         #if numpatches>2:
