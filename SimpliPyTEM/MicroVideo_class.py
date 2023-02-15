@@ -17,6 +17,7 @@ from SimpliPyTEM.Micrograph_class import *
 import matplotlib.animation as animation
 import pandas as pd
 
+
 plt.gray()
 
 class MicroVideo: 
@@ -325,8 +326,7 @@ class MicroVideo:
             name = '.'.join(self.filename.split('.')[:-1])+'.tif'    
         
         if outdir:
-            if outdir not in os.listdir('.') and outdir!='.':
-                os.mkdir(outdir)
+            make_outdir(outdir)
             name = outdir+'/'+name
         tifffile.imsave(name, self.frames,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
 
@@ -358,11 +358,7 @@ class MicroVideo:
             name = '.'.join(self.filename.split('.')[:1]) 
 
         if outdir:
-            if '/' in outdir:
-                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
-                    os.mkdir(outdir)
-            elif outdir not in os.listdir('.'):
-                os.mkdir(outdir)
+            make_outdir(outdir)
             name = outdir+'/'+name
 
         for i in range(len(self.frames)):
@@ -427,12 +423,8 @@ class MicroVideo:
             outformat='mp4'
 
         if outdir:
-            if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])) and outdir!='.':
-                os.mkdir(outdir)
+            make_outdir(outdir)
             name = outdir+'/'+name
-
-        
-            
         
         if not fps and hasattr(self,'fps'):
             fps= self.fps    
@@ -452,7 +444,7 @@ class MicroVideo:
         else:
             clip.write_videofile(name, fps=fps)
                 
-    def write_image(self, name=None, ftype='jpg', average=True, framenumber=0, **kwargs):
+    def write_image(self, name=None, ftype='jpg', average=True, framenumber=0, outdir=None):
         '''
         Saves the image in a .jpg or .tif file for display or use with other programs. 
 
@@ -479,17 +471,9 @@ class MicroVideo:
         '''
 
 
-        if 'outdir' in kwargs:
-            outdir = str(kwargs['outdir'])
-            if '/' in outdir:
-                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
-                    os.mkdir(outdir)
-            elif outdir not in os.listdir('.'):
-                os.mkdir(outdir)
-            if name.split('/')>1:
-                name=name.split('/')[:-1]+outdir+'/'+name
-            else:
-                name =outdir+name    
+        if outdir:
+            make_outdir(outdir)
+            name =outdir+name    
         print('Start name :', name)
         if name:
                 print('if name : ',name)
@@ -877,20 +861,23 @@ class MicroVideo:
         return self.AqDate, self.AqTime
 
     def export_metadata(self,name=None, outdir='.'):
-        if not name:
-            name='metadata.csv'
-        if outdir!='.':
-            if outdir not in os.listdir('.'):
-                os.mkdir(outdir)
-           
+        '''
+        '''
+        make_outdir(outdir)
         
-        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':self.get_date_time()[0],'Time':self.get_date_time()[1], 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(print_values=False)[1], 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[2]),'Video':self.video, 'Frame Rate (fps)':self.fps,  'Number of frames':self.frames.shape[0]}        
+        dt = self.get_date_time()
+        date_time = pd.to_datetime(dt[0]+' '+dt[1])
+
+        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':str(date_time.date()),'Time':str(date_time.time()), 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(print_values=False)[1], 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[2]),'Video':self.video, 'Frame Rate (fps)':self.fps,  'Number of frames':self.frames.shape[0]}        
         #print(metadata)
+
+
         df = pd.DataFrame(metadata, index=[0])
         
         if name in os.listdir(outdir):
             old_df = pd.read_csv(outdir+'/'+name)
             new_df = pd.concat([old_df, df], ignore_index=True)
+            new_df.sort_values(by=['Date', 'Time'], inplace=True)
             new_df.to_csv(outdir+'/'+name, index=False)
         else:
             df.to_csv(outdir+'/'+name,index=False)
@@ -1696,7 +1683,7 @@ class MicroVideo:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True,  xybin=2, color='Auto',Average_frames=2, **kwargs):
+def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True,  xybin=2, color='Auto',Average_frames=2,save_metadata=True, metadata_name='metadata.csv', outdir='.', name=None):
     '''
     Use to automate default filtering, scalebar adding, binning,frame averaging and saving.
 
@@ -1708,7 +1695,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
         filename: str
             The filename of the .dm3 or .dm4 file to open 
         output type: str
-            This needs to be one of the following: ['Save Average', 'Save Tif Stack', 'Save Tif Sequence', 'Save Video as .mp4', 'Save video as .avi', 'Save MotionCorrected Average']
+            This needs to be one of the following: ['Save Tif Stack', 'Save Tif Sequence', 'Save Video as .mp4', 'Save video as .avi', 'Save MotionCorrected Average']. To save as an average, use default_image_pipeline (Micrograph_class module).
         medfilter: int
             Kernal value for a median filter to apply, zero is no filter
         gaussfilter: int
@@ -1731,12 +1718,11 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
     MicroVideo_object = MicroVideo()
     MicroVideo_object.open_dm(filename)
+    if save_metadata==True:
+        MicroVideo_object.export_metadata(metadata_name,outdir)
 
-    
     #print(MicroVideo_object)
-    if 'name' in kwargs:
-        name=kwargs['name']
-    else:
+    if not name:
         name = '.'.join(MicroVideo_object.filename.split('.')[:-1])
 
     if output_type=='Save MotionCorrected Average':
@@ -1752,10 +1738,9 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
         MicroVideo_object = MicroVideo_object.clip_contrast()
         if scalebar==True:
             aved = aved.make_scalebar()
-        if 'outdir' in kwargs:
-            aved.write_image(name, outdir=kwargs['outdir']+'/Images')
-        else:
-            aved.write_image(name, outdir='Images')
+
+        aved.write_image(name, outdir=outdir+'/Images')
+
     
  
 
@@ -1772,9 +1757,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             MicroVideo_object = MicroVideo_object.gaussian_filter(gaussfilter)
 
 
-        if 'name' in kwargs:
-            name=kwargs['name']
-        else:
+        if not name:
             name = '.'.join(MicroVideo_object.filename.split('.')[:1])
         #MicroVideo_object.bin(xybin)
         
@@ -1787,29 +1770,22 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             if scalebar==True:
                 MicroVideo_object=MicroVideo_object.make_scalebar(color=color)
             name = name+output_type[-4:]
-            if 'outdir' in kwargs:
-                MicroVideo_object.write_video(name=name,outdir=kwargs['outdir']+'/Videos')
-            else:
-                MicroVideo_object.write_video(name=name)     
+        
+            MicroVideo_object.write_video(name=name,outdir=outdir+'/Videos')
+  
                 
         elif output_type=='Save Tif Stack':
             if scalebar==True:
                 MicroVideo_object=MicroVideo_object.make_scalebar(color=color)
                 #MicroVideo_object = MicroVideo_object.clip_contrast()
-
-            if 'outdir' in kwargs:
-                MicroVideo_object.save_tif_stack(name=name, outdir=kwargs['outdir']+'/Videos')
-            else: 
-                MicroVideo_object.save_tif_stack(name=name)
+            MicroVideo_object.save_tif_stack(name=name, outdir=outdir+'/Videos')
 
         elif output_type=='Save Tif Sequence':
             if scalebar==True:
                 MicroVideo_object= MicroVideo_object.make_scalebar(color=color)
                 #MicroVideo_object = MicroVideo_object.clip_contrast()
-            if 'outdir' in kwargs:
-                MicroVideo_object.save_tif_sequence(name=name, outdir=kwargs['outdir']+'/Videos')
-            else: 
-                MicroVideo_object.save_tif_sequence(name=name, outdir='/Videos')
+
+            MicroVideo_object.save_tif_sequence(name=name, outdir=outdir+'/Videos')
 
 
         else:

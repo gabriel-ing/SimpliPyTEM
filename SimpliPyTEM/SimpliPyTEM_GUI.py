@@ -418,10 +418,10 @@ class MainApplication(QWidget):
         for  file in dm_ims:
             if self.eval_stop():
                 return 1 
-            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
+            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
         if len(dm_frames)!=0: 
             print(dm_frames)
-            frames_processing(dm_frames,output_folder_name+'/Images',xybin, medfilter, gaussian_filter, video_status )
+            frames_processing(dm_frames,output_folder_name,xybin, medfilter, gaussian_filter, video_status )
         print('All files in folder complete!')  
         running_time = time.time()-start_time
         print('Running time for {} files: {}'.format(len(dm_files), running_time))

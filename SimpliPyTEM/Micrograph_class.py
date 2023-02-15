@@ -15,6 +15,8 @@ from scipy.signal import wiener
 import pandas as pd
 import tifffile
 import itertools
+
+
 plt.gray()
 
 class Micrograph: 
@@ -312,27 +314,13 @@ class Micrograph:
             outdir: str
                 Keyword argument (usage: outdir='/path/to/directory'). This defines the output location of the saved image, use a path relative to the current directory or an absolute path.
                 The final directory in the path will be made if it does not already exist.
-        '''
-
-
+        ''' 
         if outdir:
-
-            if '/' in outdir:
-                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
-                    os.mkdir(outdir)
-            elif outdir not in os.listdir('.') and outdir!='':
-                print(outdir)
-                print(os.listdir('.'))
-                os.mkdir(outdir)
-
-            if len(name.split('/'))>1:
-                name=name.split('/')[:-1]+outdir+'/'+name
-            else:
-                name =outdir+'/'+name  
- 
-        print('Start name :', name)
+            make_outdir(outdir)
+            name = outdir+'/'+name
+        #print('Start name :', name)
         if name:
-                print('if name : ',name)
+                #print('if name : ',name)
                 if name[-3:]=='jpg':
                     ftype='jpg'
                 elif name[-3:]=='tif':
@@ -340,7 +328,7 @@ class Micrograph:
                 if len(name.split('.'))>=2 and name[-4]=='.':
                     name='.'.join(name.split('.')[:-1])
                     #print('if len name: ', name)
-                    print('.'.join(name.split('.')[:-1]))
+                    #print('.'.join(name.split('.')[:-1]))
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
                 #print('else_name = ',name)
@@ -1249,6 +1237,8 @@ class Micrograph:
             #print('Indicated mag: {}'.format(self.indicated_mag))
             #print('Actual mag: {}'.format(self.actual_mag))
             return self.indicated_mag, self.actual_mag
+        else:
+            return -1, -1
 
     def get_voltage(self):
         '''
@@ -1260,8 +1250,12 @@ class Micrograph:
             Voltage:int
                 Microscope voltage for the image
         '''
-        self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
-        return self.voltage
+        try:
+            self.voltage = self.metadata_tags['.ImageList.2.ImageTags.Microscope Info.Voltage']
+            return self.voltage
+        except KeyError:
+            print('Voltage was not found')
+            return -1
 
     def get_exposure(self):
         '''
@@ -1276,8 +1270,11 @@ class Micrograph:
         #print('Frame rate : {}fps'.format(self.fps))
         #print('Exposure time per frame: {}s '.format(1/self.fps))
         #print('Imaging time: {}s'.format(self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']))
-        self.exposure = self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']
-        return self.exposure
+        try:
+            self.exposure = self.metadata_tags['.ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)']
+            return self.exposure
+        except KeyError:
+            return -1
 
     def get_date_time(self): 
         '''
@@ -1291,27 +1288,35 @@ class Micrograph:
             AqTime:str
                 Time at which the micrograph was captured
         '''
-
-        self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
-        self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
+        try:
+            self.AqDate = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Date']
+            self.AqTime = self.metadata_tags['.ImageList.2.ImageTags.DataBar.Acquisition Time']
+            return self.AqDate, self.AqTime
+        except:
+            return 'UNK', 'UNK'
         #print('Date: {} '.format(self.AqDate))
         #print('Time {} '.format(self.AqTime))
-        return self.AqDate, self.AqTime
+
 
 
     def export_metadata(self,name=None, outdir='.'):
+        
+        make_outdir(outdir)
+
+
         if not name:
             name='metadata.csv'
-        if outdir!='.':
-            if outdir not in os.listdir('.'):
-                os.mkdir(outdir)
-           
-                
-        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':self.get_date_time()[0],'Time':self.get_date_time()[1], 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(), 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[0]),'Video':self.video, 'Frame Rate (fps)':False,  'Number of frames':self.nframes}        
+
+        dt = self.get_date_time()
+        date_time = pd.to_datetime(dt[0]+' '+dt[1])
+    
+        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':str(date_time.date()),'Time':str(date_time.time()), 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(), 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[0]),'Video':self.video, 'Frame Rate (fps)':False,  'Number of frames':self.nframes}        
+        
         df = pd.DataFrame(metadata, index=[0])
         if name in os.listdir(outdir):
             old_df = pd.read_csv(outdir+'/'+name)
             new_df = pd.concat([old_df, df], ignore_index=True)
+            new_df.sort_values(by=['Date', 'Time'], inplace=True)
             new_df.to_csv(outdir+'/'+name, index=False)
         else:
             df.to_csv(outdir+'/'+name,index=False)
@@ -1394,7 +1399,7 @@ class Micrograph:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto', outdir='.',save_metadata=True, metadata_name='metadata.csv'):
     '''
     Default pipeline to process image, add scalebar, filter, bin and save the image, speeding up automation.
     
@@ -1431,6 +1436,10 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         Micrograph_object.open_dm(filename)
     else:
         print('Sorry only dm files  are currently supported here.')
+        return 1
+
+    if save_metadata==True:
+        Micrograph_object.export_metadata(name=metadata_name, outdir=outdir)
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
@@ -1453,13 +1462,12 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
     if scalebar==True:
         Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
-    if 'outdir' in kwargs:
-        Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])
-    else:
-        Micrograph_object.write_image(name=name) 
+    
+    Micrograph_object.write_image(name=name,outdir=outdir+'/Images')
+
     #Micrograph_object.save_image(outname=name)
 
-def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',**kwargs):
+def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',outdir='.'):
 
     '''
     Default pipeline to process from a Micrograph_object, add scalebar, filter, bin and save the image, speeding up automation.
@@ -1492,6 +1500,7 @@ def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilte
             Chooses scalebar color 'black', 'white' or 'grey'
 
     '''
+
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
@@ -1516,12 +1525,9 @@ def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilte
     if scalebar:
         Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
-    if 'outdir' in kwargs:
-        print(kwargs['outdir'])
-        Micrograph_object.write_image(name=name,outdir=kwargs['outdir'])
-    else:
-        print('No outdir')
-        Micrograph_object.write_image(name=name) 
+
+    Micrograph_object.write_image(name=name,outdir=outdir)
+
     #Micrograph_object.save_image(outname=name)
 
 def group_frames(frames):
@@ -1543,3 +1549,21 @@ def group_frames(frames):
         images_per_prefix = [x[0] for x in tups if x[1]==prefix]
         organised_dict[prefix]=images_per_prefix
         return organised_dict
+
+def make_outdir(outdir):
+    if outdir==None:
+        return 0
+
+    elif '/' in outdir:
+        split = outdir.split('/')
+        new_dir = split[-1]
+        current_dir = '/'.join(split[:-1])
+
+        if new_dir not in os.listdir(current_dir):
+            os.mkdir(outdir)
+    elif outdir=='.':
+        return 0
+    else: 
+        if outdir not in os.listdir('.'):
+            os.mkdir(outdir)
+
