@@ -1,9 +1,10 @@
 from SimpliPyTEM.Micrograph_class import * 
 from SimpliPyTEM.MicroVideo_class import * 
 import os
-
+'''
 def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
     print('Processing folder!')
+    print('Here')
     cwd = os.getcwd()
 
     os.chdir(folder)
@@ -16,22 +17,23 @@ def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter,
     if output_folder_name not in os.listdir('.') and output_folder_name!='.':
         os.mkdir(output_folder_name)
 
+    print('OUTPUTFOLDERNAME===='+output_folder_name)
     for file in dm_vids:
         print('Processing: ', file)
         video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
 
     for  file in dm_ims:
-        default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
+        default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
     if len(dm_frames)!=0: 
         print(dm_frames)
-        frames_processing(dm_frames,output_folder_name+'/Images',xybin, medfilter, gaussian_filter, video_status )
+        frames_processing(dm_frames,output_folder_name,xybin, medfilter, gaussian_filter, video_status )
 
 
 
     print('All files in folder complete!')  
     os.chdir(cwd)
-
-
+'''
+'''
 def process_folder_original(folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
 
     ##deal with videostatus
@@ -95,7 +97,8 @@ def process_folder_original(folder, output_folder_name,xybin, medfilter, gaussia
     print('All files in folder complete!')  
     os.chdir(cwd)
 
-
+'''
+'''
 def process_file(filename, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
 
     if isvideo(file):
@@ -153,6 +156,7 @@ def live_process(filename, output_folder_name,xybin, medfilter, gaussian_filter,
 
     os.chdir(cwd)
 
+'''
 def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
     if video_status=='Save Average':
 
@@ -165,7 +169,7 @@ def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_fil
 
 def isvideo(file):
     if os.path.getsize(file)>230165776:
-        print('Large_file, probably video')
+        #print('Large_file, probably video')
         return True
     else:
         return False
@@ -182,3 +186,18 @@ def frames_processing(dm_frames,output_folder_name,xybin, medfilter, gaussian_fi
             default_pipeline_class(micrograph, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
             
 
+
+'''
+            if '/' in outdir:
+                if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
+                    os.mkdir(outdir)
+            elif outdir not in os.listdir('.') and outdir!='.' and outdir!='.':
+                print(outdir)
+                #print(os.listdir('.'))
+                os.mkdir(outdir)
+
+            if len(name.split('/'))>1:
+                name=name.split('/')[:-1]+outdir+'/'+name
+            else:
+                name =outdir+'/'+name  
+'''
