@@ -29,9 +29,9 @@ class Micrograph:
     ----------
     filename:str
         The file name opened (blank if not opened in object)
-    pixelSize:float
+    pixel_size:float
         The pixel size in the image, should be initialised when opening data assuming the pixel size is included, if not can easily be altered
-    pixelUnit:str
+    pixel_unit:str
         The unit of the pixel size
     metadata_tags:dict
         The metadata of the file should be stored in this dictionary (works with digital micrograph files)
@@ -167,14 +167,14 @@ class Micrograph:
         
         #self.image = np.flip(self.image, axis=0)
         self.x = self.image.shape[1]
-        pixelUnit = dm_input['pixelUnit'][-1]
+        self.pixel_unit = dm_input['pixelUnit'][-1]
         self.y = self.image.shape[0]
-        pixelSize=dm_input['pixelSize'][-1]
-        #print(pixelSize,type(pixelSize))
+        self.pixel_size=float(dm_input['pixelSize'][-1])
+        #print(pixel_size,type(pixel_size))
         self.original_image = self.image
         self.filename = file
-        self.pixelSize= float(pixelSize)
-        self.pixelUnit = pixelUnit
+        #self.pixel_size= float(pixel_size)
+        #self.pixel_unit = pixel_unit
 
 
         
@@ -183,7 +183,7 @@ class Micrograph:
             self.image[self.image>self.image.mean()+self.image.std()*20]=self.image.mean()
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         self.image = self.image.astype('float32')
-        #       #return image, x, y, pixelSize, pixelUnit
+        #       #return image, x, y, pixel_size, pixel_unit
         self.shape=self.image.shape
         print('{} opened as a Micrograph object'.format(file))
 
@@ -200,12 +200,12 @@ class Micrograph:
         mrc= mrcfile.open(file)
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
-        self.pixelSize = float(str(voxel_size).split(',')[0].strip('('))
+        self.pixel_size = float(str(voxel_size).split(',')[0].strip('('))
         self.image = mrc.data
         self.image.setflags(write=1)
         self.x = self.image.shape[1]
         self.y = self.image.shape[0]
-        self.pixelUnit='nm'
+        self.pixel_unit='nm'
         self.filename = file
         if pixel_correction:
             self.image[self.image>self.image.mean()+self.image.std()*20]=self.image.mean()
@@ -216,7 +216,7 @@ class Micrograph:
 
     ##write a hyperspy opening function 
 
-    def open_image(self, filename, pixelSize=None, pixelUnit=None):
+    def open_image(self, filename, pixel_size=None, pixel_unit=None):
         '''
         Open a jpg, png or tif file into the micrograph object. If the tif has any metadata tags, these should be saved into the metadata_tags and will then be accessible with .show_metadata()
         The pixel size is likely to be included somewhere within the metadata and may be loaded, but the name of the tags are not always constant, and so this may need to be searched in  the .show_metadata output.
@@ -226,9 +226,9 @@ class Micrograph:
 
             filename: str
                 Name of image file to load into the object
-            pixelSize: float
+            pixel_size: float
                 The pixel size in the image, not necessary but can be included here, can also be loaded with set_scale()
-            pixelUnit: str
+            pixel_unit: str
                 The unit for the pixel size included.
         '''
 
@@ -247,28 +247,28 @@ class Micrograph:
         if 'XResolution' in self.metadata_tags:
             if self.metadata_tags['XResolution']==self.metadata_tags['YResolution']:
                 try:
-                    self.pixelSize = 1/(self.metadata_tags['XResolution'][0] / self.metadata_tags['XResolution'][1])
+                    self.pixel_size = 1/(self.metadata_tags['XResolution'][0] / self.metadata_tags['XResolution'][1])
                 except:
                     pass
 
         if 'unit' in self.metadata_tags:
             if self.metadata_tags['unit']=='micron':
-                self.pixelUnit = 'µm'
+                self.pixel_unit = 'µm'
             elif self.metadata_tags['unit']=='nm':
-                self.pixelUnit='nm'
+                self.pixel_unit='nm'
 
         self.filename=filename
         self.reset_xy()
 
-        if pixelSize:
-            self.pixelSize=pixelSize
-        if pixelUnit:
-            self.pixelUnit=pixelUnit
+        if pixel_size:
+            self.pixel_size=pixel_size
+        if pixel_unit:
+            self.pixel_unit=pixel_unit
 
         self.original_image = self.image
 
 
-    def open_array(self, array, pixelSize=None, pixelUnit=None, name='Default_image_name'):
+    def open_array(self, array, pixel_size=None, pixel_unit=None, name='Default_image_name'):
         '''
         Opens np array into micrograph object. 
         
@@ -278,9 +278,9 @@ class Micrograph:
             array:  numpy array
                 The image data in the form of a numpy array 
 
-            pixelSize: float
+            pixel_size: float
                 The pixel size in the image, not necessary but can be included here, can also be loaded with set_scale()
-            pixelUnit: str
+            pixel_unit: str
                 The unit for the pixel size included.
             name: str
                 The name for the image (becomes micrograph.filename attribute)     
@@ -289,10 +289,10 @@ class Micrograph:
         self.image = array 
         self.reset_xy()
         self.filename = name
-        if pixelSize:
-            self.pixelSize=pixelSize
-        if pixelUnit:
-            self.pixelUnit=pixelUnit
+        if pixel_size:
+            self.pixel_size=pixel_size
+        if pixel_unit:
+            self.pixel_unit=pixel_unit
 
         self.original_image = self.image
 
@@ -343,10 +343,10 @@ class Micrograph:
         #else:
         #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
         
-        if self.pixelUnit=='µm':
-            pixelUnit='um'
+        if self.pixel_unit=='µm':
+            pixel_unit='um'
         else:
-            pixelUnit=self.pixelUnit
+            pixel_unit=self.pixel_unit
 
         if ftype=='jpg':
             if self.image.max()!=255 or self.image.min()!=0:
@@ -356,7 +356,7 @@ class Micrograph:
             cv.imwrite(name,self.image)
 
         elif ftype=='tif':
-            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':pixelUnit})
+            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':pixel_unit})
 
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')
@@ -421,7 +421,7 @@ class Micrograph:
         '''
         binned_image = deepcopy(self)
         binned_image.image = cv.resize(self.image, (int(self.image.shape[1]/value), int(self.image.shape[0]/value)), interpolation=cv.INTER_CUBIC) 
-        binned_image.pixelSize= binned_image.pixelSize*value
+        binned_image.pixel_size= binned_image.pixel_size*value
         binned_image.reset_xy()
         return binned_image
 
@@ -561,7 +561,7 @@ class Micrograph:
         enhanced_object = deepcopy(self)
         enhanced_object = enhanced_object.convert_to_8bit()
         enhanced_object.image = cv.equalizeHist(enhanced_object.image)
-        eqHist.log.append('eqHist()')
+        enhanced_object.log.append('eqHist()')
         return enhanced_object
 
 
@@ -665,28 +665,28 @@ class Micrograph:
                 The value to multiply the current value by to give the new scale. This isnt necessary with 'µm'/'nm' transitions, but without it any other change will change unit only.
 
         '''
-        if new_unit==self.pixelUnit:
+        if new_unit==self.pixel_unit:
 
             print('The unit is already {}! Skipping file.'.format(new_unit))
-        elif new_unit=='nm' and self.pixelUnit=='µm':
-            self.pixelSize*=1000
-            self.pixelUnit='nm'
+        elif new_unit=='nm' and self.pixel_unit=='µm':
+            self.pixel_size*=1000
+            self.pixel_unit='nm'
         elif new_unit!='nm' and new_unit!='µm':
-            self.pixelUnit=new_unit
+            self.pixel_unit=new_unit
 
             if scaling_factor !=None:
-                self.pixelSize*=scaling_factor
+                self.pixel_size*=scaling_factor
             else:
                 print('Setting new scale unit but not changing the value, please include a scaling factor to also change the value.')
-        elif new_unit=='µm' and self.pixelUnit=='nm':
-            self.pixelSize= self.pixelSize/1000
-            self.pixelUnit='µm'
+        elif new_unit=='µm' and self.pixel_unit=='nm':
+            self.pixel_size= self.pixel_size/1000
+            self.pixel_unit='µm'
 
-        elif self.pixelUnit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor==None:
-            print("Error! You want to switch to {} but the transition from {} is not naturally supported, please include a scaling factor (even if its just 1) to ensure correct conversion.".format(new_unit,self.pixelUnit))
-        elif self.pixelUnit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor!=None:
-            self.pixelSize*=scaling_factor
-            self.pixelUnit=new_unit
+        elif self.pixel_unit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor==None:
+            print("Error! You want to switch to {} but the transition from {} is not naturally supported, please include a scaling factor (even if its just 1) to ensure correct conversion.".format(new_unit,self.pixel_unit))
+        elif self.pixel_unit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor!=None:
+            self.pixel_size*=scaling_factor
+            self.pixel_unit=new_unit
 
         else:
             print('Not sure how we got here! Check inputs and try again - if genuine error, raise an issue on github!')
@@ -708,8 +708,8 @@ class Micrograph:
                 Unit of measurement
 
         '''
-        self.pixelSize=dist/pixels
-        self.pixelUnit=unit
+        self.pixel_size=dist/pixels
+        self.pixel_unit=unit
         self.log.append('set_scale({},{},{})'.format(pixels, dist, unit))
 
     def choose_scalebar_size(self):
@@ -727,7 +727,7 @@ class Micrograph:
             height:int
                 height of the scalebar
             scalebar_size:int (or float)
-                Size of the scalebar in scaled units (pixelUnit)
+                Size of the scalebar in scaled units (pixel_unit)
         '''
         y,x = self.image.shape
         
@@ -745,7 +745,7 @@ class Micrograph:
         #the largest size is chosen as default
         
         for n in possible_sizes:
-            width = n*1/self.pixelSize
+            width = n*1/self.pixel_size
             #print(n, image.shape([0]/10)
             if width>(x/15):
                 break
@@ -779,7 +779,7 @@ class Micrograph:
             height:int
                 height of the scalebar
             scalebar_size:int (or float)
-                Size of the scalebar in scaled units (pixelUnit)
+                Size of the scalebar in scaled units (pixel_unit)
         '''
         if color=='black' or self.image.dtype!='uint8':
             pixvalue = 0
@@ -831,11 +831,11 @@ class Micrograph:
         
         textposition = ((scalebar_x+width/2),scalebar_y-5)
         
-        #if pixelUnit!='nm':
+        #if pixel_unit!='nm':
          #   Utext = str(n)+u'\u00b5'+ 'm'
           #  text = str(n)+'microns'
         #else:
-        micrograph_SB.scalebar_size = '{}{}'.format(scalebar_size,self.pixelUnit) 
+        micrograph_SB.scalebar_size = '{}{}'.format(scalebar_size,self.pixel_unit) 
          
 
         pil_image = Image.fromarray(micrograph_SB.image)
@@ -887,7 +887,7 @@ class Micrograph:
         ----------
 
             radius : int (or potentially float)
-                The effects of this vary depending on if the pixelsize is defined in self.pixelSize.: 
+                The effects of this vary depending on if the pixelsize is defined in self.pixel_size.: 
                      - Assuming your micrograph object has a pixel size defined, the filter works by removing any features smaller than the size you input as a parameter (the unit is the same as the pixelsize), A larger number yields a stronger filter, if it is too large, you won't see any features. 
                     Effective filter sizes depends on features and magnification, so with something between 1-5 and tune it to your needs.
                     - If your micrograph is missing a pixelsize the size input will be the radius of a circle kept in the power spectrum. Here the input number does the inverse - a smaller number leads to stronger filter. In this case, much larger numbers will be needed, 50 is a good starting value.
@@ -899,8 +899,8 @@ class Micrograph:
 
         '''    
         N=self.image.shape[0]
-        if type(self.pixelSize)==int or type(self.pixelSize)==float and self.pixelSize!=0:
-            radius=int((N*self.pixelSize)/radius)
+        if type(self.pixel_size)==int or type(self.pixel_size)==float and self.pixel_size!=0:
+            radius=int((N*self.pixel_size)/radius)
         
             
         fft = np.fft.fft2(self.image)
@@ -1310,7 +1310,7 @@ class Micrograph:
         dt = self.get_date_time()
         date_time = pd.to_datetime(dt[0]+' '+dt[1])
     
-        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':str(date_time.date()),'Time':str(date_time.time()), 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(), 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[0]),'Video':self.video, 'Frame Rate (fps)':False,  'Number of frames':self.nframes}        
+        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':str(date_time.date()),'Time':str(date_time.time()), 'Pixel size':self.pixel_size,'Pixel unit':self.pixel_unit, 'Exposure Time (s)':self.get_exposure(), 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[0]),'Video':self.video, 'Frame Rate (fps)':False,  'Number of frames':self.nframes}        
         
         df = pd.DataFrame(metadata, index=[0])
         if name in os.listdir(outdir):
@@ -1559,7 +1559,7 @@ def make_outdir(outdir):
         new_dir = split[-1]
         current_dir = '/'.join(split[:-1])
 
-        if new_dir not in os.listdir(current_dir):
+        if new_dir not in os.listdir(current_dir) and new_dir.lower() not in [x.lower() for x in os.listdir(current_dir)]:
             os.mkdir(outdir)
     elif outdir=='.':
         return 0

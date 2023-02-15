@@ -122,7 +122,7 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, rem
 
 
     
-def Collect_particle_data(contours_im, pixelSize, multimeasure=False ):    
+def Collect_particle_data(contours_im, pixel_size, multimeasure=False ):    
     '''
     This collects a number of data sets from the contours_im outputted by the find_contours function. Complex measurement of particle size can be done with multimeasure (it measures the distance across each particle at multiple points and then includes max, min, mean and std of these measurements)
 
@@ -153,7 +153,7 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False ):
  
         contours_im:list
             As generated from find_contours()
-        pixelSize:float
+        pixel_size:float
             Pixel size in the image, the same unit is used in the output data so not important here but worth keeping an eye on. 
         multimeasure:bool
             Whether to measure the distance across the particle many times, this can give an idea of the variation in shape and a better measure of diameter, but also  significantly increases runtime. 
@@ -203,37 +203,37 @@ def Collect_particle_data(contours_im, pixelSize, multimeasure=False ):
         centroid_y=(moment_contour['m01']/moment_contour['m00'])
         centroid_x_particle.append(centroid_x)
         centroid_y_particle.append(centroid_y)
-        area = cv.contourArea(c)*pixelSize**2
+        area = cv.contourArea(c)*pixel_size**2
         area_particle.append(area)
         #meanradius_particle = area__particle[i, 0]
 
 
-        perimeter_particle.append(cv.arcLength(c, True)*pixelSize)
+        perimeter_particle.append(cv.arcLength(c, True)*pixel_size)
         min_rectangle = cv.minAreaRect(c)
         #print(min_rectangle)
         #circularity_particle = 
         width_height = min_rectangle[1]
         #print(width, height)
-        #width_particle[i, 0]= width*pixelSize
-        #height_particle[i, 0] = height*pixelSize
+        #width_particle[i, 0]= width*pixel_size
+        #height_particle[i, 0] = height*pixel_size
         height = max(width_height)
         width = min(width_height)
-        width_particle.append(width*pixelSize)
-        height_particle.append(height*pixelSize)
+        width_particle.append(width*pixel_size)
+        height_particle.append(height*pixel_size)
         MajMinRat = height/width
         MajorMinorRatio.append(MajMinRat)
         ((cx, cy), radius) = cv.minEnclosingCircle(c)
-        radius_particle.append(radius*pixelSize)
-        circularity_particle.append(area/(np.pi*radius*radius*pixelSize**2))
+        radius_particle.append(radius*pixel_size)
+        circularity_particle.append(area/(np.pi*radius*radius*pixel_size**2))
         box = cv.boxPoints(min_rectangle)
         box=np.int0(box)
 
         if multimeasure: 
             dists,coords = multiMeasure_particle(c, (centroid_x,centroid_y))
-            maxlength.append(max(dists)*pixelSize)
-            minlength.append(min(dists)*pixelSize)
-            meanlength.append(np.mean(dists)*pixelSize)
-            stddev_length.append(np.std(dists)*pixelSize)
+            maxlength.append(max(dists)*pixel_size)
+            minlength.append(min(dists)*pixel_size)
+            meanlength.append(np.mean(dists)*pixel_size)
+            stddev_length.append(np.std(dists)*pixel_size)
             measurements.append(len(dists))
     
 
@@ -346,7 +346,7 @@ def Sidebyside(Video1, Video2):
     #plt.show()
     return sidebyside
 
-def Particle_analysis(image, threshold, minsize, pixelSize,multimeasure=False):
+def Particle_analysis(image, threshold, minsize, pixel_size,multimeasure=False):
     '''
     Do the thresholding, contours finding and data collection all in one to collect data from the particles  in an image
     
@@ -358,7 +358,7 @@ def Particle_analysis(image, threshold, minsize, pixelSize,multimeasure=False):
             The threshold pixel value
         minsize:int
             minimum area of particles 
-        pixelSize:float
+        pixel_size:float
             Pixel size in the image, normally in nanometers but this unit is kept in the resulting data so it doesnt matter. 
         Multimeasure:bool
             Whether to measure the distance across the particle many times, this can give an idea of the variation in shape and a better measure of diameter, but also  significantly increases runtime. 
@@ -374,10 +374,10 @@ def Particle_analysis(image, threshold, minsize, pixelSize,multimeasure=False):
 
     thresh = Threshold(image, threshold)
     contours_im, mask = Find_contours(thresh, minsize)
-    particle_data = Collect_particle_data(contours_im, pixelSize, multimeasure)
+    particle_data = Collect_particle_data(contours_im, pixel_size, multimeasure)
     return mask, particle_data
 
-def Particle_analysis_video(video,threshold, minsize,pixelSize, multimeasure=False):
+def Particle_analysis_video(video,threshold, minsize,pixel_size, multimeasure=False):
     '''
     Runs the particle analysis for every frame in a video and creates a dictionary with a list of lists (data from each frame) as the value.  
 
@@ -389,7 +389,7 @@ def Particle_analysis_video(video,threshold, minsize,pixelSize, multimeasure=Fal
             The threshold pixel value
         minsize:int
             minimum area of particles 
-        pixelSize:float
+        pixel_size:float
             Pixel size in the image, normally in nanometers but this unit is kept in the resulting data so it doesnt matter. 
         Multimeasure:bool
             Whether to measure the distance across the particle many times, this can give an idea of the variation in shape and a better measure of diameter, but also  significantly increases runtime. 
@@ -417,7 +417,7 @@ def Particle_analysis_video(video,threshold, minsize,pixelSize, multimeasure=Fal
     #print(particle_data)
 
     for frame in video:
-        mask, data =Particle_analysis(frame, threshold, minsize,pixelSize, multimeasure)
+        mask, data =Particle_analysis(frame, threshold, minsize,pixel_size, multimeasure)
         masks.append(mask)
         for key in data:
             video_data[key].append(data[key])

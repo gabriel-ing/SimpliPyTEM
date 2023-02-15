@@ -28,9 +28,9 @@ class MicroVideo:
     ----------
     filename:str
         The file name opened (blank if not opened in object)
-    pixelSize:float
+    pixel_size:float
         The pixel size in the image, should be initialised when opening data assuming the pixel size is included, if not can easily be altered
-    pixelUnit:str
+    pixel_unit:str
         The unit of the pixel size
     metadata_tags:dict
         The metadata of the file should be stored in this dictionary (works with digital micrograph files)
@@ -178,13 +178,13 @@ class MicroVideo:
         self.x = self.frames[0].shape[1]
         self.y = self.frames[0].shape[0]
 
-        pixelSize=float(dm_input['pixelSize'][-1])
-        #print(type(pixelSize))
-        #print(pixelSize,type(pixelSize))
-        pixelUnit = dm_input['pixelUnit'][-1]
+        pixel_size=float(dm_input['pixelSize'][-1])
+        #print(type(pixel_size))
+        #print(pixel_size,type(pixel_size))
+        pixel_unit = dm_input['pixelUnit'][-1]
         self.filename = file
-        self.pixelSize= pixelSize
-        self.pixelUnit = pixelUnit
+        self.pixel_size= pixel_size
+        self.pixel_unit = pixel_unit
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         #This line removes any giant outliers (bright pixels) from the images
         #print(self.frames[self.frames>self.frames.mean()+self.frames.std()*50])
@@ -199,32 +199,42 @@ class MicroVideo:
         self.shape = self.frames.shape
         print(file + ' opened as a MicroVideo object')
 
-#       #return image, x, y, pixelSize, pixelUnit
+#       #return image, x, y, pixel_size, pixel_unit
 
     def open_mrc(self, file):
         mrc= mrcfile.open(file)
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
 
-        self.pixelSize = float(str(voxel_size).split(',')[0].strip('('))
+        self.pixel_size = float(str(voxel_size).split(',')[0].strip('('))
         self.frames = mrc.data
         self.frames.setflags(write=1)
         self.frames = np.flip(self.frames, axis=1)
 
         self.x = self.frames.shape[1]
         self.y = self.frames.shape[0]
-        self.pixelUnit='nm'
+        self.pixel_unit='nm'
         self.filename = file
 
         # this line converts the image to a float32 datatype, this will make it run slower if it starts out as a 8 or 16 bit, I maybe should account for this, but its also required for median filter and others, so I'm performing as default. 
         for frame in self.frames:
             frame = frame.astype('float32')
 
-    def open_video(self, filename,pixelsize='',pixelunit='nm',):
+    def open_video(self, filename,pixel_size='',pixel_unit='nm',):
         '''
         Loads video files (eg. mp4 and avi, unsure if others will work) into microvideo object.
-        The pixel size is not taken from the video by default, and so it should be included in the command, else the default of 1nm/pixel is used. This can be addedd later using video.pixelSize= {new pixel size}
+        The pixel size is not taken from the video by default, and so it should be included in the command, else the default of 1nm/pixel is used. This can be addedd later using video.pixel_size= {new pixel size}
         
+        Parameters
+        ----------
+
+            filename: str
+                Name of the video file to open
+            pixel_size: float
+                Size of one pixel (eg. 1nm/pixel), optionall.
+            pixel_unit: str
+                Unit for the pixel_size
+
         '''
 
         cap = cv.VideoCapture(filename)
@@ -247,11 +257,11 @@ class MicroVideo:
             #print(len(frames))
         self.frames = np.array(frames)
         print('{} frames loaded as micrograph object'.format(len(self.frames)))
-        print('As format is avi, the pixelsize is not loaded automatically, please set this using micrograph.pixelSize = n')
+        print('As format is avi, the pixelsize is not loaded automatically, please set this using micrograph.pixel_size = n')
         cap.release()
         self.reset_xy()
-        self.pixelSize=pixelsize
-        self.pixelUnit=pixelunit
+        self.pixel_size=pixel_size
+        self.pixel_unit=pixel_unit
         
         
     def open_array(self, arr, pixelsize=1,pixelunit='nm', filename='Loaded_array'):
@@ -265,8 +275,8 @@ class MicroVideo:
             return 1 
 
         self.frames = arr 
-        self.pixelSize=pixelsize
-        self.pixelUnit=pixelunit
+        self.pixel_size=pixelsize
+        self.pixel_unit=pixelunit
         self.filename=filename
         self.reset_xy()
 
@@ -328,7 +338,7 @@ class MicroVideo:
         if outdir:
             make_outdir(outdir)
             name = outdir+'/'+name
-        tifffile.imsave(name, self.frames,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
+        tifffile.imsave(name, self.frames,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':self.pixel_unit})
 
 
     def save_tif_sequence(self, name=None, outdir=None):
@@ -366,7 +376,7 @@ class MicroVideo:
             zeros = '0000'
             count = str(zeros[:j])+str(i)
             savename = name+'_{}'.format(count)+'.tif'
-            tifffile.imsave(savename, self.frames[i],imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit, 'Labels':'{}/{} -{}'.format(i, len(self.frames),self.filename)})
+            tifffile.imsave(savename, self.frames[i],imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':self.pixel_unit, 'Labels':'{}/{} -{}'.format(i, len(self.frames),self.filename)})
 
     def save_gif(self, fps=5,**kwargs ):
 
@@ -512,7 +522,7 @@ class MicroVideo:
                 print('converting to 8bit')
             cv.imwrite(name,image)
         elif ftype=='tif':
-            tifffile.imsave(name, image,imagej=True, resolution=(1/self.pixelSize, 1/self.pixelSize), metadata={'unit':self.pixelUnit})
+            tifffile.imsave(name, image,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':self.pixel_unit})
 
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')
@@ -584,7 +594,7 @@ class MicroVideo:
         binned = deepcopy(self)
         binned.frames=np.array(frames)
         #print(self.frames.shape)
-        binned.pixelSize= self.pixelSize*value
+        binned.pixel_size= self.pixel_size*value
         binned.reset_xy()
         binned.log.append('binned()')
         return binned
@@ -868,7 +878,7 @@ class MicroVideo:
         dt = self.get_date_time()
         date_time = pd.to_datetime(dt[0]+' '+dt[1])
 
-        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':str(date_time.date()),'Time':str(date_time.time()), 'Pixel size':self.pixelSize,'Pixel unit':self.pixelUnit, 'Exposure Time (s)':self.get_exposure(print_values=False)[1], 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[2]),'Video':self.video, 'Frame Rate (fps)':self.fps,  'Number of frames':self.frames.shape[0]}        
+        metadata = {'Image name':self.filename, 'Indicated Magnification':self.get_mag()[0], 'Actual Magnifiation':self.get_mag()[1],  'Date':str(date_time.date()),'Time':str(date_time.time()), 'Pixel size':self.pixel_size,'Pixel unit':self.pixel_unit, 'Exposure Time (s)':self.get_exposure(print_values=False)[1], 'Voltage':self.get_voltage(), 'Size (px)':'{}x{}'.format(self.shape[1],self.shape[2]),'Video':self.video, 'Frame Rate (fps)':self.fps,  'Number of frames':self.frames.shape[0]}        
         #print(metadata)
 
 
@@ -905,28 +915,28 @@ class MicroVideo:
                 The value to multiply the current value by to give the new scale. This isnt necessary with 'µm'/'nm' transitions, but without it any other change will change unit only.
 
         '''
-        if new_unit==self.pixelUnit:
+        if new_unit==self.pixel_unit:
             
             print('The unit is already {}! Skipping file.'.format(new_unit))
-        elif new_unit=='nm' and self.pixelUnit=='µm':
-            self.pixelSize*=1000
-            self.pixelUnit='nm'
+        elif new_unit=='nm' and self.pixel_unit=='µm':
+            self.pixel_size*=1000
+            self.pixel_unit='nm'
         elif new_unit!='nm' and new_unit!='µm':
-            self.pixelUnit=new_unit
+            self.pixel_unit=new_unit
 
             if scaling_factor !=None:
-                self.pixelSize*=scaling_factor
+                self.pixel_size*=scaling_factor
             else:
                 print('Setting new scale unit but not changing the value, please include a scaling factor to also change the value.')
-        elif new_unit=='µm' and self.pixelUnit=='nm':
-            self.pixelSize= self.pixelSize/1000
-            self.pixelUnit='µm'
+        elif new_unit=='µm' and self.pixel_unit=='nm':
+            self.pixel_size= self.pixel_size/1000
+            self.pixel_unit='µm'
 
-        elif self.pixelUnit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor==None:
-            print("Error! You want to switch to {} but the transition from {} is not naturally supported, please include a scaling factor (even if its just 1) to ensure correct conversion.".format(new_unit,self.pixelUnit))
-        elif self.pixelUnit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor!=None:
-            self.pixelSize*=scaling_factor
-            self.pixelUnit=new_unit
+        elif self.pixel_unit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor==None:
+            print("Error! You want to switch to {} but the transition from {} is not naturally supported, please include a scaling factor (even if its just 1) to ensure correct conversion.".format(new_unit,self.pixel_unit))
+        elif self.pixel_unit not in ['µm', 'nm'] and new_unit in ['µm','nm'] and scaling_factor!=None:
+            self.pixel_size*=scaling_factor
+            self.pixel_unit=new_unit
 
         else:
             print('Not sure how we got here! Check inputs and try again - if genuine error, raise an issue on github!')
@@ -949,8 +959,8 @@ class MicroVideo:
                 Unit of measurement
 
         '''
-        self.pixelSize=dist/pixels
-        self.pixelUnit=unit
+        self.pixel_size=dist/pixels
+        self.pixel_unit=unit
 
 
     def choose_scalebar_size(self):
@@ -973,7 +983,7 @@ class MicroVideo:
         #the largest size is chosen as default
         
         for n in possible_sizes:
-            width = n*1/self.pixelSize
+            width = n*1/self.pixel_size
             #print(n, image.shape([0]/10)
             if width>(self.x/15):
                 break
@@ -1046,11 +1056,11 @@ class MicroVideo:
             
             textposition = ((vidSB.scalebar_x+vidSB.width/2),vidSB.scalebar_y-5)
             
-            #if pixelUnit!='nm':
+            #if pixel_unit!='nm':
              #   Utext = str(n)+u'\u00b5'+ 'm'
               #  text = str(n)+'microns'
             #else:
-            vidSB.text = '{}{}'.format(vidSB.n,vidSB.pixelUnit) 
+            vidSB.text = '{}{}'.format(vidSB.n,vidSB.pixel_unit) 
              
 
             pil_image = Image.fromarray(vidSB.frames[i])
@@ -1102,7 +1112,7 @@ class MicroVideo:
         ----------
 
             radius : int (or potentially float)
-                The effects of this vary depending on if the pixelsize is defined in self.pixelSize.: 
+                The effects of this vary depending on if the pixelsize is defined in self.pixel_size.: 
                      - Assuming your micrograph object has a pixel size defined, the filter works by removing any features smaller than the size you input as a parameter (the unit is the same as the pixelsize), A larger number yields a stronger filter, if it is too large, you won't see any features. 
                     Effective filter sizes depends on features and magnification, so with something between 1-5 and tune it to your needs.
                     - If your micrograph is missing a pixelsize the size input will be the radius of a circle kept in the power spectrum. Here the input number does the inverse - a smaller number leads to stronger filter. In this case, much larger numbers will be needed, 50 is a good starting value.
@@ -1115,8 +1125,8 @@ class MicroVideo:
         '''    
         #print(N)
         N=self.frames[0].shape[0]
-        if type(self.pixelSize)==int or type(self.pixelSize)==float and self.pixelSize!=0:
-            radius=int((N*self.pixelSize)/radius)
+        if type(self.pixel_size)==int or type(self.pixel_size)==float and self.pixel_size!=0:
+            radius=int((N*self.pixel_size)/radius)
         
         filtered_object = deepcopy(self)
         for i in range(len(filtered_object.frames)):
@@ -1581,11 +1591,11 @@ class MicroVideo:
         MCor_path = os.environ.get('MOTIONCOR2_PATH')
         if MCor_path:
             if vid_output:
-                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixelSize*10)
+                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixel_size*10)
                 MC_vid=deepcopy(self)
                 inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
             else:
-                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {}'.format(MCor_path, tifname, outname, self.pixelSize*10)
+                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {}'.format(MCor_path, tifname, outname, self.pixel_size*10)
                 MC_vid = Micrograph()
                 inname = '.'.join(outname.split('.')[:-1])+'.mrc'
             self.save_tif_stack(name=tifname)
@@ -1600,8 +1610,8 @@ class MicroVideo:
         except FileNotFoundError:
             print("The file isn't found - this usually appears to be a motioncor2 issue, sometimes it fails to save an image as a stack for some unknown reason (likely to do with filesize), maybe try decreasing the size by binning/averaging?")
         MC_vid.metadata_tags = self.metadata_tags
-        MC_vid.pixelSize = self.pixelSize
-        MC_vid.pixelUnit=self.pixelUnit
+        MC_vid.pixel_size = self.pixel_size
+        MC_vid.pixel_unit=self.pixel_unit
         MC_vid.fps = self.fps
         MC_vid.filename = self.filename+'_MotionCorrected'
         os.remove('OutIntermediateTiff.tif')
