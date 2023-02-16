@@ -766,7 +766,112 @@ class MicroVideo:
         norm_object.log.append('Normalise_video()')
         return norm_object
 
+    def local_normalisation(self,numpatches, padding=15, pad=False, normalise_all=True):
+        '''
+        Normalises contrast across the video frames, ensuring even contrast throughout. 
+        frames are taken and split into patches, following which the median of the patches ('local median') is compared to the median of the video ('global median').
+        The patch (local area) is then normalised using the medians (patch = patch* global_median/local_medium) leading to a uniform contrast in the video frame and video itself. 
 
+        The patch median was chosen so there would be less effect if there is a large dark/bright particle, however if this is too large compared with the patch size it will affect the resulting contrast. 
+        
+        Padding can be applied which will greatly reduce edge artefacts. However doing this well will greatly increase the run time.
+        Note: if there is a black region (eg. edge of beam or grid) in the image this may lead to bad results.
+
+        Parameters
+        ----------
+
+            numpatches:int
+                The number of patches on each axis to split the image into, ie image is split into n x n patches and these are given the same median 
+
+            padding: int
+                percentage overlap between patches (only used if pad=True)
+            
+            pad:bool
+                Setting to true reduces edge artifacts from the patches of the image, however it also greatly increases processing time. 
+
+        Returns
+        -------
+
+            new_vid: Micrograph
+                Copy of the MicroVideo object with a video that has normalised contrast
+        '''
+        new_vid = deepcopy(self)
+        
+        #Create patches
+        xconst = int(new_vid.frames.shape[1]/numpatches)
+        yconst = int(new_vid.frames.shape[2]/numpatches)
+        x_coords = [i*xconst for i in range(numpatches)]
+        y_coords = [i*yconst for i in range(numpatches)]
+        patch_coords = list(itertools.product(x_coords, y_coords))
+        
+        
+        if normalise_all:
+            global_median = np.median(new_vid.frames)
+        else:
+            global_median=None
+        new_frames= []
+        for frame in new_vid.frames:
+            
+            new_frame = self.local_normalisation_frame(frame, global_median,patch_coords, pad, padding, xconst, yconst )
+            #print(new_frame)
+            new_frames.append(new_frame)
+        new_vid.frames= np.array(new_frames)
+        new_vid.log.append('local_normalisation')
+        return new_vid    
+        
+            
+            
+            
+            
+    def local_normalisation_frame(self,frame,global_median, patch_coords, pad, padding, xconst, yconst):
+        '''
+        Function to perform local normalisation on each frame. This function is called by the local_normalisation() function and can be ignored for users. 
+        '''
+        if pad:
+            arrs = []
+        else:
+            padding=0
+                
+        if global_median==None:
+            global_median = np.median(frame)
+            
+        for coord in patch_coords:
+
+            x_low = coord[0]
+            x_high = coord[0]+xconst+int((padding/100)*xconst)
+            y_low = coord[1]
+            y_high = coord[1]+yconst+int((padding/100)*yconst)
+
+
+            local_patch = frame[x_low:x_high, y_low:y_high]
+            local_median = np.median(local_patch)
+            local_patch = local_patch*global_median/local_median
+                
+            if pad:
+                    #Creates arrays for each coordinate and sets the patch equal to the normalise local patch, the rest are zeros
+                    #print(coord)
+                empty_arr = np.zeros_like(frame, dtype='float32')
+                    #Set all values to not-a-number
+                    #print(empty_arr.dtype)
+                empty_arr[:]=np.nan
+                    #Set patch in empty array 
+                empty_arr[x_low:x_high, y_low:y_high]=local_patch
+                arrs.append(empty_arr)
+            else:    
+                frame[x_low:x_high, y_low:y_high]=local_patch
+                    
+            
+        if pad:
+                #Creates array of arrays
+            arrs = np.array(arrs)
+                #Creates mean of array (ignoring not-a-number values)
+            new_arr = np.nanmean(arrs, axis=0)
+            return new_arr
+                
+        else:
+                #print(frame)
+            return frame 
+    
     '''--------------------------------------------------------------------------------
     SECTION: METADATA
 

@@ -74,7 +74,7 @@ class Micrograph:
 
         eqHist - equalises histogram, ensuring even converage of pixel values from 0-255
 
-        Local_normalisation - Evens out contrast across the image
+        local_normalisation - Evens out contrast across the image
 
     Metadata (currently relies on dm3/dm4 metadata):
         show_metadata - shows all metadata tags and values
@@ -565,7 +565,7 @@ class Micrograph:
         return enhanced_object
 
 
-    def Local_normalisation(self,numpatches, padding=15, pad=True):
+    def local_normalisation(self,numpatches, padding=15, pad=True):
         """
         Normalises contrast across the image, ensuring even contrast throughout. 
         Image is taken and split into patches, following which the median of the patches ('local median') is compared to the median of the image ('global median').
@@ -626,7 +626,7 @@ class Micrograph:
                 arrs.append(empty_arr)
             else:    
                 new_im.image[x_low:x_high, y_low:y_high]=local_patch
-        new_im.log.append('Local_normalisation')
+        new_im.log.append('local_normalisation')
         if pad:
             arrs = np.array(arrs)
             new_arr = np.nanmean(arrs, axis=0)

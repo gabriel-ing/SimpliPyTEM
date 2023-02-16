@@ -64,7 +64,7 @@ Contrast enhancement:
     * clip_contrast - enhances contrast by making a percentage of values saturated (absolute black/white) and scaling the rest of the pixels between these (my preferred contrast enhancement)
     * enhance_contrast - enhances contrast based on alpha (contrast), beta (brightness) and gamma (non-linear contrast) values
     * eqHist - equalises histogram, ensuring even converage of pixel values from 0-255
-    * Local_normalisation - Evens out contrast across the image 
+    * local_normalisation - Evens out contrast across the image 
 
 Metadata (currently relies on dm3/dm4 metadata):
     * show_metadata - shows all metadata tags and values

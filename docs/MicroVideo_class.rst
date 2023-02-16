@@ -107,6 +107,7 @@ Plotting:
 
 Other functions:
     * Sidebyside - Sticks two videos together so they play side by side. 
+    * local_normalisation - evens out the contrast within the frames of a video, correcting for uneven illumination.
 Documentation 
 -------------
 
