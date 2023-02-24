@@ -1714,6 +1714,7 @@ class MicroVideo:
             MC_vid.open_mrc(inname)
         except FileNotFoundError:
             print("The file isn't found - this usually appears to be a motioncor2 issue, sometimes it fails to save an image as a stack for some unknown reason (likely to do with filesize), maybe try decreasing the size by binning/averaging?")
+            return 1
         MC_vid.metadata_tags = self.metadata_tags
         MC_vid.pixel_size = self.pixel_size
         MC_vid.pixel_unit=self.pixel_unit
@@ -1841,28 +1842,26 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
         name = '.'.join(MicroVideo_object.filename.split('.')[:-1])
 
     if output_type=='Save MotionCorrected Average':
-        MCor_vid = MicroVideo_object.motioncorrect_vid()
+        MCor_im = MicroVideo_object.motioncorrect_vid()
+        if MCor_im==1:
+            default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussfilter,outdir=output_folder_name)
+            return 1
         #aved =  MCor_vid.toMicrograph()
+        print(medfilter, type(medfilter))
         if medfilter!=0:
-            aved= aved.median_filter(medfilter)
+            MCor_im= MCor_im.median_filter(int(medfilter))
         if gaussfilter!=0:
-            aved = aved.gaussian_filter(gaussfilter)
+            MCor_im = MCor_im.gaussian_filter(gaussfilter)
 
         if xybin!=0 and xybin!=1:
-            aved = aved.bin(xybin)
-        MicroVideo_object = MicroVideo_object.clip_contrast()
+            MCor_im = MCor_im.bin(xybin)
+        MCor_im = MCor_im.clip_contrast()
         if scalebar==True:
-            aved = aved.make_scalebar()
+            MCor_im = MCor_im.make_scalebar()
 
-        aved.write_image(name, outdir=outdir+'/Images')
-
-    
- 
+        MCor_im.write_image(name, outdir=outdir+'/Images')
 
     else:
-
-
-
         if xybin!= 0 and xybin!=1:
             MicroVideo_object.bin(xybin)
         if type(medfilter)==int and medfilter!=0: 

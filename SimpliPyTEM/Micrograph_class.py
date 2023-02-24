@@ -620,7 +620,7 @@ class Micrograph:
             local_patch = local_patch*global_median/local_median
 
             if pad:
-                empty_arr = np.zeros_like(new_im.image)
+                empty_arr = np.zeros_like(new_im.image, dtype='float32')
                 empty_arr[:]=np.nan
                 empty_arr[x_low:x_high, y_low:y_high]=local_patch
                 arrs.append(empty_arr)
