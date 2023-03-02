@@ -1,7 +1,7 @@
 from airium import Airium
 import os
 
-def write_html(images, videos, title='Default_experiment_title', notes='', **kwargs):
+def write_html(images, videos=None, title='Default_experiment_title', notes='', **kwargs):
     '''
     Writes html file containing the images and videos from an experiment so they can be viewed on a webbrowser. This can be preferable over PDFS as the videos can be played. 
     The images and videos are only linked in this html, so in order to share the page these need to be sent as well. 

@@ -1575,7 +1575,7 @@ class MicroVideo:
     SECTION: VIDEO SPECIFIC METHODS
 
     '''
-    def Average_frames(self, groupsize, keep_remainder=True):
+    def Average_frames(self, groupsize, keep_remainder=False):
         '''
         Sums frames in groups, reducing the number of frames and the time resolution but increases contrast.
         
@@ -1877,7 +1877,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
         
         if output_type=='Save Video as .mp4' or output_type=='Save Video as .avi':
             if Average_frames!= 0 and Average_frames!=1:
-                MicroVideo_object=MicroVideo_object.Average_frames(Average_frames)
+                MicroVideo_object=MicroVideo_object.Average_frames(Average_frames,keep_remainder=False)
             print('Saving {} as video'.format(filename))
             MicroVideo_object.convert_to_8bit()
             MicroVideo_object = MicroVideo_object.clip_contrast()

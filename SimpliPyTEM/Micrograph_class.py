@@ -1433,9 +1433,11 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
     else:
         print('Sorry only dm files  are currently supported here.')
         return 1
-
+    if '/' in Micrograph_object.filename:
+        Micrograph_object.filename=Micrograph_object.filename.split('/')[-1]
+        
     if save_metadata==True:
-        Micrograph_object.export_metadata(name=metadata_name, outdir=outdir)
+        Micrograph_object.export_metadata(name=metadata_name, outdir=outdir) 
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
