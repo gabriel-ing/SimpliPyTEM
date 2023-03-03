@@ -235,7 +235,8 @@ class Micrograph:
         if filename[-3:].lower()=='jpg' or filename[-3:]=='png':
             #Load file as grayscale image
             self.image = cv.imread(filename, 0)
-
+            if type(self.image) is None:
+                raise FileNotFoundError
         if filename[-3:] in ['tiff', 'tif', 'TIF', 'TIFF']:
             with tifffile.TiffFile(filename) as tif:
                 self.metadata_tags = {}
@@ -244,18 +245,18 @@ class Micrograph:
                     for tag in page.tags:
                         self.metadata_tags[tag.name] = tag.value
 
-        if 'XResolution' in self.metadata_tags:
-            if self.metadata_tags['XResolution']==self.metadata_tags['YResolution']:
-                try:
-                    self.pixel_size = 1/(self.metadata_tags['XResolution'][0] / self.metadata_tags['XResolution'][1])
-                except:
-                    pass
+            if 'XResolution' in self.metadata_tags:
+                if self.metadata_tags['XResolution']==self.metadata_tags['YResolution']:
+                    try:
+                        self.pixel_size = 1/(self.metadata_tags['XResolution'][0] / self.metadata_tags['XResolution'][1])
+                    except:
+                        pass
 
-        if 'unit' in self.metadata_tags:
-            if self.metadata_tags['unit']=='micron':
-                self.pixel_unit = 'µm'
-            elif self.metadata_tags['unit']=='nm':
-                self.pixel_unit='nm'
+            if 'unit' in self.metadata_tags:
+                if self.metadata_tags['unit']=='micron':
+                    self.pixel_unit = 'µm'
+                elif self.metadata_tags['unit']=='nm':
+                    self.pixel_unit='nm'
 
         self.filename=filename
         self.reset_xy()
@@ -1435,7 +1436,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         return 1
     if '/' in Micrograph_object.filename:
         Micrograph_object.filename=Micrograph_object.filename.split('/')[-1]
-        
+
     if save_metadata==True:
         Micrograph_object.export_metadata(name=metadata_name, outdir=outdir) 
     if type(medfilter)==int and medfilter!=0: 
