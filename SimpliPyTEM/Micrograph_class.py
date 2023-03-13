@@ -800,7 +800,7 @@ class Micrograph:
         return pixvalue, textcolor        
 
 
-    def make_scalebar(self, texton = True, color='Auto'):
+    def make_scalebar(self, texton = True, color='Auto', fontsize='M'):
         '''
         Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
         The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
@@ -813,12 +813,15 @@ class Micrograph:
                 The color of the scalebar, the options are 'white'. 'black' or 'grey'
             texton : bool
                 Text can be turned off using texton=False, the selected size of the scalebar can be accessed using micrograph.scalebar_size
+            fontsize : str or int
+                Can choose S, M, L, XL for size of the text on the scalebar, or an integer value for size. 
 
         Returns
         -------
             Micrograph_object_with_scalebar: Micrograph
                 Copy of the micrograph object with a scale bar.
         '''
+
         micrograph_SB = deepcopy(self)
         scalebar_x, scalebar_y , width, height, scalebar_size = self.choose_scalebar_size()
         
@@ -839,9 +842,18 @@ class Micrograph:
 
         if texton==True:
             #print('textoff')
+            if fontsize=='M':
+                fontsize=int(scalebar_x/(25))
+            elif fontsize=='L':
+                fontsize=int(scalebar_x/(20))
+            elif fontsize=='XL':
+                fontsize=int(scalebar_x/(17))
+            elif fontsize=='S':
+                fontsize=int(scalebar_x/(30))
+            print(fontsize)
             draw = ImageDraw.Draw(pil_image)        
             
-            fontsize=int(scalebar_x/(25))
+            #fontsize=int(scalebar_x/(25))
             try:
                 file = font_manager.findfont('Helvetica Neue')
                 font = ImageFont.truetype(file, fontsize)
