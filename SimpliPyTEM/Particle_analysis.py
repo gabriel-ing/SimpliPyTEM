@@ -42,7 +42,7 @@ def Threshold(image, threshold, brightfield=True):
     return thresh#,res
 
 
-def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, remove_edges=True):
+def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, remove_edges=True, labelled=False):
     '''
     Finds the contours (or edges) of the particles in the image 
 
@@ -52,7 +52,7 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, rem
     ----------
 
         thresh:numpy array
-            The thresholded image produced by threshold()
+            The thresholded image, can be produced with threshold(). Can also use a pre-labelled image (labelled=True)
         
         minsize:int
             The minimum area (in pixels) for a particle to be considered a particle
@@ -63,6 +63,8 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, rem
         complex_coords:bool 
             Whether to use cv.CHAIN_APPROX_SIMPLE or cv.CHAIN_APPROX_NONE in the contours. Complex_coords = False (off, chain_approx_simple) simplifies the bounding coordinates leading to less total coordinates, this is faster to process. Full coordinates (complex_coords=True) allows more detailed measurements across the particle, however will take longer. 
 
+        labelled: bool
+            If you want to use a labelled image (rather than thresholded) set to true. Labelled image should have the pixels lablled a specific number for each particle 
     Returns
     -------
         contours_im:list 
@@ -72,13 +74,17 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, rem
             Binary image showing the particles selected in white and the background in black. 
 
     '''
-    cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    for cnt in cnts:
-        cv.drawContours(thresh, [cnt], 0,255,-1)
+
     #plt.imshow(thresh)
     #plt.show()
     #labels =measure.label(thresh, neighbors=8, background=0)
-    labels =measure.label(thresh,background=0)
+    if labelled!=True:
+        cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        for cnt in cnts:
+            cv.drawContours(thresh, [cnt], 0,255,-1)
+        labels =measure.label(thresh,background=0)
+    else: 
+        labels=thresh
     mask = np.zeros(thresh.shape, dtype='uint8')
     
     
@@ -118,6 +124,7 @@ def Find_contours(thresh, minsize=200, complex_coords=False, maxsize=100000, rem
     #plt.imshow(labels)
     #for labell in np.unique(labels)
     return contours_im, mask
+
 
 
 
