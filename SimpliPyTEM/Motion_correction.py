@@ -61,27 +61,33 @@ def find_shift(frame1, frame2, crop=3700):
     return shift_x, shift_y
 
 def shift_elements(arr, shifts, fill_value):
-    result = np.empty_like(arr)
-    x = shifts[0]
-    if x>0:
-        result[:x]=fill_value
-        result[x:] = arr[:-x]
-    elif x<0: 
-        result[x]=fill_value
-        result[:x]=arr[-x:]
+    '''
+    shifts an array by set values, with the remaining values being set to 'fill_value'
+    shifts are entered in format of [y,x] and will shift with up and left being the negative direction. 
+    This was designed to work with the find_shifts() function above, however this appears to be problematic (I think it doesn't shift in negative directions correctly).
+    aligning based on particle coordinates should work. 
+    
+    '''
+    result = np.full_like(arr, fill_value)
+    y = shifts[0]
+    if y>0:
+        result[y:] = arr[:-y]
+    elif y<0: 
+        #print('Here')
+        #result[x]=fill_value
+        result[:y]=arr[-y:]
     else:
         result =arr
     #print(result)   
-    r2 = np.zeros_like(result)
+    r2 = np.full_like(result, fill_value)
     #print(r2)
-    y = shifts[1]
+    x = shifts[1]
     #print(y)
-    if y>0:
-        r2[:,:y]=fill_value
-        r2[:,y:]=result[:,:-y]
-    elif y<0:
-        r2[:,y] = fill_value
-        r2[:, :y]=result[:, -y:] 
+    if x>0:
+        r2[:,x:]=result[:,:-x]
+    elif x<0:
+        
+        r2[:, :x]=result[:, -x:] 
     else:
         r2=result
     #print(result)

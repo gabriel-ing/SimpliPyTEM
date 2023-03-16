@@ -1448,7 +1448,7 @@ class MicroVideo:
 
         # this was put here to invert the masked video, DO this BEFORE calling function. 
         #masksinv=cv.bitwise_not(np.array(masks))
-        sidebyside[:, :, :x1] =Video1
+        sidebyside[:, :, :x1] =self.frames
 
         sidebyside[:, :, x1:] =Video2[:,:,:]
         #plt.imshow(sidebyside[0], cmap='magma')
