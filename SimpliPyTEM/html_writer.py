@@ -14,10 +14,10 @@ def write_html(images, videos=None, title='Default_experiment_title', notes='', 
         Videos: list
             List of videos (including their path from the current directory), can be made with get_files()
         
-        Title:str
+        title:str
             The title for the experiment (name of html doc and title of the resulting page)
     
-        Notes:str
+        notes:str
             Accompanying notes for the experiment, included at the top of the doc.
 
     Output

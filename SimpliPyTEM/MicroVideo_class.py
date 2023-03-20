@@ -133,7 +133,8 @@ class MicroVideo:
         else:
             self.filename = ''
             #self.image='Undefined'
-            self.pixel_size= 'Undefined'
+            self.pixel_size= 1
+            self.pixel_unit = 'pixels'
             self.log = []
             self.video=True
         '''-------------------------------------------------------------------------------------------------------------------------------------------
@@ -1924,9 +1925,9 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
     print('Processing :',filename)
 
-    MicroVideo_object = MicroVideo()
-    MicroVideo_object.open_dm(filename)
-    if save_metadata==True:
+    MicroVideo_object = MicroVideo(filename)
+    
+    if save_metadata==True and filename[-4:-1]=='.dm':
         MicroVideo_object.export_metadata(metadata_name,outdir)
 
     #print(MicroVideo_object)

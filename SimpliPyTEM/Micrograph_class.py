@@ -114,6 +114,7 @@ class Micrograph:
         if filename:
             self.video=False
             self.nframes=1
+            self.filename = filename
             self.open_file(filename)
             self.log = []            
         else:
@@ -315,6 +316,56 @@ class Micrograph:
             self.open_mrc(filename)
         elif filename[-4:].lower() in ['.jpg', '.png', '.tif', 'tiff']:
             self.open_image(filename)
+        elif filename[-4:].lower() in ['.mp4', '.avi', '.mov']:
+            self.open_video(filename)
+
+
+    def open_video(self, filename,pixel_size=1,pixel_unit='pixels',):
+        '''
+        Loads video files (eg. mp4 and avi, unsure if others will work) into microvideo object.
+        The pixel size is not taken from the video by default, and so it should be included in the command, else the default of 1nm/pixel is used. This can be addedd later using video.pixel_size= {new pixel size}
+        
+        Parameters
+        ----------
+
+            filename: str
+                Name of the video file to open
+            pixel_size: float
+                Size of one pixel (eg. 1nm/pixel), optionall.
+            pixel_unit: str
+                Unit for the pixel_size
+
+        '''
+
+        cap = cv.VideoCapture(filename)
+        frames= []
+        self.filename = '.'.join(filename.split('.')[:-1])
+        while cap.isOpened():
+            ret, frame =cap.read()
+            
+            #print(ret, frame)
+            if not ret:
+                print("Can't receive frame (stream end?). Exiting ...")
+                break
+            #print(frame.shape)
+            frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+            #plt.imshow(frame)
+            #cv.imshow('frame',frame)
+            if cv.waitKey(1)==ord('q'):
+                break
+            frames.append(frame)
+            #print(len(frames))
+        frames = np.array(frames)
+        self.image = np.sum(frames, axis=0)
+        self.image = self.image.astype('float32')
+        print(self.image)
+        print('{} frames loaded as an average'.format(len(frames)))
+        #print('As format is avi, the pixelsize is not loaded automatically, please set this using micrograph.pixel_size = n')
+        cap.release()
+        self.reset_xy()
+        self.pixel_size=pixel_size
+        self.pixel_unit=pixel_unit
+
 
     def write_image(self, name=None, ftype='jpg',outdir=None):
         '''
@@ -1536,16 +1587,12 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         denoise_with_cuda: bool
             If denoising with topaz, use CUDA gpu for this? If availble this will dramatically increase speed. 
     '''
-    Micrograph_object = Micrograph()
-    if filename[-3:-1]=='dm':
-        Micrograph_object.open_dm(filename)
-    else:
-        print('Sorry only dm files  are currently supported here.')
-        return 1
+    Micrograph_object = Micrograph(filename)
+
     if '/' in Micrograph_object.filename:
         Micrograph_object.filename=Micrograph_object.filename.split('/')[-1]
 
-    if save_metadata==True:
+    if save_metadata==True and filename[-4:-1]=='.dm':
         Micrograph_object.export_metadata(name=metadata_name, outdir=outdir) 
 
     if topaz_denoise:

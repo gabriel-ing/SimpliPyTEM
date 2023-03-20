@@ -19,16 +19,20 @@ class MainApplication(QWidget):
         self.setGeometry(500, 500, 100,400)
         self.setWindowTitle('SimpliPyTEM-GUI')
         
-        self.title = QLabel('Make Preview Images',self)
+        self.title = QLabel('SimpliPyTEM-GUI',self)
+        self.title.setObjectName("title")
         #app.setStyleSheet("QLabel, QCheckBox{font-size: 16pt;}")
 
 
 
 
-        self.folderlabel = QLabel('Choose whether to process a folder,\n a file or liveprocessing a folder:')
+        self.folderlabel = QLabel('Process a folder, a file or \nliveprocessing a folder:')
         #label.setLayout(layout)
         #self.label2 = QLabel('Choose whether to process a file, a folder, or live during an imaging session',self)
         self.title.setAlignment(Qt.AlignCenter)
+
+
+
         #Live
         self.live = 'Folder'
         self.live_choice = QComboBox(self)
@@ -42,6 +46,11 @@ class MainApplication(QWidget):
 
         self.folderpath = None
         self.folderpath_label = QLabel('')
+
+        # For giving an input pattern
+        self.filepattern_label = QLabel('Input File Pattern\ne.g. *.tif means all .tif files (default= *.dm*)\n')
+        self.filepattern_box = QLineEdit(self)
+
         #Checkbox for median filter
         self.med_check = QCheckBox('Median filter',self)
         #self.med_check.setEnabled(True)
@@ -85,7 +94,23 @@ class MainApplication(QWidget):
         self.scalebar_check.toggled.connect(self.updateScalebar)
         self.scalebar_check.setChecked(True)
 
+        # Checkbox for topaz_denoise and using cuda GPU
+        
+        self.topaz_label =  QLabel('Use Topaz Denoising? (requires setup, see docs for details) ')
 
+        self.topaz_on = False
+        self.topaz_check = QCheckBox('Denoise using Topaz', self)
+        self.topaz_check.toggled.connect(self.updateTopaz)
+        self.topaz_check.setChecked(False)
+
+        self.cuda_on = False
+        self.cuda_check = QCheckBox('Use CUDA GPU for topaz', self)
+        self.cuda_check.toggled.connect(self.updateCuda)
+        self.cuda_check.setChecked(False)
+
+
+
+        # Choosing output folder name
         self.output_folder_label = QLabel('Give the output folder a name:')
         self.output_folder_box =  QLineEdit(self)
 
@@ -105,7 +130,7 @@ class MainApplication(QWidget):
 
 
         self.doc_label1 = QLabel('Document Section')
-        
+        self.doc_label1.setObjectName('doc_label')
         self.doc_label1.setAlignment(Qt.AlignCenter)
 
         self.doc_label=QLabel('Following generation of images/videos, use this section to create \n an html or pdf file to display the resulting images:')
@@ -119,10 +144,10 @@ class MainApplication(QWidget):
         #Call other functions
         self.make_buttons()
         #self.video_checkbox_functions()
-        self.set_fonts()
+        
         self.set_layouts()
         self.add_styles()
-
+        self.set_fonts()
         self.show()
 
     def make_buttons(self):
@@ -156,11 +181,15 @@ class MainApplication(QWidget):
             QPushButton:hover{background-color: #D8BBEA; color:black;} \
             QPushButton{background-color:white;font-size:16pt;font-weight:500;}  \
             QPushButton.active{background-color:#502673}
-            QCheckBox{background-color:white;font-size: 12pt; } \
+            QCheckBox{background-color:white;font-size: 11pt; } \
+            QLabel{font-size:12pt;font-weight:400;}\
             QComboBox{background-color:white;font-size:10px;vertical-align:text-top;}\
             QTextEdit{background-color:white;} \
             QLineEdit{background-color:white}\
-            #stopButton:hover{background-color:#F2B8D5}''')
+            #stopButton:hover{background-color:#F2B8D5}\
+            QLabel#title{font-size:18pt; font-weight:700;}
+            QLabel#doc_label{font-size:15pt; font-weight:600;}
+            ''')
 
     def set_fonts(self):
         #define title font
@@ -202,35 +231,43 @@ class MainApplication(QWidget):
         self.layout.addWidget(self.live_choice,1,1,1,1)
         self.layout.addWidget(self.FolderBrowse_button, 2,0,1,2)
         self.layout.addWidget(self.folderpath_label, 3,0,1,2)
-        self.layout.addWidget(self.med_check,4,0,1,1)
-        self.layout.addWidget(self.med_choice,4,1,1,1)
+        self.layout.addWidget(self.filepattern_label,4,0,1,1)
+        self.layout.addWidget(self.filepattern_box,4,1,1,1)
 
-        self.layout.addWidget(self.gauss_check,5,0,1,1)
-        self.layout.addWidget(self.gauss_choice,5,1,1,1)
-        self.layout.addWidget(self.bin_check,6,0,1,1)
-        self.layout.addWidget(self.bin_choice,6,1,1,1)
+        self.layout.addWidget(self.med_check,5,0,1,1)
+        self.layout.addWidget(self.med_choice,5,1,1,1)
 
-        self.layout.addWidget(self.scalebar_check, 7,0,1,1)
-        self.layout.addWidget(self.output_folder_label, 8,0,1,1)
-        self.layout.addWidget(self.output_folder_box,8,1,1,1)
+        self.layout.addWidget(self.gauss_check,6,0,1,1)
+        self.layout.addWidget(self.gauss_choice,6,1,1,1)
+        self.layout.addWidget(self.bin_check,7,0,1,1)
+        self.layout.addWidget(self.bin_choice,7,1,1,1)
 
-        self.layout.addWidget(self.video_label, 9,0,1,2)
-        self.layout.addWidget(self.video_choice, 10, 0,1,2)
+        self.layout.addWidget(self.scalebar_check, 8,0,1,1)
+
+        self.layout.addWidget(self.topaz_label, 9,0,1,2)        
+        self.layout.addWidget(self.topaz_check, 10,0,1,1)
+        self.layout.addWidget(self.cuda_check, 10,1,1,1)
+
+        self.layout.addWidget(self.output_folder_label, 11,0,1,1)
+        self.layout.addWidget(self.output_folder_box,11,1,1,1)
+
+        self.layout.addWidget(self.video_label, 12,0,1,2)
+        self.layout.addWidget(self.video_choice, 13, 0,1,2)
         #self.layout.addWidget(self.video_option1,9,0,1,1)
         #self.layout.addWidget(self.video_option2,9,1,1,1)
         #self.layout.addWidget(self.video_option3,10,0,1,1)
         #self.layout.addWidget(self.video_option4,10,1,1,1)
-        self.layout.addWidget(self.Run_button, 12,0,2,2)
-        self.layout.addWidget(self.stopButton, 14,0,1,2)
-        self.layout.addWidget(self.doc_label1, 15,0,1,2)
-        self.layout.addWidget(self.doc_label, 16, 0,1,2)
-        self.layout.addWidget(self.title_box_label, 17, 0,1,1)
-        self.layout.addWidget(self.title_box,18,0,1,2)
-        self.layout.addWidget(self.notes_box_label, 19,0,1,1)
-        self.layout.addWidget(self.notes_box, 20,0,1,3)
+        self.layout.addWidget(self.Run_button, 15,0,2,2)
+        self.layout.addWidget(self.stopButton, 17,0,1,2)
+        self.layout.addWidget(self.doc_label1, 18,0,1,2)
+        self.layout.addWidget(self.doc_label, 19, 0,1,2)
+        self.layout.addWidget(self.title_box_label, 20, 0,1,1)
+        self.layout.addWidget(self.title_box,21,0,1,2)
+        self.layout.addWidget(self.notes_box_label, 22,0,1,1)
+        self.layout.addWidget(self.notes_box, 23,0,1,3)
 
-        self.layout.addWidget(self.html_button, 24,0,1,1)
-        self.layout.addWidget(self.pdf_button, 24,1,1,1)
+        self.layout.addWidget(self.html_button, 27,0,1,1)
+        self.layout.addWidget(self.pdf_button, 27,1,1,1)
 
     def video_checkbox_functions(self):
                 #Video options checkboxes:
@@ -278,6 +315,10 @@ class MainApplication(QWidget):
         self.video_status = (but.text())
     def video_choice_changed(self, s):
         self.video_status = s
+    def updateTopaz(self, state):
+        self.topaz_on = state
+    def updateCuda(self, state):
+        self.cuda_on=  state
 
     def FileFolderChooser(self):
         if self.folder_option=='Folder' or self.folder_option=='Live Processing':
@@ -400,22 +441,30 @@ class MainApplication(QWidget):
 
         os.chdir(folder)
 
-        dm_files = [x for x in os.listdir('.') if x[-4:-1]=='.dm']
-        dm_vids = [x for x in dm_files if isvideo(x)]
-        dm_frames = [x for x in dm_files if x[-9]=='-' and x[-13:-9].isdigit() and x[-8:-4].isdigit()]
-        dm_ims = [x for x in dm_files if x not in dm_vids and x not in dm_frames]   
+#        dm_files = [x for x in os.listdir('.') if x[-4:-1]=='.dm']
+#        dm_vids = [x for x in dm_files if isvideo(x)]
+#        dm_frames = [x for x in dm_files if x[-9]=='-' and x[-13:-9].isdigit() and x[-8:-4].isdigit()]
+#        dm_ims = [x for x in dm_files if x not in dm_vids and x not in dm_frames]   
+
+
+        pattern = self.filepattern_box.text()
+        im_files, vid_files, dm_frames = get_files_from_pattern(pattern)
+
+        print('Imfiles', im_files)
+        print('Vidfiles', vid_files)
+        print('dm_frames', dm_frames)
 
         if output_folder_name not in os.listdir('.') and output_folder_name!='.':
             os.mkdir(output_folder_name)
 
-        for file in dm_vids:
+        for file in vid_files:
             print(self.stopSignal)
             if self.eval_stop():
                 return 1 
             print('Processing: ', file)
             video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
 
-        for  file in dm_ims:
+        for  file in im_files:
             if self.eval_stop():
                 return 1 
             default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
@@ -424,7 +473,7 @@ class MainApplication(QWidget):
             frames_processing(dm_frames,output_folder_name,xybin, medfilter, gaussian_filter, video_status )
         print('All files in folder complete!')  
         running_time = time.time()-start_time
-        print('Running time for {} files: {}'.format(len(dm_files), running_time))
+        print('Running time for {} images and {} videos: {}'.format(len(im_files),len(vid_files), running_time))
         os.chdir(cwd)
 
 
@@ -443,6 +492,7 @@ class MainApplication(QWidget):
         while True:
             if self.eval_stop():
                     return 1 
+
             for file in os.listdir('.'):
          #       print(file)
                 if file not in file_set:
