@@ -104,7 +104,7 @@ class MainApplication(QWidget):
         self.topaz_check.setChecked(False)
 
         self.cuda_on = False
-        self.cuda_check = QCheckBox('Use CUDA GPU for topaz', self)
+        self.cuda_check = QCheckBox('Use CUDA GPU', self)
         self.cuda_check.toggled.connect(self.updateCuda)
         self.cuda_check.setChecked(False)
 
@@ -448,6 +448,8 @@ class MainApplication(QWidget):
 
 
         pattern = self.filepattern_box.text()
+        if pattern=='':
+            pattern='*dm*'
         im_files, vid_files, dm_frames = get_files_from_pattern(pattern)
 
         print('Imfiles', im_files)
@@ -533,6 +535,7 @@ class MainApplication(QWidget):
         print('Time out reached, exiting now')
         os.chdir(cwd)
 
+    #def process_file(self,folderpath, outdir, bin_value, med_filter_value, gauss_filter_value,video_status ):
 
 '''
 class JobRunner(QRunnable):

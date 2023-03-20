@@ -11,7 +11,7 @@ setup(
 	url='https://github/gabriel-ing/Micrograph-analysis-scripts',
 	author='Gabriel Ing',
 	author_email='ucbtgrb@ucl.ac.uk',
-	license = 'BSD 2-clause',
+	license = 'GPL-3.0',
 	packages =['SimpliPyTEM'],
 	install_requires=['numpy',
 	 'ncempy',
