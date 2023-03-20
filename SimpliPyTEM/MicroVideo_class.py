@@ -262,8 +262,10 @@ class MicroVideo:
         self.reset_xy()
         self.pixel_size=pixel_size
         self.pixel_unit=pixel_unit
-        
-        
+
+
+
+
     def open_array(self, arr, pixelsize=1,pixelunit='nm', filename='Loaded_array'):
         '''
         Loads a numpy array into the microvideo object, allowing use of all the other available methods. Filename, pixel size and pixel unit should be given in the call, defaults of 1nm/pixel allow this to be avoided but correct pixel size should be loaded if a scalebar is required (as well as certain other functions)
@@ -602,7 +604,7 @@ class MicroVideo:
 
 
 
-    def clip_contrast(self, saturation=0.5, maxvalue=None, minvalue=None):
+    def clip_contrast(self, saturation=0.2, maxvalue=None, minvalue=None):
         """
         Function for enhancing the contrast in an image by clipping the histogram between two values. 
         These values can be defined directly or can be automatically decided using a saturation value, which the is percentage of the pixels above or below this value.
@@ -1350,6 +1352,75 @@ class MicroVideo:
 
 
 
+    def topaz_denoise(self, model='unet', use_cuda=True, lowpass=0, cutoff=0, \
+                gaus=None,inv_gaus=None ,deconvolve=False,deconv_patch=1, \
+                patch_size=1024, padding=200, normalize=False):
+        '''
+        Denoise micrograph with topaz denoiser. 
+
+        Topaz (https://doi.org/10.1038/s41467-020-18952-1) is a pre-trained implementation of the deeplearning based noise2noise method (https://doi.org/10.48550/arXiv.1803.04189). 
+        It has been specifically trained on cryo-EM datasets but works pretty well for dryTEM and liquid-TEM images and videos. It is very effective at reducing noise and enhancing lower resolution features, although is not necessarily trustworthy for high resolution data.
+        Use with caution, but it is a powerful method. 
+        
+        Best to only perform on a machine with high RAM and ideally a CUDA GPU, as can take a long time with lesser computers. 
+        If topaz is not installed, simply type `pip install topaz-em` into the command line.
+
+        Unfortunately bespoke training is not currently included in SimpliPyTEM, so please use Topaz to train your own model. 
+
+        Parameters
+        ----------
+            The parameters here are not required for running with default options, these are available through the topaz code and thus documentation for more advanced options can be found in topaz documentation (https://github.com/tbepler/topaz/, https://topaz-em.readthedocs.io/en/latest/?badge=latest)
+            The important parameters are which model is used, and whether to use a cuda GPU: 
+
+            model: str
+                Which topaz denoising model is used, options are ['unet', 'unet-small', 'fcnn', 'affine', 'unet-v0.2.1']
+            use_cuda: bool
+                Use CUDA gpu(s)? true or false. 
+            
+            
+
+
+        '''
+        
+        from topaz.commands import denoise
+        import topaz.denoise as dn
+        
+        frames = self.frames.copy()
+        frames = frames.astype('float32')
+
+        im_denoised = deepcopy(self)
+        denoised_frames = [] 
+
+        if gaus!= None and gaus>0:
+            gaus = dn.GaussianDenoise(gaus)
+            if use_cuda:
+                gaus.cuda()
+        else:
+            gaus = None
+            
+        if inv_gaus!= None and inv_gaus>0:
+            inv_gaus = dn.InvGaussianFilter(inv_gaus)
+            if use_cuda:
+                inv_gaus.cuda()
+        else:
+            inv_gaus = None
+        
+
+
+        model = dn.load_model(model)
+        if use_cuda:
+            model.cuda()
+
+        for frame in frames:
+            output = denoise.denoise_image(frame, [model], lowpass=lowpass, cutoff=cutoff, gaus=gaus,\
+                                           inv_gaus=inv_gaus ,deconvolve=deconvolve,deconv_patch=deconv_patch,\
+                                           patch_size=1024, padding=200, normalize=False, use_cuda=use_cuda)
+            denoised_frames.append(output)
+        im_denoised.frames = np.array(denoised_frames)
+
+        return im_denoised
+
+
     '''
     ------------------------------------------------------------------------------------------------------------
     Section Visualising images
@@ -1799,7 +1870,8 @@ class MicroVideo:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True,  xybin=2, color='Auto',Average_frames=2,save_metadata=True, metadata_name='metadata.csv', outdir='.', name=None):
+def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, scalebar=True,  xybin=2, color='Auto',\
+    Average_frames=2,save_metadata=True, metadata_name='metadata.csv', outdir='.', name=None, topaz_denoise=False, denoise_with_cuda=False):
     '''
     Use to automate default filtering, scalebar adding, binning,frame averaging and saving.
 
@@ -1822,6 +1894,10 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             True for adding scalebar, False for not adding scalebar
         Average_frames: int
             Average this number of frames together, only used for saving as video options. 
+        topaz_denoise: bool
+            Denoise with topaz? True (default) or False (default)
+        denoise_with_cuda: bool
+            If denoising with topaz, use CUDA gpu for this? If availble this will dramatically increase speed. 
 
     Outputs
     -------
@@ -1841,8 +1917,14 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
     if not name:
         name = '.'.join(MicroVideo_object.filename.split('.')[:-1])
 
+
+
+
     if output_type=='Save MotionCorrected Average':
         MCor_im = MicroVideo_object.motioncorrect_vid()
+        if topaz_denoise:
+            Mcor_im = Mcor_im.topaz_denoise(use_cuda=denoise_with_cuda)
+
         if MCor_im==1:
             default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussfilter,outdir=output_folder_name)
             return 1
@@ -1863,7 +1945,11 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
 
     else:
         if xybin!= 0 and xybin!=1:
-            MicroVideo_object.bin(xybin)
+            MicroVideo_object = MicroVideo_object.bin(xybin)
+
+        if topaz_denoise:
+            MicroVideo_object = MicroVideo_object.topaz_denoise(use_cuda=denoise_with_cuda)
+
         if type(medfilter)==int and medfilter!=0: 
             MicroVideo_object = MicroVideo_object.median_filter(medfilter)
         

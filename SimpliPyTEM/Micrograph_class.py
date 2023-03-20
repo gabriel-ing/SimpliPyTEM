@@ -449,7 +449,7 @@ class Micrograph:
     # This, much like the filters below returns the enhanced version as a new object, I have made it this way to allow tuning of alpha and beta.
     
 
-    def clip_contrast(self, saturation=0.5, maxvalue=None, minvalue=None):
+    def clip_contrast(self, saturation=0.2, maxvalue=None, minvalue=None):
         """
         Function for enhancing the contrast in an image by clipping the histogram between two values. 
         These values can be defined directly or can be automatically decided using a saturation value, which the is percentage of the pixels above or below this value.
@@ -1020,6 +1020,79 @@ class Micrograph:
         return filtered_object
 
 
+    def topaz_denoise(self, model='unet', use_cuda=False, lowpass=0, cutoff=0, \
+                gaus=None,inv_gaus=None ,deconvolve=False,deconv_patch=1, \
+                patch_size=1024, padding=200, normalize=False):
+        '''
+        Denoise micrograph with topaz denoiser. 
+
+        Topaz (https://doi.org/10.1038/s41467-020-18952-1) is a pre-trained implementation of the deeplearning based noise2noise method (https://doi.org/10.48550/arXiv.1803.04189). 
+        It has been specifically trained on cryo-EM datasets but works pretty well for dryTEM and liquid-TEM images and videos. It is very effective at reducing noise and enhancing lower resolution features, although is not necessarily trustworthy for high resolution data.
+        Use with caution, but it is a powerful method. 
+        
+        Best to only perform on a machine with high RAM and ideally a CUDA GPU, as can take a long time with lesser computers. 
+        If topaz is not installed, simply type `pip install topaz-em` into the command line.
+
+        Unfortunately bespoke training is not currently included in SimpliPyTEM, so please use Topaz to train your own model. 
+
+        Parameters
+        ----------
+            The parameters here are not required for running with default options, these are available through the topaz code and thus documentation for more advanced options can be found in topaz documentation (https://github.com/tbepler/topaz/, https://topaz-em.readthedocs.io/en/latest/?badge=latest)
+            The important parameters are which model is used, and whether to use a cuda GPU: 
+
+            model: str
+                Which topaz denoising model is used, options are ['unet', 'unet-small', 'fcnn', 'affine', 'unet-v0.2.1']
+            use_cuda: bool
+                Use CUDA gpu(s)? true or false. 
+            
+            
+        Topaz Parameters
+        ----------------
+
+            These are parameters 
+
+
+        '''
+        
+        from topaz.commands import denoise
+        import topaz.denoise as dn
+        
+        mic = self.image.copy()
+        mic = mic.astype('float32')
+
+        im_denoised = deepcopy(self)
+
+        mic = im_denoised.image
+        mic = mic.astype('float32')
+
+
+        if gaus!= None and gaus>0:
+            gaus = dn.GaussianDenoise(gaus)
+            if use_cuda:
+                gaus.cuda()
+        else:
+            gaus = None
+            
+        if inv_gaus!= None and inv_gaus>0:
+            inv_gaus = dn.InvGaussianFilter(inv_gaus)
+            if use_cuda:
+                inv_gaus.cuda()
+        else:
+            inv_gaus = None
+        
+
+        model = dn.load_model(model)
+        if use_cuda:
+            model.cuda()
+        output = denoise.denoise_image(mic, [model], lowpass=lowpass, cutoff=cutoff, gaus=gaus,\
+                                       inv_gaus=inv_gaus ,deconvolve=deconvolve,deconv_patch=deconv_patch,\
+                                       patch_size=1024, padding=200, normalize=False, use_cuda=use_cuda)
+        
+        im_denoised.image = output
+
+        return im_denoised
+
+
 
     '''
     ------------------------------------------------------------------------------------------------------------
@@ -1409,7 +1482,7 @@ class Micrograph:
 
 # I had to move default pipeline outside of the class because the filters make a new instance of the class and I didnt want to multiply the number of instances in memory. 
 # Use: default_pipeline(micrograph)
-def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto', outdir='.',save_metadata=True, metadata_name='metadata.csv'):
+def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto', outdir='.',save_metadata=True, metadata_name='metadata.csv',topaz_denoise=False, denoise_with_cuda=False):
     '''
     Default pipeline to process image, add scalebar, filter, bin and save the image, speeding up automation.
     
@@ -1440,6 +1513,11 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
         color:str
             Chooses scalebar color 'black', 'white' or 'grey'
 
+        topaz_denoise: bool
+            Denoise with topaz? True (default) or False (default)
+
+        denoise_with_cuda: bool
+            If denoising with topaz, use CUDA gpu for this? If availble this will dramatically increase speed. 
     '''
     Micrograph_object = Micrograph()
     if filename[-3:-1]=='dm':
@@ -1452,6 +1530,10 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
 
     if save_metadata==True:
         Micrograph_object.export_metadata(name=metadata_name, outdir=outdir) 
+
+    if topaz_denoise:
+        Micrograph_object = Micrograph_object.topaz_denoise(use_cuda=denoise_with_cuda)
+
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
     
@@ -1479,7 +1561,7 @@ def default_image_pipeline(filename,  name='', medfilter=3, gaussfilter=0, scale
 
     #Micrograph_object.save_image(outname=name)
 
-def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',outdir='.'):
+def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilter=0, scalebar=True, texton = True, xybin=2, color='Auto',outdir='.', topaz_denoise=False, denoise_with_cuda=False):
 
     '''
     Default pipeline to process from a Micrograph_object, add scalebar, filter, bin and save the image, speeding up automation.
@@ -1511,7 +1593,16 @@ def default_pipeline_class(Micrograph_object ,name=None, medfilter=3, gaussfilte
         color:str
             Chooses scalebar color 'black', 'white' or 'grey'
 
+        topaz_denoise: bool
+            Denoise with topaz? True (default) or False (default)
+
+        denoise_with_cuda: bool
+            If denoising with topaz, use CUDA gpu for this? If availble this will dramatically increase speed. 
+
+        
     '''
+    if topaz_denoise:
+        Micrograph_object = Micrograph_object.topaz_denoise(use_cuda=denoise_with_cuda)
 
     if type(medfilter)==int and medfilter!=0: 
         Micrograph_object = Micrograph_object.median_filter(medfilter)
