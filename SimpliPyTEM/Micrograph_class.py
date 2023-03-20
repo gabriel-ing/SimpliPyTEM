@@ -110,13 +110,19 @@ class Micrograph:
 
 
     '''
-    def __init__(self):
-        self.filename = ''
-        self.image='Undefined'
-        self.pixel_size= 'Undefined'
-        self.log = []
-        self.video=False
-        self.nframes=1
+    def __init__(self, filename=None):
+        if filename:
+            self.video=False
+            self.nframes=1
+            self.open_file(filename)
+            self.log = []            
+        else:
+            self.filename = ''
+            self.image='Undefined'
+            self.pixel_size= 'Undefined'
+            self.log = []
+            self.video=False
+            self.nframes=1
 
 
 
@@ -151,7 +157,7 @@ class Micrograph:
 
         # at the moment it automatically averages a video into a single image. This will be changed soon to allow for video analysis.
         elif len(dm_input['data'].shape)==3:
-            print('{} is an image stack, averaging frames together, if you would open as a video, please us MicroVideo object'.format(self.filename))
+            print('{} is an image stack, averaging frames together, if you would open as a video, please us MicroVideo object'.format(file))
             self.nframes=dm_input['data'].shape[0]
             if video_average:
 
@@ -264,8 +270,12 @@ class Micrograph:
 
         if pixel_size:
             self.pixel_size=pixel_size
-        if pixel_unit:
+        else:
+            self.pixel_size=1
+        if pixel_unit: 
             self.pixel_unit=pixel_unit
+        else:
+            self.pixel_unit='pixels'
 
         self.original_image = self.image
 
@@ -298,6 +308,13 @@ class Micrograph:
 
         self.original_image = self.image
 
+    def open_file(self, filename):
+        if filename[-4:]=='.dm3' or filename[-4:]=='.dm4':
+            self.open_dm(filename)
+        elif filename[-4:]=='.mrc':
+            self.open_mrc(filename)
+        elif filename[-4:].lower() in ['.jpg', '.png', '.tif', 'tiff']:
+            self.open_image(filename)
 
     def write_image(self, name=None, ftype='jpg',outdir=None):
         '''

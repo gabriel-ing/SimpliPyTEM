@@ -122,12 +122,20 @@ class MicroVideo:
 
 
     '''
-    def __init__(self):
-        self.filename = ''
-        #self.image='Undefined'
-        self.pixel_size= 'Undefined'
-        self.log = []
-        self.video=True
+    def __init__(self, filename=None):
+        if filename: 
+            self.log = []
+            self.video=True
+            self.pixel_size= 1
+            self.pixel_unit = 'pixels'
+            self.filename = filename
+            self.open_file(filename)
+        else:
+            self.filename = ''
+            #self.image='Undefined'
+            self.pixel_size= 'Undefined'
+            self.log = []
+            self.video=True
         '''-------------------------------------------------------------------------------------------------------------------------------------------
         SECTION: IMPORT IMAGES
 
@@ -220,7 +228,7 @@ class MicroVideo:
         for frame in self.frames:
             frame = frame.astype('float32')
 
-    def open_video(self, filename,pixel_size='',pixel_unit='nm',):
+    def open_video(self, filename,pixel_size=1,pixel_unit='pixels',):
         '''
         Loads video files (eg. mp4 and avi, unsure if others will work) into microvideo object.
         The pixel size is not taken from the video by default, and so it should be included in the command, else the default of 1nm/pixel is used. This can be addedd later using video.pixel_size= {new pixel size}
@@ -293,6 +301,14 @@ class MicroVideo:
             next_frame = nci.dm.dmReader(frame)
             new_frames.append(next_frame)
         self.frames = np.array(new_frames)
+
+    def open_file(self, filename):
+        if filename[-4:]=='.dm3' or filename[-4:]=='.dm4':
+            self.open_dm(filename)
+        elif filename[-4:]=='.mrc':
+            self.open_mrc(filename)
+        else:
+            self.open_video(filename)
 
     def reset_xy(self):
         '''
