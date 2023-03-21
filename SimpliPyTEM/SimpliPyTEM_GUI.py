@@ -490,52 +490,55 @@ class MainApplication(QWidget):
         #print(os.getcwd())
         if output_folder_name not in os.listdir('.') and output_folder_name!='.':
             os.mkdir(output_folder_name)
-
+        
+        pattern = self.filepattern_box.text()
+        if pattern=='':
+            pattern='*dm*'
+                
+        possible_filetypes = ['.avi', '.mp4', '.dm3', '.dm4', '.tif', '.jpg', ]
+        
         while True:
             if self.eval_stop():
                     return 1 
 
-            for file in os.listdir('.'):
-         #       print(file)
+            im_files, vid_files, dm_frames = get_files_from_pattern(pattern)
+            
+            for file in im_files+vid_files+dm_frames:
                 if file not in file_set:
-                    currentsize = os.path.getsize(file)
-                    time.sleep(1)
-          #          print(file)
-                    if os.path.getsize(file)>currentsize:
-                        print('Breaking here')
-                        break
-                    if file[-4:-1]=='.dm':
+                    #print(file)
+                    if file[-4:].lower() in  possible_filetypes:
+                        # this is to check the file isnt still being written, if it grows in size, it ignores if for now and loops again:
+                        currentsize = os.path.getsize(file)
+                        time.sleep(1)      
+                        if os.path.getsize(file)>currentsize:
+                            break
 
-                        if isvideo(file):
-                                
-                            
+
+
+                        if isvideo(file) and video_status!='Save Average':
                             video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status)
-
-                        #elif file[-9]=='-' and file[-13:-9].isdigit() and file[-8:-4].isdigit():
-                                
-                        #        pass
-                                #wait = 1
-                                #time.sleep(60)
-                                #if self.motioncor=='Off':
-                                #   dm_frames = [x for x in dm_files if x[-9]=='-' and x[-13:-9].isdigit() and x[-8:-4].isdigit()]
-
                         else:
-                            
-                            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name+'/Images')
+                            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
+                    
+                        
 
-                        print(file)
-                        file_set.add(file)
+                    file_set.add(file)
                 
             running_time = time.time() - start_time
             print('Running time : {}s'.format(round(running_time,0)))
+            
             if running_time>max_running_time:
                 break
             time.sleep(10)
-            print('Looping')      
+            #print('Looping')      
         print('Time out reached, exiting now')
         os.chdir(cwd)
 
-    #def process_file(self,folderpath, outdir, bin_value, med_filter_value, gauss_filter_value,video_status ):
+    def process_file(self,folderpath, outdir, bin_value, med_filter_value, gauss_filter_value,video_status ):
+        if isvideo(file):
+            video_processing(folderpath, outdir, xybin =bin_value, medfilter=med_filter_value, gaussian_filter=gauss_filter_value, video_status= video_status)
+        else:
+            default_image_pipeline(filename, xybin = xybin, medfilter=med_filter_value, gaussfilter=gauss_filter_value,outdir=outdir)
 
 '''
 class JobRunner(QRunnable):

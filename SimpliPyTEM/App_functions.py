@@ -209,7 +209,7 @@ def get_files_from_pattern(pattern):
     im_files = []
     video_files = []
     frames = []
-    print(files)
+    #print(files)
     for file in files: 
         if file[-4:-1]=='.dm':
             if isvideo(file):
@@ -224,7 +224,7 @@ def get_files_from_pattern(pattern):
             im_files.append(file)
         else:
             print('{} file not included as not a known image/video format, if this is unexpected please raise an issue on github'.format(file))
-    
+
     return im_files, video_files, frames
 
 
