@@ -35,7 +35,7 @@ This app is designed to be simple to use for people with basic computational ski
 
    SimpliPyTEM-GUI
 
-.. image:: Media/Images/App_screenshot1.png
+.. image:: Media/Images/SimpliPyTEM_V1.1_screenshot.png
    :width: 400
    :alt: Figure showing the SimpliPy-GUI app
 

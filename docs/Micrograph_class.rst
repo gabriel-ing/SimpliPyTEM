@@ -18,11 +18,8 @@ Here is a basic example showing a micrograph being opened, gaussian filtered, co
         #import the class 
         from SimpliPyTEM.Micrograph_class import Micrograph
 
-        #initialise class
-        image = Micrograph()
-
-        #open dm file
-        image.open_dm('My_file.dm4')
+        #initialise class and open file
+        image = Micrograph('My_file.dm4')
 
         #gaussian filter
         im_gaussian =image.gaussian_filter(5)
@@ -48,6 +45,9 @@ List of functions in MicroVideo
 Imports:
     * open_dm - Opening digital micrograph files
     * open_mrc - Opening an mrc file
+    * open_image - Opening .tif, .jpg, .png
+    * open_video - Open .mp4 or .avi as an all-frame average
+    * open_file - Opening any image/video file (using other functions)
 
 Saving: 
     * write_image - save video frame or video average as an image
@@ -79,11 +79,16 @@ Image filters:
     * low_pass_filter
     * weiner_filter
     * non_local_means_filter
+    * denoise_with_topaz - denoises with topaz (https://doi.org/10.1038/s41467-020-18952-1), run `pip install topaz-em` before use.
 
 Plotting:
     * imshow - plots image
     * plot_histogram - plots the histogram of the image 
     * imshow_pair - plots two images side by side  
+
+Others:
+    * display_fft - shows the 2D Fourier Transform of the image
+    
 
 
 
