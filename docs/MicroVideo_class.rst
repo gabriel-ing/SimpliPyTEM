@@ -23,10 +23,7 @@ Basic example including many of the functions ::
     from SimpliPyTEM.MicroVideo_class import MicroVideo
     
     #Initialise video
-    video = MicroVideo()
-    
-    #Dpen video from Digital micrograph  file
-    video.open_dm('My_video.dm4')
+    video = MicroVideo('My_video.dm4')
     
     #Bin video (reduce size) 
     video = video.bin(2)
@@ -99,7 +96,7 @@ Image filters:
     * low_pass_filter
     * weiner_filter
     * non_local_means_filter
-
+    * topaz_denoise - Denoise with topaz, run `pip install topaz-em` before use. 
 Plotting:
     * imshow - plots still image (either single frame or average) of video
     * plot_histogram - plots the histogram of the video 
@@ -108,6 +105,7 @@ Plotting:
 Other functions:
     * Sidebyside - Sticks two videos together so they play side by side. 
     * local_normalisation - evens out the contrast within the frames of a video, correcting for uneven illumination.
+
 Documentation 
 -------------
 
