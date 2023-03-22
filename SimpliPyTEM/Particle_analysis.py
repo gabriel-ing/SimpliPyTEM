@@ -182,6 +182,7 @@ def Collect_particle_data(contours_im, pixel_size, multimeasure=False ):
     # this parameter computes the center of the mass of  particles
     centroid_x_particle =[]
     centroid_y_particle = []
+    centroid_particle = []
     # this parameter computes the ratio between maximum and minimum length of a particle
     aspect_ratio_particle = []
     # this parameter computes the perimeter of particles
@@ -210,6 +211,7 @@ def Collect_particle_data(contours_im, pixel_size, multimeasure=False ):
         centroid_y=(moment_contour['m01']/moment_contour['m00'])
         centroid_x_particle.append(centroid_x)
         centroid_y_particle.append(centroid_y)
+        centroid_particle.append((centroid_x, centroid_y))
         area = cv.contourArea(c)*pixel_size**2
         area_particle.append(area)
         #meanradius_particle = area__particle[i, 0]
@@ -244,7 +246,7 @@ def Collect_particle_data(contours_im, pixel_size, multimeasure=False ):
             measurements.append(len(dists))
     
 
-    particle_data = { 'Area':area_particle, 'Centroid_x':centroid_x_particle, 'Centroid_y':centroid_y_particle,
+    particle_data = { 'Area':area_particle, 'Centroid':centroid_particle, 'Centroid_x':centroid_x_particle, 'Centroid_y':centroid_y_particle,
                       'Perimeter':perimeter_particle, 'Circularity':circularity_particle, 
                      'Width':width_particle, 'Height':height_particle, 'Radius':radius_particle, 'Major-Minor Ratio':MajorMinorRatio}  
     if multimeasure:
@@ -411,23 +413,33 @@ def Particle_analysis_video(video,threshold, minsize,pixel_size, multimeasure=Fa
     '''
     masks =[]
 
-    video_data ={'Max_length':[], 'Area':[], 'Centroid':[], 
-                     'Aspect_ratio':[], 'Perimeter':[], 'Circularity':[], 
-                     'Width':[], 'Height':[], 'Radius':[], 'Major-Minor Ratio':[]}  
+    #video_data ={'Max_length':[], 'Area':[], 'Centroid':[], 
+    #                 'Aspect_ratio':[], 'Perimeter':[], 'Circularity':[], 
+    #                 'Width':[], 'Height':[], 'Radius':[], 'Major-Minor Ratio':[]}  
     
-    if multimeasure:
-        video_data['Min diameter'] = []
-        video_data['Max diameter'] = []
-        video_data['Mean diameter'] = []
-        video_data['Stddev diameter']=[]
-        video_data['Measurements']=[]
+    #if multimeasure:
+    #    video_data['Min diameter'] = []
+    #    video_data['Max diameter'] = []
+    #    video_data['Mean diameter'] = []
+    #    video_data['Stddev diameter']=[]
+    #    video_data['Measurements']=[]
     #print(particle_data)
-
+    video_data = {}
+    
+    i = 0
+    
     for frame in video:
         mask, data =Particle_analysis(frame, threshold, minsize,pixel_size, multimeasure)
         masks.append(mask)
+        
+        if i==0: 
+            for key in data.keys():
+                video_data[key]=[]
+            i=1
+
         for key in data:
             video_data[key].append(data[key])
+
     masks = np.array(masks)
     return masks, video_data
 

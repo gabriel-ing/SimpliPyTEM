@@ -402,10 +402,10 @@ class Micrograph:
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
                 #print('else_name = ',name)
-        try:
-            name += '_'+self.scalebar_size.replace('µ','u')+'scale.{}'.format(ftype)
-        except AttributeError:
-            name+='.'+ftype
+        #try:
+        #    name += '_'+self.scalebar_size.replace('µ','u')+'scale.{}'.format(ftype)
+        #except AttributeError:
+        name+='.'+ftype
         #if self.foldername!='':
         #        name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
         #if self.foldername=='':
