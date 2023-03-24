@@ -1205,7 +1205,7 @@ class MicroVideo:
                     
                 #fontsize=int(vidSB.scalebar_x/(25))
                 try:
-                    file = font_manager.findfont('Helvetica Neue')
+                    file = font_manager.findfont('Helvetica')
                     font = ImageFont.truetype(file, fontsize)
                 except:
                     font_search = font_manager.FontProperties(family='sans-serif', weight='normal')

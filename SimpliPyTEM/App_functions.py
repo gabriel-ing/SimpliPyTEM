@@ -161,9 +161,9 @@ def live_process(filename, output_folder_name,xybin, medfilter, gaussian_filter,
 def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_filter, video_status, topaz_denoise, denoise_with_cuda):
     if video_status=='Save Average':
 
-        default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name, topaz_denoise=topaz_on, denoise_with_cuda=cuda_on)
+        default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name, topaz_denoise=topaz_denoise, denoise_with_cuda=denoise_with_cuda)
     else:
-        default_video_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name, topaz_denoise=topaz_on, denoise_with_cuda=cuda_on) #output folder = output_folder+videos
+        default_video_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name, topaz_denoise=topaz_denoise, denoise_with_cuda=denoise_with_cuda) #output folder = output_folder+videos
      
 
 
