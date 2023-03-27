@@ -989,8 +989,9 @@ class Micrograph:
         fshift_filtered=np.copy(fshift)
         mask = np.zeros_like(self.image)
 
-        mask = cv.circle(mask, (crow, ccol),radius*2, 1, -1) 
+        mask = cv.circle(cv.UMat(mask), (crow, ccol),radius*2, 1, -1) 
         #print(fshift_filtered)
+        mask = mask.get()
         fcomplex = fshift[:,:]*1j
         fshift_filtered = mask*fcomplex
         f_filtered_shifted = np.fft.fftshift(fshift_filtered)

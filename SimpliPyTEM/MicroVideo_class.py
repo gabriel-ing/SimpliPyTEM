@@ -354,10 +354,16 @@ class MicroVideo:
         else:
             name = '.'.join(self.filename.split('.')[:-1])+'.tif'    
         
+        if pixel_unit!='nm':
+            pu = 'um'
+        else:
+            pu='nm'
+
+
         if outdir:
             make_outdir(outdir)
             name = outdir+'/'+name
-        tifffile.imsave(name, self.frames,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':self.pixel_unit})
+        tifffile.imsave(name, self.frames,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':pu})
 
 
     def save_tif_sequence(self, name=None, outdir=None):
@@ -380,7 +386,6 @@ class MicroVideo:
 
         '''
         if name:
-            name = kwargs['name']
             if name[-4:]=='.tif':
                 name= name.strip('.tif')
         else: 
@@ -390,12 +395,17 @@ class MicroVideo:
             make_outdir(outdir)
             name = outdir+'/'+name
 
+        if self.pixel_unit!='nm':
+            pu = 'um'
+        else:
+            pu='nm'
+
         for i in range(len(self.frames)):
             j=4-len(str(i))
             zeros = '0000'
             count = str(zeros[:j])+str(i)
             savename = name+'_{}'.format(count)+'.tif'
-            tifffile.imsave(savename, self.frames[i],imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':self.pixel_unit, 'Labels':'{}/{} -{}'.format(i, len(self.frames),self.filename)})
+            tifffile.imsave(savename, self.frames[i],imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':pu, 'Labels':'{}/{} -{}'.format(i, len(self.frames),self.filename)})
 
     def save_gif(self, fps=5,**kwargs ):
 
@@ -502,7 +512,7 @@ class MicroVideo:
 
         if outdir:
             make_outdir(outdir)
-            name =outdir+name    
+            name =outdir+'/'+name    
         print('Start name :', name)
         if name:
                 print('if name : ',name)
@@ -1273,8 +1283,9 @@ class MicroVideo:
             fshift_filtered=np.copy(fshift)
             mask = np.zeros_like(self.frames[i])
 
-            mask = cv.circle(mask, (crow, ccol),radius*2, 1, -1) 
+            mask = cv.circle(cv.UMat(mask), (crow, ccol),radius*2, 1, -1) 
             #print(fshift_filtered)
+            mask = mask.get()
             fcomplex = fshift[:,:]*1j
             fshift_filtered = mask*fcomplex
             f_filtered_shifted = np.fft.fftshift(fshift_filtered)
