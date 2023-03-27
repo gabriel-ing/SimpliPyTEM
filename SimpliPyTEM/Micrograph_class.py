@@ -212,7 +212,7 @@ class Micrograph:
         self.image.setflags(write=1)
         self.x = self.image.shape[1]
         self.y = self.image.shape[0]
-        self.image = np.flip(self.image, axis=0)
+        #self.image = np.flip(self.image, axis=0)
         self.pixel_unit='nm'
         self.filename = file
         if pixel_correction:
@@ -924,7 +924,7 @@ class Micrograph:
             
             #fontsize=int(scalebar_x/(25))
             try:
-                file = font_manager.findfont('Helvetica Neue')
+                file = font_manager.findfont('Helvetica')
                 font = ImageFont.truetype(file, fontsize)
             except:
                 font_search = font_manager.FontProperties(family='sans-serif', weight='normal')
