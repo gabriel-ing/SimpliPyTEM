@@ -2,7 +2,7 @@
 
 <img src=docs/Media/Images/SimpliPyTEM_figures.001.png width=700px, alt='Figure showing effect of SimpliPyTEM-GUI'>
 
-Please see full documentation at https://micrograph-analysis-scripts.readthedocs.io/en/latest/ 
+Please see full documentation at https://simplipytem.readthedocs.io/en/latest/
 
 SimpliPyTEM introduces the Micrograph and MicroVideo classes to process images and videos respectively. These aim to make many basic functions incredibly simple, without the need for knowledge of more complex libraries which are performing the functions. Functions included are adding scalebar, enhancing contrast and equalising histogram, converting to 8bit images, binning, filtering with many common filters (Median, gaussian, low-pass, weiner and non-local means). Video frames can easily be averaged together in both simple averaging and running averging ways. 
 
