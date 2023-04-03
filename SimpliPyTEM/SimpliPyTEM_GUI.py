@@ -341,6 +341,8 @@ class MainApplication(QWidget):
         os.chdir(self.folderpath+'/'+outdir)
 
         title = self.title_box.text()
+        if title=='':
+            title = 'Default_title'
         notes = self.notes_box.toPlainText()
         print('Writing html and css files')
         try: 
