@@ -391,21 +391,25 @@ class Micrograph:
         #print('Start name :', name)
         if name:
                 #print('if name : ',name)
-                if name[-3:]=='jpg':
+                if name[-4:]=='.jpg':
                     ftype='jpg'
-                elif name[-3:]=='tif':
+                    name = name[:-4]
+                elif name[-4:]=='.tif':
                     ftype='tif'    
+                    name = name[:-4]
+
                 if len(name.split('.'))>=2 and name[-4]=='.':
                     name='.'.join(name.split('.')[:-1])
                     #print('if len name: ', name)
                     #print('.'.join(name.split('.')[:-1]))
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
+                name+='.'+ftype
                 #print('else_name = ',name)
         #try:
         #    name += '_'+self.scalebar_size.replace('µ','u')+'scale.{}'.format(ftype)
         #except AttributeError:
-        name+='.'+ftype
+        
         #if self.foldername!='':
         #        name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
         #if self.foldername=='':
@@ -413,6 +417,7 @@ class Micrograph:
         #else:
         #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
         
+        name+='.'+ftype
         if self.pixel_unit=='µm':
             pixel_unit='um'
         else:
@@ -426,7 +431,9 @@ class Micrograph:
             cv.imwrite(name,self.image)
 
         elif ftype=='tif':
-            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata={'unit':pixel_unit})
+            metadata= self.metadata_tags
+            metadata['unit':pixel_unit]
+            tifffile.imsave(name, self.image,imagej=True, resolution=(1/self.pixel_size, 1/self.pixel_size), metadata=metadata)
 
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')
@@ -802,27 +809,35 @@ class Micrograph:
         scalebar_y = y-int(y/25)
         scalebar_x = x-int(x/6.5)
         #print(x,scalebar_x)
-        #possible scalebar sizes are given here, if its >500nm it should be in unit micron, hopefully this should only fail with very extreme examples
+
+        #possible scalebar sizes are given here, if its >500nm it should be in unit micron
         
         possible_sizes = [0.5, 1,2,5,10,25,50,100,250,500,1000]
         
         #to select sizes, iterate through possible sizes, if the width of the resulting scalebar (n*pixelsize) 
         #is over 15% of the image size, the size is chose, if none are over 15% of image size
         #the largest size is chosen as default
-        
         for n in possible_sizes:
-            width = n*1/self.pixel_size
+            width = int(n*1/self.pixel_size)
             #print(n, image.shape([0]/10)
             if width>(x/15):
                 break
-                #print(width, x/15)
+        
+        # This if statement checks whether the scalebar is too close to the edge or bigger than the size. 
+        # This should ensure it is at least one 100th of the image width away from the edge.
+
+        if scalebar_x+width>=x:
+            print(True)
+            diff = x - scalebar_x+width
+            scalebar_x=scalebar_x-diff - x/100
+        elif scalebar_x+width+x/100 > x:
+            scalebar_x=scalebar_x-x/100
+
         #choose height of scalebar (default is scalebar width/6), convert width into an integer
         height = int(y/60)
         width = int(width)   
         scalebar_x = int(scalebar_x)
         scalebar_y = int(scalebar_y)
-        height = int(height)
-        width = int(width)
         scalebar_size = n
         #return int(scalebar_x/xybin), int(scalebar_y/xybin), int(height/xybin), int(width/xybin), n
         return scalebar_x, scalebar_y, width, height, scalebar_size

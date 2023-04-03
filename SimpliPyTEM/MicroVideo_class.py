@@ -516,10 +516,12 @@ class MicroVideo:
         print('Start name :', name)
         if name:
                 print('if name : ',name)
-                if name[-3:]=='jpg':
+                if name[-4:]=='.jpg':
                     ftype='jpg'
-                elif name[-3:]=='tif':
-                    ftype='tif'    
+                    name=name[:-4]
+                elif name[-4:]=='.tif':
+                    ftype='tif' 
+                    name = name[:-4]   
                 if len(name.split('.'))>2:
                     name='.'.join(name.split('.')[:-1])
                     print('if len name: ', name)
@@ -527,10 +529,10 @@ class MicroVideo:
         else:
                 name = '.'.join(self.filename.split('.')[:-1])
                 print('else_name = ',name)
-        try:
-            name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
-        except AttributeError:
-            name+='.'+ftype
+        #try:
+        #    name += '_'+self.scalebar_size+'scale.{}'.format(ftype)
+        #except AttributeError:
+        name+='.'+ftype
         #if self.foldername!='':
         #        name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
         #if self.foldername=='':
@@ -1096,69 +1098,91 @@ class MicroVideo:
         self.pixel_size=dist/pixels
         self.pixel_unit=unit
 
-
     def choose_scalebar_size(self):
         '''
         Function for choosing scalebar size, called through make_scalebar(), not a standalone function.
+
+        Returns
+        -------
+            scalebar_x: int
+                x coordinate for the scalebar 
+            scalebar_y: int
+                y coordinate for the scalebar 
+            width:int
+                width of scalebar
+            height:int
+                height of the scalebar
+            scalebar_size:int (or float)
+                Size of the scalebar in scaled units (pixel_unit)
         '''
-       
+        y,x = self.frames.shape[1], self.frames.shape[2]
         
         #make coordinates for the scalebar, currently set to y-12.5%,x-5% of image size from the bottom right corner 
         #of the image to bottom left of the scalebar - change this by editing /20 and /7.5 values (this just looked good to me)
-        scalebar_y = self.y-int(self.y/25)
-        scalebar_x = self.x-int(self.x/6.5)
+        scalebar_y = y-int(y/25)
+        scalebar_x = x-int(x/6.5)
         #print(x,scalebar_x)
-        #possible scalebar sizes are given here, if its >500nm it should be in unit micron, hopefully this should only fail with very extreme examples
+
+        #possible scalebar sizes are given here, if its >500nm it should be in unit micron
         
-        possible_sizes = [0.5, 1,2,5,10,25,50,100,250,500]
+        possible_sizes = [0.5, 1,2,5,10,25,50,100,250,500,1000]
         
         #to select sizes, iterate through possible sizes, if the width of the resulting scalebar (n*pixelsize) 
         #is over 15% of the image size, the size is chose, if none are over 15% of image size
         #the largest size is chosen as default
-        
         for n in possible_sizes:
-            width = n*1/self.pixel_size
+            width = int(n*1/self.pixel_size)
             #print(n, image.shape([0]/10)
-            if width>(self.x/15):
+            if width>(x/16):
                 break
-                #print(width, x/15)
+        
+        # This if statement checks whether the scalebar is too close to the edge or bigger than the size. 
+        # This should ensure it is at least one 100th of the image width away from the edge.
+
+        if scalebar_x+width>=x:
+            print(True)
+            diff = x - scalebar_x+width
+            scalebar_x=scalebar_x-diff - x/100
+        elif scalebar_x+width+x/100 > x:
+            scalebar_x=scalebar_x-x/100
+
         #choose height of scalebar (default is scalebar width/6), convert width into an integer
-        height = int(self.y/60)
+        height = int(y/60)
         width = int(width)   
-        self.scalebar_x = int(scalebar_x)
-        self.scalebar_y = int(scalebar_y)
-        self.height = int(height)
-        self.width = int(width)
-        self.n = n
-    #return int(scalebar_x/xybin), int(scalebar_y/xybin), int(height/xybin), int(width/xybin), n
+        scalebar_x = int(scalebar_x)
+        scalebar_y = int(scalebar_y)
+        scalebar_size = n
+        #return int(scalebar_x/xybin), int(scalebar_y/xybin), int(height/xybin), int(width/xybin), n
+        return scalebar_x, scalebar_y, width, height, scalebar_size
 
 
 
-    def choose_scalebar_color(self,color):
+
+    def choose_scalebar_color(self,color,scalebar_x, scalebar_y , width, height):
         '''
         Function for choosing the scalebar color and returns the pixelvalue and text color for the annotation.
         Called through make_scalebar(), not a standalone function
         '''
         if color=='black':
-            self.pixvalue = 0
-            self.textcolor = 'black'
+            pixvalue = 0
+            textcolor = 'black'
         elif color=='white':
-            self.pixvalue = 255
-            self.textcolor='white'
+            pixvalue = 255
+            textcolor='white'
         elif color=='grey':
-            self.pixvalue = 150
-            self.textcolor='grey'
+            pixvalue = 150
+            textcolor='grey'
         else: #default is black, unless it is a particularly dark area - if the mean pixvalue of the scale bar region is significantly less than the overall image mean, the scalebar will be white
             
-            if np.mean(self.frames[0][self.scalebar_y:self.scalebar_y+self.height,self.scalebar_x:self.scalebar_x+self.width])<np.mean(self.frames[0])/1.5:
-                self.pixvalue = 255
-                self.textcolor='white'
+            if np.mean(self.frames[0][scalebar_y:scalebar_y+height,scalebar_x:scalebar_x+width])<np.mean(self.frames[0])/1.5:
+                pixvalue = 255
+                textcolor='white'
             else:
-                self.pixvalue = 0
-                self.textcolor = 'black'
+                pixvalue = 0
+                textcolor = 'black'
         #add scalebar (set pixels to color) 
 
-        #return pixvalue, textcolor        
+        return pixvalue, textcolor        
 
 
     def make_scalebar(self, texton=True, color='Auto', fontsize='M'):
@@ -1166,6 +1190,8 @@ class MicroVideo:
         Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar. 
         The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
         This will work best for 8-bit images, as the scalebar will be given values of 0 or 255. 
+
+        You can change the fontsize of the scalebar label with the fontsize option, this is medium ('M') by default but can be made larger or smaller ('S','L', 'XL'), if none of these look good to you, you can choose the fontsize by entering an integer instead of these options. For reference, the fontsize given by these values (calculated based on image size) is printed.
         
         Parameters
         ----------
@@ -1175,7 +1201,7 @@ class MicroVideo:
             texton : bool
                 Text can be turned off using texton=False, the selected size of the scalebar can be accessed using micrograph.scalebar_size
             fontsize: str
-                Choose the fontsize from S,M,L,XL 
+                Choose the fontsize from S,M,L,XL or give an integer value 
         Returns
         -------
             Micrograph_object_with_scalebar: Micrograph
@@ -1183,34 +1209,37 @@ class MicroVideo:
         '''
         #print(pixvalue, textcolor)
         vidSB = deepcopy(self)
-        vidSB.choose_scalebar_size()
-        vidSB.choose_scalebar_color(color)
+        scalebar_x, scalebar_y , width, height, scalebar_size = self.choose_scalebar_size()
+        pixvalue, textcolor = self.choose_scalebar_color(color,scalebar_x, scalebar_y , width, height)
+        textposition = ((scalebar_x+width/2),scalebar_y-5)
+
+        if fontsize=='M':
+            fontsize=int(scalebar_x/(22))
+        elif fontsize=='L':
+            fontsize=int(scalebar_x/(18))
+        elif fontsize=='XL':
+            fontsize=int(scalebar_x/(15))
+        elif fontsize=='S':
+            fontsize=int(scalebar_x/(27))
+
+
         for i in range(len(self.frames)):
             #print(self.frames[i])
-            vidSB.frames[i][vidSB.scalebar_y:vidSB.scalebar_y+vidSB.height,vidSB.scalebar_x:vidSB.scalebar_x+vidSB.width]=vidSB.pixvalue
+            vidSB.frames[i][scalebar_y:scalebar_y+height,scalebar_x:scalebar_x+width]=pixvalue
             
-            textposition = ((vidSB.scalebar_x+vidSB.width/2),vidSB.scalebar_y-5)
+            
             
             #if pixel_unit!='nm':
              #   Utext = str(n)+u'\u00b5'+ 'm'
               #  text = str(n)+'microns'
             #else:
-            vidSB.text = '{}{}'.format(vidSB.n,vidSB.pixel_unit) 
+            vidSB.scalebar_size = '{}{}'.format(scalebar_size,vidSB.pixel_unit) 
              
 
             pil_image = Image.fromarray(vidSB.frames[i])
 
             if texton==True:
                 #print('TEXTON!')
-                if fontsize=='M':
-                    fontsize=int(vidSB.scalebar_x/(25))
-                elif fontsize=='L':
-                    fontsize=int(vidSB.scalebar_x/(20))
-                elif fontsize=='XL':
-                    fontsize=int(vidSB.scalebar_x/(17))
-                elif fontsize=='S':
-                    fontsize=int(vidSB.scalebar_x/(30))
-
                 draw = ImageDraw.Draw(pil_image)        
                     
                 #fontsize=int(vidSB.scalebar_x/(25))
@@ -1222,9 +1251,10 @@ class MicroVideo:
                     file = font_manager.findfont(font_search)
                     font = ImageFont.truetype(file, fontsize)
 
-                draw.text(textposition, vidSB.text, anchor ='mb', fill=vidSB.textcolor, font=font, stroke_width=1)
+                draw.text(textposition, vidSB.scalebar_size, anchor ='mb', fill=textcolor, font=font, stroke_width=1)
                 vidSB.frames[i] = np.array(pil_image)    
-        
+            else:
+                print('The scalebar added is {}'.format(vidSB.scalebar_size))
         print('Fontsize:',fontsize)
         vidSB.log.append('make_scalebar()')
         return vidSB
