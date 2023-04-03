@@ -421,22 +421,22 @@ class MainApplication(QWidget):
         try: 
             if self.folder_option=='Folder':
                     print('Running folder?')
-                    thread = threading.Thread(target =self.process_folder, args=(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status, self.topaz_on, self.cuda_on ))
+                    thread = threading.Thread(target =self.process_folder, args=(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.scalebar_on, self.video_status, self.topaz_on, self.cuda_on ))
                     thread.start()
             elif self.folder_option=='File':
                     print(self.live)    
-                    self.process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status,self.topaz_on, self.cuda_on  )
+                    self.process_file(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.scalebar_on,self.video_status,self.topaz_on, self.cuda_on  )
             elif self.folder_option =='Live Processing':
                     #live_process_folder(self.folderpath, outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status )
                     print('Live processing')
-                    thread = threading.Thread(target=self.live_process, args=(self.folderpath,outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.video_status,self.topaz_on, self.cuda_on  ))
+                    thread = threading.Thread(target=self.live_process, args=(self.folderpath,outdir, self.bin_value, self.med_filter_value, self.gauss_filter_value,self.scalebar_on,self.video_status,self.topaz_on, self.cuda_on  ))
                     thread.start()
         except Exception as e:
 
             print('Whoops there is an error, check the terminal and your inputs and try again.')
             print(e)
 
-    def process_folder(self,folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status, topaz_on, cuda_on):
+    def process_folder(self,folder, output_folder_name,xybin, medfilter, gaussian_filter,scalebar_on, video_status, topaz_on, cuda_on):
         start_time = time.time()
         print('Processing folder!')
         cwd = os.getcwd()
@@ -466,12 +466,12 @@ class MainApplication(QWidget):
             if self.eval_stop():
                 return 1 
             print('Processing: ', file)
-            video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status, topaz_on, cuda_on )
+            video_processing(filename=file,output_folder_name=output_folder_name,xybin=xybin, medfilter=medfilter, gaussian_filter=gaussian_filter,scalebar_on=scalebar_on, video_status=video_status, topaz_denoise=topaz_on, denoise_with_cuda=cuda_on )
 
         for  file in im_files:
             if self.eval_stop():
                 return 1 
-            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name, topaz_denoise=topaz_on, denoise_with_cuda=cuda_on)
+            default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,scalebar=scalebar_on,outdir=output_folder_name, topaz_denoise=topaz_on, denoise_with_cuda=cuda_on)
         if len(dm_frames)!=0: 
             print(dm_frames)
             frames_processing(dm_frames,output_folder_name,xybin, medfilter, gaussian_filter, video_status )
@@ -481,7 +481,7 @@ class MainApplication(QWidget):
         os.chdir(cwd)
 
 
-    def live_process(self, folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status, topaz_on, cuda_on):
+    def live_process(self, folder, output_folder_name,xybin, medfilter, gaussian_filter, scalebar_on,video_status, topaz_on, cuda_on):
         cwd = os.getcwd()
         #print('calling function')
         os.chdir(folder)
@@ -518,7 +518,7 @@ class MainApplication(QWidget):
 
 
                         if isvideo(file) and video_status!='Save Average':
-                            video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, video_status,topaz_denoise=topaz_on, denoise_with_cuda=cuda_on)
+                            video_processing(file,output_folder_name,xybin, medfilter, gaussian_filter, scalebar_on=scalebar_on,video_status=video_status,topaz_denoise=topaz_on, denoise_with_cuda=cuda_on)
                         else:
                             default_image_pipeline(file, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name,topaz_denoise=topaz_on, denoise_with_cuda=cuda_on)
                     
@@ -536,11 +536,11 @@ class MainApplication(QWidget):
         print('Time out reached, exiting now')
         os.chdir(cwd)
 
-    def process_file(self,folderpath, outdir, bin_value, med_filter_value, gauss_filter_value,video_status ):
+    def process_file(self,folderpath, outdir, bin_value, med_filter_value, gauss_filter_value,scalebar_on, video_status ):
         if isvideo(file):
-            video_processing(folderpath, outdir, xybin =bin_value, medfilter=med_filter_value, gaussian_filter=gauss_filter_value, video_status= video_status)
+            video_processing(folderpath, outdir, xybin =bin_value, medfilter=med_filter_value, gaussian_filter=gauss_filter_value, scalebar_on=scalebar_on,video_status= video_status)
         else:
-            default_image_pipeline(filename, xybin = xybin, medfilter=med_filter_value, gaussfilter=gauss_filter_value,outdir=outdir)
+            default_image_pipeline(filename, xybin = xybin, medfilter=med_filter_value, gaussfilter=gauss_filter_value,scalebar=scalebar_on,outdir=outdir)
 
 '''
 class JobRunner(QRunnable):
