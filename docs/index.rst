@@ -49,7 +49,7 @@ SimpliPyTEM-Library
 
 While SimpliPy-GUI makes the basic post-processing simple, the SimpliPy-Library provides more powerful python-based methods, while still aiming to keep the functions simple.
 
-This library contains several modules, including those for various post-processing and analysis of micrographs as well as microscope videos (see MicroVideo_class module), basic particle analysis functions (e.g. locating particles by simple thresholding and measuring properties) writing html and pdf documents. These methods aim to be easy to use and are fully documented in the links below. However, there are also 3 jupyter-notebook tutorials available to learn how to use, and give more details about these functions. These are found in the Tutorials folder where the package is installed, or can be downloaded individually from :ref:`the github-repo <https://github.com/gabriel-ing/Micrograph-analysis-scripts>`_.
+This library contains several modules, including those for various post-processing and analysis of micrographs as well as microscope videos (see MicroVideo_class module), basic particle analysis functions (e.g. locating particles by simple thresholding and measuring properties) writing html and pdf documents. These methods aim to be easy to use and are fully documented in the links below. However, there are also 3 tutorials available within this documentation side (see left-hand side panel) to learn how to use, and give more details about these functions. These tutorials can also be downloaded and run on your own system, and are found in at SimpliPyTEM/docs/Tutorials where the package is installed, or can be downloaded individually from https://github.com/gabriel-ing/SimpliPyTEM.
 
 Importantly, this library is especially useful for *in situ* TEM videos, as this is a rarer endevour but also my specific interest. 
 
@@ -61,7 +61,6 @@ This library aims to simplify python-based image analysis functions for beginner
 
 .. toctree::
    :maxdepth: 1
-   :caption: Python Library
 
    Micrograph_class
    MicroVideo_class
@@ -77,7 +76,7 @@ Here are tutorials on how the python library can be used to process images and v
 
 .. toctree::
    :maxdepth: 1
-   :caption: Tutorials
+
 
    Tutorials/MicrographAnalysisTutorial
    Tutorials/MicroVideoAnalysisTutorial
@@ -101,7 +100,7 @@ Then you can download SimpliPyTEM using pip:
 
 ``pip install SimpliPyTEM``
 
-If you have any issues with the installation feel free to open a issue on the github repository: https://github.com/gabriel-ing/Micrograph-analysis-scripts and I can try to help. 
+If you have any issues with the installation, there is a short Troubleshooting section below with known errors, or feel free to open a issue on the github repository: https://github.com/gabriel-ing/SimpliPyTEM and I can try to help. 
 
 Following this the library should be accessible within python or jupyter-notebook scripts with: 
 
@@ -111,17 +110,19 @@ Installation Troubleshooting
 ----------------------------
 
 I've come across some errors when installing the package, particularly in linux computers, one in particular relating to `qt.qpa.plugin`, it looks as follows
-..
-   QObject::moveToThread: Current thread (0x26b9850) is not the object's thread (0x41d2cb0).
-   Cannot move to target thread (0x26b9850)
+:::
 
-   qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/anaconda3/envs/New_test/lib/python3.8/site-packages/cv2/qt/plugins" even though it was found.
-   This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+      QObject::moveToThread: Current thread (0x26b9850) is not the object's thread (0x41d2cb0).
+      Cannot move to target thread (0x26b9850)
 
-   Available platform plugins are: xcb, eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl.
+      qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "/home/anaconda3/envs/New_test/lib/python3.8/site-packages/cv2/qt/plugins" even though it was found.
+      This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
 
-   Aborted (core dumped)
+      Available platform plugins are: xcb, eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, wayland-egl, wayland, wayland-xcomposite-egl, wayland-xcomposite-glx, webgl.
 
+      Aborted (core dumped)
+
+:::
 The solution I have found to fix this error is simply to delete the file `libqxcb.so` which is in /home/anaconda3/envs/New_test/lib/python3.8/site-packages/cv2/qt/plugins/platforms/ this pathway will be specific to your system and apart from the platforms directory is found on the third line of the error.
 
 to remove this you can simply run 
@@ -135,6 +136,11 @@ If there is still an error but it has changed after doing this, try uninstalling
    `pip install pyQT5==5.14`
 
 Unfortunately making pyQT5==5.14 th default leads to the program not running on macs (at least on my computer running python3.10), so I have not made this the default. 
+
+Alternatively, one user has reported that uninstalling openCV and installing the 'headless' version also works:
+
+   `pip uninstall opencv-python`
+   `pip install opencv-python-headless`
 
 If this fix still doesn't work, I don't immediately have a solution, try googling parts of the error message,  and raise an issue on the SimpliPyTEM github page and I can you debug. 
 
