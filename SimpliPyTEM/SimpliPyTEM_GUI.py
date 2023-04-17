@@ -378,7 +378,7 @@ class MainApplication(QWidget):
         print(os.getcwd())
         print(os.listdir('.'))
         try: 
-            images = ['Images/'+x for x in os.listdir('Images')]
+            images = ['Images/'+x for x in os.listdir('Images') if 'jpg' in x]
         except FileNotFoundError: 
             print('The Images folder was not found, please make sure that the output folder defined above has a folder of images called images.')
             os.chdir(cwd)

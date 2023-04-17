@@ -147,11 +147,12 @@ def find_number(string):
 
     
     '''
-    lstring = string.split('_')
-
+    nstring= string.replace('.', '_')
+    lstring = nstring.split('_')
+    #print(lstring)
     success = False
     for item in lstring:
-        if len(item)==4 and item.isdigit:
+        if len(item)==4 and item.isdigit():
                 im_id = item
                 ind = lstring.index(im_id)
                 #print(ind)
@@ -161,6 +162,7 @@ def find_number(string):
         im_id = lstring[ind]
 
     prefix = ' '.join(lstring[:ind])
+    #print(success)
     return im_id, prefix
 #print(im_prefix)
 
