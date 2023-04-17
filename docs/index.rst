@@ -61,7 +61,7 @@ This library aims to simplify python-based image analysis functions for beginner
 
 .. toctree::
    :maxdepth: 1
-
+   :caption: Python Library
    Micrograph_class
    MicroVideo_class
    PDF_generator
@@ -76,7 +76,7 @@ Here are tutorials on how the python library can be used to process images and v
 
 .. toctree::
    :maxdepth: 1
-
+   :caption: Tutorials
 
    Tutorials/MicrographAnalysisTutorial
    Tutorials/MicroVideoAnalysisTutorial
