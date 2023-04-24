@@ -587,7 +587,7 @@ class MicroVideo:
         frames = []
         for frame in self.frames:
 
-            frame = cv.resize(frame, (int(frame.shape[0]/value), int(frame.shape[1]/value)), interpolation=cv.INTER_CUBIC)
+            frame = cv.resize(frame, (int(frame.shape[1]/value), int(frame.shape[0]/value)), interpolation=cv.INTER_CUBIC)
             frames.append(frame)
             i+=1
         binned = deepcopy(self)

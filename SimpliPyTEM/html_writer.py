@@ -25,6 +25,8 @@ def write_html(images, videos=None, title='Default_experiment_title', notes='', 
         HTML document {title}.html saved in the current working directory. This html document has the images from an experiment as well as playable videos.
     '''
     print(images)
+    images.sort()
+    videos.sort()
     a =Airium()
     with a.html(lang='en'):
         with a.head():
