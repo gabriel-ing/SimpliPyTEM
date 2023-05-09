@@ -157,3 +157,15 @@ Indices
 Licensing
 ---------
 This project is licensed under the GPL-3.0 license.
+
+
+Citing
+------ 
+
+If SimpliPyTEM is useful for your projects, please cite our manuscript at: 
+
+:::
+   SimpliPyTEM: An open-source Python library and app to simplify Transmission Electron Microscopy and in situ-TEM image analysis
+   Gabriel Ing, Andrew Stewart, Guiseppe Battaglia, Lorena Ruiz-Perez
+   bioRxiv 2023.04.28.538777; doi: https://doi.org/10.1101/2023.04.28.538777 
+:::
