@@ -1750,3 +1750,5 @@ def make_outdir(outdir):
         if outdir not in os.listdir('.'):
             os.mkdir(outdir)
 
+def get_files(pattern, directory='.'):
+    return [directory+'/'+x for x in os.listdir(directory) if pattern in x]
