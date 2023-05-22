@@ -722,7 +722,7 @@ class MicroVideo:
     def __len__(self):
         return self.frames.shape[0]
 
-    def Normalise_video(self, normtype='mean'):
+    def normalise_video(self, normtype='mean'):
         '''
         Normalises the video frames to have equal contrast, either through  mean or median normalisation
             
@@ -739,8 +739,8 @@ class MicroVideo:
             Normalised_microvideo: MicroVideo
                 Returns  a normalised copy of the original object.
 
-        '''
-
+        ''' 
+        dtype = self.frames.dtype
         norm_frames = []
         normtypes = ['median', 'mean']
         if normtype not in normtypes:
@@ -762,7 +762,8 @@ class MicroVideo:
             #frame_median = np.median(self.frames)
             norm_frames.append(frame*vid_norm/frame_norm)
         norm_object.frames =  np.array(norm_frames)
-        norm_object.log.append('Normalise_video()')
+        norm_object.log.append('normalise_video()')
+        norm_object.frames = norm_object.frames.astype(dtype)
         return norm_object
 
     def local_normalisation(self,numpatches, padding=15, pad=False, normalise_all=True):
@@ -1793,6 +1794,7 @@ class MicroVideo:
         original_cwd = os.getcwd()
         tifname = 'OutIntermediateTiff.tif'
         outname= '.'.join(self.filename.split('.')[:-1])+'Motion_corrected.mrc'
+        outname = outname.replace(' ', '_')
         print('outname = ', outname)
         outname = outname.split('/')[-1]
 
@@ -1964,7 +1966,7 @@ def default_video_pipeline(filename, output_type,medfilter=0, gaussfilter=3, sca
             Mcor_im = Mcor_im.topaz_denoise(use_cuda=denoise_with_cuda)
 
         if MCor_im==1:
-            default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussfilter,outdir=output_folder_name)
+            default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussfilter,outdir=outdir)
             return 1
         #aved =  MCor_vid.toMicrograph()
         print(medfilter, type(medfilter))
