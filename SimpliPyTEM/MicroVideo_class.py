@@ -526,6 +526,32 @@ class MicroVideo:
         #self.pil_image.save(name, quality=self.quality)
         print(name, 'Done!')
 
+    def write_mrc(self, name=None, outdir=None, overwrite=False):
+        '''
+        Function to save video as an mrc file. Currently Metadata is not supported. 
+        '''
+        
+
+        
+        if name:
+                #print('if name : ',name)
+                if len(name.split('.'))>2:
+                    name='.'.join(name.split('.')[:-1])
+                    print('.'.join(name.split('.')[:-1]))
+        else:
+            name = '.'.join(self.filename.split('.')[:-1])
+                
+        if name[-4:]!='.mrc':
+            name+='.mrc'
+        
+        if outdir:
+            make_outdir(outdir)
+            name =outdir+'/'+name        
+        
+        with mrcfile.new(name, overwrite=overwrite) as mrc:
+            mrc.set_data(self.frames)
+            
+
     def toMicrograph(self):
         '''
         Returns a micrograph object with the average of the image so the video average can be treated as a single image
@@ -1792,7 +1818,7 @@ class MicroVideo:
         '''
 
         original_cwd = os.getcwd()
-        tifname = 'OutIntermediateTiff.tif'
+        tifname = 'OutIntermediate.mrc'
         outname= '.'.join(self.filename.split('.')[:-1])+'Motion_corrected.mrc'
         outname = outname.replace(' ', '_')
         print('outname = ', outname)
@@ -1807,14 +1833,14 @@ class MicroVideo:
         MCor_path = os.environ.get('MOTIONCOR2_PATH')
         if MCor_path:
             if vid_output:
-                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixel_size*10)
+                command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1'.format(MCor_path, tifname, outname, self.pixel_size*10)
                 MC_vid=deepcopy(self)
                 inname = '.'.join(outname.split('.')[:-1])+'_Stk.mrc'
             else:
-                command = '{} -InTiff {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {}'.format(MCor_path, tifname, outname, self.pixel_size*10)
+                command = '{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {}'.format(MCor_path, tifname, outname, self.pixel_size*10)
                 MC_vid = Micrograph()
                 inname = '.'.join(outname.split('.')[:-1])+'.mrc'
-            self.save_tif_stack(name=tifname)
+            self.write_mrc(name=tifname, overwrite=True)
             sb.call(command, shell=True, cwd=os.getcwd())
         else:
             print('Sorry, the motioncor2 exectuable is not defined and so cannot be run. Please give the executable using "export MOTIONCOR2_PATH=\'PATH/TO/EXECUTABLE\'" (or on windows: "setx MY_EXECUTABLE_PATH \'path/to/executable\'") for more info, please see documentation  ')
@@ -1831,7 +1857,7 @@ class MicroVideo:
         MC_vid.pixel_unit=self.pixel_unit
         MC_vid.fps = self.fps
         MC_vid.filename = self.filename+'_MotionCorrected'
-        os.remove('OutIntermediateTiff.tif')
+        os.remove(tifname)
         os.chdir(original_cwd)
         MC_vid.log.append('motioncorrect_vid()')
         return MC_vid
