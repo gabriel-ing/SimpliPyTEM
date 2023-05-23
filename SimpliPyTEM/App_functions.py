@@ -1,8 +1,10 @@
-from SimpliPyTEM.Micrograph_class import * 
-from SimpliPyTEM.MicroVideo_class import * 
 import os
 import re
-'''
+
+from SimpliPyTEM.Micrograph_class import *
+from SimpliPyTEM.MicroVideo_class import *
+
+"""
 def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
     print('Processing folder!')
     print('Here')
@@ -33,8 +35,8 @@ def process_folder(folder, output_folder_name,xybin, medfilter, gaussian_filter,
 
     print('All files in folder complete!')  
     os.chdir(cwd)
-'''
-'''
+"""
+"""
 def process_folder_original(folder, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
 
     ##deal with videostatus
@@ -98,8 +100,8 @@ def process_folder_original(folder, output_folder_name,xybin, medfilter, gaussia
     print('All files in folder complete!')  
     os.chdir(cwd)
 
-'''
-'''
+"""
+"""
 def process_file(filename, output_folder_name,xybin, medfilter, gaussian_filter, video_status):
 
     if isvideo(file):
@@ -157,79 +159,119 @@ def live_process(filename, output_folder_name,xybin, medfilter, gaussian_filter,
 
     os.chdir(cwd)
 
-'''
-def video_processing(filename, output_folder_name,xybin, medfilter, gaussian_filter,scalebar_on, video_status, topaz_denoise, denoise_with_cuda):
-    if video_status=='Save Average':
+"""
 
-        default_image_pipeline(filename, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,scalebar=scalebar_on, outdir=output_folder_name, topaz_denoise=topaz_denoise, denoise_with_cuda=denoise_with_cuda)
+
+def video_processing(
+    filename,
+    output_folder_name,
+    xybin,
+    medfilter,
+    gaussian_filter,
+    scalebar_on,
+    video_status,
+    topaz_denoise,
+    denoise_with_cuda,
+):
+    if video_status == "Save Average":
+        default_image_pipeline(
+            filename,
+            xybin=xybin,
+            medfilter=medfilter,
+            gaussfilter=gaussian_filter,
+            scalebar=scalebar_on,
+            outdir=output_folder_name,
+            topaz_denoise=topaz_denoise,
+            denoise_with_cuda=denoise_with_cuda,
+        )
     else:
-        default_video_pipeline(filename,output_type=video_status, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name, scalebar=scalebar_on,topaz_denoise=topaz_denoise, denoise_with_cuda=denoise_with_cuda) #output folder = output_folder+videos
-     
-
+        default_video_pipeline(
+            filename,
+            output_type=video_status,
+            xybin=xybin,
+            medfilter=medfilter,
+            gaussfilter=gaussian_filter,
+            outdir=output_folder_name,
+            scalebar=scalebar_on,
+            topaz_denoise=topaz_denoise,
+            denoise_with_cuda=denoise_with_cuda,
+        )  # output folder = output_folder+videos
 
 
 def isvideo(dmfile):
     try:
         f = nci.dm.fileDM(dmfile)
-        if f.zSize[1]>1:
+        if f.zSize[1] > 1:
             return True
         else:
             return False
     except OSError as e:
         print(e)
 
-def frames_processing(dm_frames,output_folder_name,xybin, medfilter, gaussian_filter, video_status):
+
+def frames_processing(
+    dm_frames, output_folder_name, xybin, medfilter, gaussian_filter, video_status
+):
     dm_frames = group_frames(dm_frames)
     for vid in dm_frames:
-            #if self.motioncor=='Off':
-            print(dm_frames[vid])
-            frames = dm_frames[vid]
-            micrograph = Micrograph()
-            micrograph.open_dm(frames[0])
-            micrograph.add_frames(frames[1:])
-            default_pipeline_class(micrograph, xybin = xybin, medfilter=medfilter, gaussfilter=gaussian_filter,outdir=output_folder_name)
-            
+        # if self.motioncor=='Off':
+        print(dm_frames[vid])
+        frames = dm_frames[vid]
+        micrograph = Micrograph()
+        micrograph.open_dm(frames[0])
+        micrograph.add_frames(frames[1:])
+        default_pipeline_class(
+            micrograph,
+            xybin=xybin,
+            medfilter=medfilter,
+            gaussfilter=gaussian_filter,
+            outdir=output_folder_name,
+        )
+
 
 def get_files_from_pattern(pattern):
-    '''
+    """
     Imports all the files in the current directory that fits the defined pattern and returns them into lists of images, videos and digital micrograph frames
     The pattern allows for use of * for anything and ? for any single charactor, so for all tif files in the directory, one can use `*.tif` or give files with the same prefix but different number: filenumber00??.tif
-    
-    '''
 
-    dirfiles = os.listdir('.')
+    """
+
+    dirfiles = os.listdir(".")
     files = []
-    if '*' in pattern:
-        pattern = pattern.replace('*', '.+')
-        pattern = pattern.replace('?', '.')
+    if "*" in pattern:
+        pattern = pattern.replace("*", ".+")
+        pattern = pattern.replace("?", ".")
         for file in dirfiles:
             if re.search(pattern, file):
-                #print(file)
+                # print(file)
                 files.append(file)
     im_files = []
     video_files = []
     frames = []
-    #print(files)
-    for file in files: 
-        if file[-4:-1]=='.dm':
+    # print(files)
+    for file in files:
+        if file[-4:-1] == ".dm":
             if isvideo(file):
                 video_files.append(file)
-            elif file[-9]=='-' and file[-13:-9].isdigit() and file[-8:-4].isdigit():
+            elif file[-9] == "-" and file[-13:-9].isdigit() and file[-8:-4].isdigit():
                 frames.append(file)
             else:
                 im_files.append(file)
-        elif file[-4:]=='.avi' or file[-4:]=='mp4':
+        elif file[-4:] == ".avi" or file[-4:] == "mp4":
             video_files.append(file)
-        elif file[-4:].lower() in ['.tif', '.jpg', '.png', 'tiff']:
+        elif file[-4:].lower() in [".tif", ".jpg", ".png", "tiff"]:
             im_files.append(file)
         else:
-            print('{} file not included as not a known image/video format, if this is unexpected please raise an issue on github'.format(file))
+            print(
+                "{} file not included as not a known image/video format, if this is unexpected please raise an issue on github".format(
+                    file
+                )
+            )
 
     return im_files, video_files, frames
 
 
-
-'''
+"""
             if '/' in outdir:
                 if outdir.split('/')[-1] not in os.listdir('/'.join(outdir.split('/')[:-1])):
                     os.mkdir(outdir)
@@ -242,4 +284,4 @@ def get_files_from_pattern(pattern):
                 name=name.split('/')[:-1]+outdir+'/'+name
             else:
                 name =outdir+'/'+name  
-'''
+"""
