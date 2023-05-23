@@ -39,7 +39,7 @@ Here is a basic example showing a micrograph being opened, gaussian filtered, co
         #save image
         im_contrast_enhanced.write_image('output.jpg')
 
-List of functions in MicroVideo
+List of functions in Micrograph
 -------------------------------
 
 Imports:
