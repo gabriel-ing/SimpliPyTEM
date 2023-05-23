@@ -26,7 +26,7 @@ setup(
 	 'scikit-image',
 	 'imutils',
 	 'fpdf',
-	 'PyQt5',
+	 'PyQt6==6.5.0',
 	 'sphinx',
 	 'sphinx_rtd_theme',
 	 'nbsphinx',

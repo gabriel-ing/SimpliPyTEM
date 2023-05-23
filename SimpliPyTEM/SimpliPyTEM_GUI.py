@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
 import os
-from PyQt5.QtCore import QCoreApplication, Qt
-from PyQt5.QtWidgets import (QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QHBoxLayout,
+from PyQt6.QtCore import QCoreApplication, Qt
+from PyQt6.QtWidgets import (QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QHBoxLayout,
                              QFileDialog, QTextEdit, QTextBrowser, QComboBox, QCheckBox, QMainWindow,QGridLayout,QFileDialog,QLineEdit,QButtonGroup)
-from PyQt5.QtGui import QFont
+from PyQt6.QtGui import QFont
 import sys
 from SimpliPyTEM.App_functions import * 
 from SimpliPyTEM.PDF_generator import *
@@ -29,7 +29,7 @@ class MainApplication(QWidget):
         self.folderlabel = QLabel('Process a folder, a file or \nliveprocessing a folder:')
         #label.setLayout(layout)
         #self.label2 = QLabel('Choose whether to process a file, a folder, or live during an imaging session',self)
-        self.title.setAlignment(Qt.AlignCenter)
+        self.title.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
 
 
@@ -131,7 +131,7 @@ class MainApplication(QWidget):
 
         self.doc_label1 = QLabel('Document Section')
         self.doc_label1.setObjectName('doc_label')
-        self.doc_label1.setAlignment(Qt.AlignCenter)
+        self.doc_label1.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 
         self.doc_label=QLabel('Following generation of images/videos, use this section to create \n an html or pdf file to display the resulting images:')
         self.title_box_label = QLabel('Give a title for the experiment:')
@@ -578,4 +578,4 @@ class JobRunner(QRunnable):
 #application.exec()
 app = QApplication(sys.argv)
 ex = MainApplication()
-sys.exit(app.exec_())
+sys.exit(app.exec())
