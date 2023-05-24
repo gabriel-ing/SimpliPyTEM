@@ -2074,7 +2074,8 @@ class MicroVideo:
 # Use: default_pipeline(micrograph)
 def default_video_pipeline(
     filename,
-    output_type,
+    vid_type,
+    contrast_enhance=True,
     medfilter=0,
     gaussfilter=3,
     scalebar=True,
@@ -2087,6 +2088,7 @@ def default_video_pipeline(
     name=None,
     topaz_denoise=False,
     denoise_with_cuda=False,
+    im_type = 'jpg'
 ):
     """
     Use to automate default filtering, scalebar adding, binning,frame averaging and saving.
@@ -2133,7 +2135,7 @@ def default_video_pipeline(
     if not name:
         name = ".".join(MicroVideo_object.filename.split(".")[:-1])
 
-    if output_type == "Save MotionCorrected Average":
+    if vid_type == "Save MotionCorrected Average":
         MCor_im = MicroVideo_object.motioncorrect_vid()
         if topaz_denoise:
             Mcor_im = Mcor_im.topaz_denoise(use_cuda=denoise_with_cuda)
@@ -2141,6 +2143,7 @@ def default_video_pipeline(
         if MCor_im == 1:
             default_image_pipeline(
                 filename,
+                output_type=im_type,
                 xybin=xybin,
                 medfilter=medfilter,
                 gaussfilter=gaussfilter,
@@ -2156,11 +2159,12 @@ def default_video_pipeline(
 
         if xybin != 0 and xybin != 1:
             MCor_im = MCor_im.bin(xybin)
-        MCor_im = MCor_im.clip_contrast()
+        if contrast_enhance:
+            MCor_im = MCor_im.clip_contrast()
         if scalebar == True:
             MCor_im = MCor_im.make_scalebar()
 
-        MCor_im.write_image(name, outdir=outdir + "/Images")
+        MCor_im.write_image(name, outdir=outdir + "/Images", ftype=im_type)
 
     else:
         if xybin != 0 and xybin != 1:
@@ -2181,35 +2185,39 @@ def default_video_pipeline(
             name = ".".join(MicroVideo_object.filename.split(".")[:1])
         # MicroVideo_object.bin(xybin)
 
-        if output_type == "Save Video as .mp4" or output_type == "Save Video as .avi":
+        if vid_type == "Save Video as .mp4" or vid_type == "Save Video as .avi":
             if Average_frames != 0 and Average_frames != 1:
                 MicroVideo_object = MicroVideo_object.Average_frames(
                     Average_frames, keep_remainder=False
                 )
             print("Saving {} as video".format(filename))
+            if contrast_enhance:
+                MicroVideo_object = MicroVideo_object.clip_contrast()
             MicroVideo_object.convert_to_8bit()
-            MicroVideo_object = MicroVideo_object.clip_contrast()
+
             if scalebar == True:
                 MicroVideo_object = MicroVideo_object.make_scalebar(color=color)
-            name = name + output_type[-4:]
+            name = name + vid_type[-4:]
 
             MicroVideo_object.write_video(name=name, outdir=outdir + "/Videos")
 
-        elif output_type == "Save Tif Stack":
+        elif vid_type == "Save Tif Stack":
             if scalebar == True:
                 MicroVideo_object = MicroVideo_object.make_scalebar(color=color)
-                # MicroVideo_object = MicroVideo_object.clip_contrast()
+            if contrast_enhance:
+                MicroVideo_object = MicroVideo_object.clip_contrast()
             MicroVideo_object.save_tif_stack(name=name, outdir=outdir + "/Videos")
 
-        elif output_type == "Save Tif Sequence":
+        elif vid_type == "Save Tif Sequence":
             if scalebar == True:
                 MicroVideo_object = MicroVideo_object.make_scalebar(color=color)
                 # MicroVideo_object = MicroVideo_object.clip_contrast()
-
+            if contrast_enhance:
+                MicroVideo_object = MicroVideo_object.clip_contrast()
             MicroVideo_object.save_tif_sequence(name=name, outdir=outdir + "/Videos")
 
         else:
-            print('Error "{}" is not an acceptable output type.'.format(output_type))
+            print('Error "{}" is not an acceptable output type.'.format(vid_type))
 
 
 # def group_frames( frames):

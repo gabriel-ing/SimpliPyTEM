@@ -379,7 +379,7 @@ class Micrograph:
         self.pixel_size = pixel_size
         self.pixel_unit = pixel_unit
 
-    def write_image(self, name=None, ftype="jpg", outdir=None):
+    def write_image(self, name=None, ftype="jpg", outdir=None, bit8=False):
         """
         Saves the image in a .jpg or .tif file for display or use with other programs.
 
@@ -391,7 +391,9 @@ class Micrograph:
 
             ftype: str
                 Optional. Filetype of output image, either 'jpg' or 'tif' (default jpg), this is better defined using the suffix of the name.
-                Saving as a tif will save in whatever format it is currently in - this can be a 32-bit or 8-bit image, using convert_to_8bit() will ensure that latter.
+                Saving as a tif will save in whatever format it is currently in - this can be a 32-bit or 8-bit image, using 'tif 8-bit' or bit8=True ensures its the latter.
+            bit8: bool
+                save tif as 8-bit image? Set to False if you want a full size (32-bit) image
 
             outdir: str
                 Keyword argument (usage: outdir='/path/to/directory'). This defines the output location of the saved image, use a path relative to the current directory or an absolute path.
@@ -414,24 +416,14 @@ class Micrograph:
                 # print('.'.join(name.split('.')[:-1]))
         else:
             name = ".".join(self.filename.split(".")[:-1])
-            name += "." + ftype
+
 
         if outdir:
             make_outdir(outdir)
             name = outdir + "/" + name
             # print('else_name = ',name)
-        # try:
-        #    name += '_'+self.scalebar_size.replace('µ','u')+'scale.{}'.format(ftype)
-        # except AttributeError:
 
-        # if self.foldername!='':
-        #        name = '/'+self.foldername.strip('/n') + '/' + name.split('/')[-1]
-        # if self.foldername=='':
-        #    newname = self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
-        # else:
-        #    newname = self.foldername.strip('\n') + '/' +self.filename.split('.dm')[0]+'_'+self.text+'scale.jpg'
-
-        name += "." + ftype
+        name += "." + ftype[:3]
         if self.pixel_unit == "µm":
             pixel_unit = "um"
         else:
@@ -444,10 +436,11 @@ class Micrograph:
                 print("converting to 8bit")
             cv.imwrite(name, self.image)
 
-        elif ftype == "tif":
+        elif ftype[:3] == "tif":
             metadata = self.metadata_tags
             metadata["unit"]=pixel_unit
-            
+            if ftype=='tif 8-bit' or bit8==True:
+                self = self.convert_to_8bit()
             delkeys = []
             for key in metadata.keys():
 
@@ -647,7 +640,7 @@ class Micrograph:
         ----------
 
             alpha:float
-                Basic contrast control, usually in the range of 1-3. The histogram is streched.
+                Basic contrast control, usually in the range of 1-3. The histogram is stretched.
 
             beta: int (or float)
                 Brightness control, this will add the value to every pixel in the image, only really has an effect with 8-bit images (and any pixels above 255 will be clipped to this)
@@ -1712,7 +1705,9 @@ class Micrograph:
 # Use: default_pipeline(micrograph)
 def default_image_pipeline(
     filename,
+    output_type='jpg',
     name="",
+    contrast_enhance=True,
     medfilter=3,
     gaussfilter=0,
     scalebar=True,
@@ -1735,6 +1730,9 @@ def default_image_pipeline(
 
         name:str
             Name of the saved image
+
+        output_type: str
+            Decides file format of saved image. Currently supported are jpg, tif (8-bit) and tif (32-bit)
 
         medfilter:int
             The kernal size for a median filter on the image, default is 3, use 0 for no median filter, otherwise must be odd.
@@ -1789,12 +1787,13 @@ def default_image_pipeline(
     # if 'outdir' in kwargs:
     # print('name=',name)
     # Micrograph_object = Micrograph_object.enhance_contrast()
-    Micrograph_object = Micrograph_object.convert_to_8bit()
-    Micrograph_object = Micrograph_object.clip_contrast()
+    #Micrograph_object = Micrograph_object.convert_to_8bit()
+    if contrast_enhance: 
+        Micrograph_object = Micrograph_object.clip_contrast()
     if scalebar == True:
         Micrograph_object = Micrograph_object.make_scalebar(texton=texton, color=color)
 
-    Micrograph_object.write_image(name=name, outdir=outdir + "/Images")
+    Micrograph_object.write_image(name=name, outdir=outdir + "/Images", ftype= output_type)
 
     # Micrograph_object.save_image(outname=name)
 

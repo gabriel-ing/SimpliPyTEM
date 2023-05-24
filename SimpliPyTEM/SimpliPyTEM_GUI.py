@@ -2,7 +2,7 @@
 import os
 import sys
 import threading
-
+import time
 from PyQt6.QtCore import QCoreApplication, Qt
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox,
@@ -52,6 +52,12 @@ class MainApplication(QWidget):
             "Input File Pattern\ne.g. *.tif means all .tif files (default= *.dm*)\n"
         )
         self.filepattern_box = QLineEdit(self)
+        
+        #Contrast enhance check box
+        self.contrast_check = QCheckBox('Enhance Contrast', self)
+        self.contrast_check.toggled.connect(self.update_contrast)
+        self.contrast_state = True
+        self.contrast_check.setChecked(True)
 
         # Checkbox for median filter
         self.med_check = QCheckBox("Median filter", self)
@@ -94,6 +100,15 @@ class MainApplication(QWidget):
         self.scalebar_check = QCheckBox("Scalebar", self)
         self.scalebar_check.toggled.connect(self.updateScalebar)
         self.scalebar_check.setChecked(True)
+
+        self.output_type_label = QLabel(
+            'Choose image output type:'
+        )
+        # combo box for output image type
+        self.output_type = 'jpg'
+        self.output_choice = QComboBox(self)
+        self.output_choice.addItems(['jpg', 'tif 8-bit', 'tif 32-bit'])
+        self.output_choice.currentTextChanged.connect(self.output_choice_changed)
 
         # Checkbox for topaz_denoise and using cuda GPU
 
@@ -231,48 +246,69 @@ class MainApplication(QWidget):
     def set_layouts(self):
         self.layout = QGridLayout()
         self.setLayout(self.layout)
-        self.layout.addWidget(self.title, 0, 0, 1, 2)
-        self.layout.addWidget(self.folderlabel, 1, 0, 1, 1)
-        self.layout.addWidget(self.live_choice, 1, 1, 1, 1)
-        self.layout.addWidget(self.FolderBrowse_button, 2, 0, 1, 2)
-        self.layout.addWidget(self.folderpath_label, 3, 0, 1, 2)
-        self.layout.addWidget(self.filepattern_label, 4, 0, 1, 1)
-        self.layout.addWidget(self.filepattern_box, 4, 1, 1, 1)
-
-        self.layout.addWidget(self.med_check, 5, 0, 1, 1)
-        self.layout.addWidget(self.med_choice, 5, 1, 1, 1)
-
-        self.layout.addWidget(self.gauss_check, 6, 0, 1, 1)
-        self.layout.addWidget(self.gauss_choice, 6, 1, 1, 1)
-        self.layout.addWidget(self.bin_check, 7, 0, 1, 1)
-        self.layout.addWidget(self.bin_choice, 7, 1, 1, 1)
-
-        self.layout.addWidget(self.scalebar_check, 8, 0, 1, 1)
-
-        self.layout.addWidget(self.topaz_label, 9, 0, 1, 2)
-        self.layout.addWidget(self.topaz_check, 10, 0, 1, 1)
-        self.layout.addWidget(self.cuda_check, 10, 1, 1, 1)
-
-        self.layout.addWidget(self.output_folder_label, 11, 0, 1, 1)
-        self.layout.addWidget(self.output_folder_box, 11, 1, 1, 1)
-
-        self.layout.addWidget(self.video_label, 12, 0, 1, 2)
-        self.layout.addWidget(self.video_choice, 13, 0, 1, 2)
+        i = 0
+        self.layout.addWidget(self.title, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.folderlabel, i, 0, 1, 1)
+        self.layout.addWidget(self.live_choice, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.FolderBrowse_button, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.folderpath_label, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.filepattern_label, i, 0, 1, 1)
+        self.layout.addWidget(self.filepattern_box, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.contrast_check, i, 0,1,1)
+        i+=1
+        self.layout.addWidget(self.med_check, i, 0, 1, 1)
+        self.layout.addWidget(self.med_choice, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.gauss_check, i, 0, 1, 1)
+        self.layout.addWidget(self.gauss_choice, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.bin_check, i, 0, 1, 1)
+        self.layout.addWidget(self.bin_choice, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.scalebar_check, i, 0, 1, 1)
+        i+=1
+        self.layout.addWidget(self.output_type_label, i,0,1,1)
+        self.layout.addWidget(self.output_choice, i, 1, 1,1)
+        i+=1
+        self.layout.addWidget(self.topaz_label, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.topaz_check, i, 0, 1, 1)
+        self.layout.addWidget(self.cuda_check, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.output_folder_label, i, 0, 1, 1)
+        self.layout.addWidget(self.output_folder_box, i, 1, 1, 1)
+        i+=1
+        self.layout.addWidget(self.video_label, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.video_choice, i, 0, 1, 2)
+        i+=2
         # self.layout.addWidget(self.video_option1,9,0,1,1)
         # self.layout.addWidget(self.video_option2,9,1,1,1)
         # self.layout.addWidget(self.video_option3,10,0,1,1)
         # self.layout.addWidget(self.video_option4,10,1,1,1)
-        self.layout.addWidget(self.Run_button, 15, 0, 2, 2)
-        self.layout.addWidget(self.stopButton, 17, 0, 1, 2)
-        self.layout.addWidget(self.doc_label1, 18, 0, 1, 2)
-        self.layout.addWidget(self.doc_label, 19, 0, 1, 2)
-        self.layout.addWidget(self.title_box_label, 20, 0, 1, 1)
-        self.layout.addWidget(self.title_box, 21, 0, 1, 2)
-        self.layout.addWidget(self.notes_box_label, 22, 0, 1, 1)
-        self.layout.addWidget(self.notes_box, 23, 0, 1, 3)
-
-        self.layout.addWidget(self.html_button, 27, 0, 1, 1)
-        self.layout.addWidget(self.pdf_button, 27, 1, 1, 1)
+        self.layout.addWidget(self.Run_button, i, 0, 2, 2)
+        i+=2
+        self.layout.addWidget(self.stopButton, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.doc_label1, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.doc_label, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.title_box_label, i, 0, 1, 1)
+        i+=1
+        self.layout.addWidget(self.title_box, i, 0, 1, 2)
+        i+=1
+        self.layout.addWidget(self.notes_box_label, i, 0, 1, 1)
+        i+=1
+        self.layout.addWidget(self.notes_box, i, 0, 1, 3)
+        i+=4
+        self.layout.addWidget(self.html_button, i, 0, 1, 1)
+        self.layout.addWidget(self.pdf_button, i, 1, 1, 1)
 
     def video_checkbox_functions(self):
         # Video options checkboxes:
@@ -299,6 +335,9 @@ class MainApplication(QWidget):
             self.stopSignal = False
             return True
 
+    def update_contrast(self, state):
+        self.contrast_state=state
+
     def text_changed(self, s):  # i is an int
         self.folder_option = s
 
@@ -320,6 +359,8 @@ class MainApplication(QWidget):
     def updateBin(self, state):
         self.Bin_state = state
 
+    def output_choice_changed(self, s):
+        self.output_type=s
     def updateScalebar(self, state):
         self.scalebar_on = state
 
@@ -432,7 +473,7 @@ class MainApplication(QWidget):
             print("Please select a folder/file")
             return 1
         print(self.folderpath)
-
+        print('Contrast_state', self.contrast_state)
         try:
             if self.folder_option == "Folder":
                 print("Running folder?")
@@ -441,6 +482,8 @@ class MainApplication(QWidget):
                     args=(
                         self.folderpath,
                         outdir,
+                        self.output_type,
+                        self.contrast_state,
                         self.bin_value,
                         self.med_filter_value,
                         self.gauss_filter_value,
@@ -456,6 +499,8 @@ class MainApplication(QWidget):
                 self.process_file(
                     self.folderpath,
                     outdir,
+                    self.output_type,
+                    self.contrast_state,
                     self.bin_value,
                     self.med_filter_value,
                     self.gauss_filter_value,
@@ -472,6 +517,8 @@ class MainApplication(QWidget):
                     args=(
                         self.folderpath,
                         outdir,
+                        self.output_type,
+                        self.contrast_state,
                         self.bin_value,
                         self.med_filter_value,
                         self.gauss_filter_value,
@@ -492,6 +539,8 @@ class MainApplication(QWidget):
         self,
         folder,
         output_folder_name,
+        output_type,
+        contrast_state,
         xybin,
         medfilter,
         gaussian_filter,
@@ -531,6 +580,8 @@ class MainApplication(QWidget):
             video_processing(
                 filename=file,
                 output_folder_name=output_folder_name,
+                output_type=output_type,
+                contrast_enhance=contrast_state,
                 xybin=xybin,
                 medfilter=medfilter,
                 gaussian_filter=gaussian_filter,
@@ -545,6 +596,8 @@ class MainApplication(QWidget):
                 return 1
             default_image_pipeline(
                 file,
+                output_type=output_type,
+                contrast_enhance=contrast_state,
                 xybin=xybin,
                 medfilter=medfilter,
                 gaussfilter=gaussian_filter,
@@ -558,6 +611,7 @@ class MainApplication(QWidget):
             frames_processing(
                 dm_frames,
                 output_folder_name,
+                output_type,
                 xybin,
                 medfilter,
                 gaussian_filter,
@@ -576,6 +630,8 @@ class MainApplication(QWidget):
         self,
         folder,
         output_folder_name,
+        output_type,
+        contrast_state,
         xybin,
         medfilter,
         gaussian_filter,
@@ -628,6 +684,8 @@ class MainApplication(QWidget):
                             video_processing(
                                 file,
                                 output_folder_name,
+                                output_type,
+                                contrast_state,
                                 xybin,
                                 medfilter,
                                 gaussian_filter,
@@ -639,7 +697,9 @@ class MainApplication(QWidget):
                         else:
                             default_image_pipeline(
                                 file,
+                                output_type=output_type,
                                 xybin=xybin,
+                                contrast_enhance=contrast_state,
                                 medfilter=medfilter,
                                 gaussfilter=gaussian_filter,
                                 outdir=output_folder_name,
@@ -663,6 +723,8 @@ class MainApplication(QWidget):
         self,
         folderpath,
         outdir,
+        output_type,
+        contrast_state,
         bin_value,
         med_filter_value,
         gauss_filter_value,
@@ -673,6 +735,8 @@ class MainApplication(QWidget):
             video_processing(
                 folderpath,
                 outdir,
+                output_type,
+                contrast_state,
                 xybin=bin_value,
                 medfilter=med_filter_value,
                 gaussian_filter=gauss_filter_value,
@@ -682,7 +746,9 @@ class MainApplication(QWidget):
         else:
             default_image_pipeline(
                 filename,
-                xybin=xybin,
+                output_type=output_type,
+                contrast_enhance=contrast_state,
+                xybin=bin_value,
                 medfilter=med_filter_value,
                 gaussfilter=gauss_filter_value,
                 scalebar=scalebar_on,
@@ -690,38 +756,7 @@ class MainApplication(QWidget):
             )
 
 
-"""
-class JobRunner(QRunnable):
 
-    signals = WorkerSignals()
-
-    def __init__(self):
-        super().__init__()
-
-        self.is_paused = False
-        self.is_killed = False
-
-    @pyqtSlot()
-    def run(self):
-        for n in range(100):
-            self.signals.progress.emit(n + 1)
-            time.sleep(0.1)
-
-            while self.is_paused:
-                time.sleep(0)
-
-            if self.is_killed:
-                break
-
-    def pause(self):
-        self.is_paused = True
-
-    def resume(self):
-        self.is_paused = False
-
-    def kill(self):
-        self.is_killed = True
-"""
 # MainApplication.show()
 # application.exec()
 app = QApplication(sys.argv)
