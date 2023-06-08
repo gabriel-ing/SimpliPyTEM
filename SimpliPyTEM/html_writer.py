@@ -85,7 +85,7 @@ def write_html(
         f.write(str(a))
 
 
-def get_files(imagedir, videodir=None, image_pattern="", video_pattern=""):
+def get_files_html(imagedir, videodir=None, image_pattern="", video_pattern=""):
     """
     Simple method for getting the image and video files.
 

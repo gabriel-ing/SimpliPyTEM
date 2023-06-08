@@ -16,7 +16,7 @@ from matplotlib import font_manager
 from moviepy.editor import ImageSequenceClip
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
-from SimpliPyTEM.Micrograph_class import *
+from SimpliPyTEM.Micrograph_class import Micrograph, default_image_pipeline, make_outdir
 
 plt.gray()
 

@@ -5,8 +5,8 @@ from imutils import contours
 from moviepy.editor import ImageSequenceClip
 from skimage import measure
 
-from SimpliPyTEM.Micrograph_class import *
-from SimpliPyTEM.MicroVideo_class import *
+from SimpliPyTEM.Micrograph_class import Micrograph
+from SimpliPyTEM.MicroVideo_class import MicroVideo
 
 """
 MAIN FUNCTIONS

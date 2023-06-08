@@ -10,10 +10,10 @@ from PyQt6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox,
                              QLineEdit, QMainWindow, QPushButton, QTextBrowser,
                              QTextEdit, QVBoxLayout, QWidget)
 
-from SimpliPyTEM.App_functions import *
-from SimpliPyTEM.html_writer import *
-from SimpliPyTEM.PDF_generator import *
-
+from SimpliPyTEM.App_functions import video_processing, isvideo, frames_processing, get_files_from_pattern
+from SimpliPyTEM.html_writer import write_html, write_css, get_files_html
+from SimpliPyTEM.PDF_generator import pdf_generator
+from SimpliPyTEM.Micrograph_class import default_image_pipeline
 
 class MainApplication(QWidget):
     def __init__(self):
@@ -402,7 +402,7 @@ class MainApplication(QWidget):
         notes = self.notes_box.toPlainText()
         print("Writing html and css files")
         try:
-            image_files, video_files = get_files("Images", "Videos")
+            image_files, video_files = get_files_html("Images", "Videos")
         except FileNotFoundError:
             print(
                 "The Images folder was not found, please make sure that the output folder defined above has a folder of images called images."
