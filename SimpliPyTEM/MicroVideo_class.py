@@ -115,7 +115,17 @@ class MicroVideo:
 
 
         """
+    def copy(self):
+        '''Returns a copy of the object 
 
+        Returns
+        -------
+
+            MicroVideo: MicroVideo
+                Copy of original MicroVideo object'''
+                
+        return deepcopy(self)
+        
     def open_dm(self, file, pixelcorrection=True):
         """
         Imports digital micrograph files into the micrograph object, initialising all the default attributes required, including saving the metadata into self.metadata_tags.

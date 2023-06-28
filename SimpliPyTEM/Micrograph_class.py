@@ -125,7 +125,9 @@ class Micrograph:
             self.log = []
             self.video = False
             self.nframes = 1
-
+    def copy(self):
+        return deepcopy(self)
+        
     def open_dm(self, file, video_average=True, pixel_correction=True):
         """
         Imports digital micrograph files into the micrograph object, initialising all the default attributes required, including saving the metadata into self.metadata_tags.
