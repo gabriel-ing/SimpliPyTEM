@@ -123,7 +123,7 @@ class MicroVideo:
 
             MicroVideo: MicroVideo
                 Copy of original MicroVideo object'''
-                
+
         return deepcopy(self)
         
     def open_dm(self, file, pixelcorrection=True):
@@ -591,9 +591,10 @@ class MicroVideo:
         if outdir:
             make_outdir(outdir)
             name = outdir + "/" + name
-
+        frames_yflipped =  np.flip(self.frames, axis=1)
         with mrcfile.new(name, overwrite=overwrite) as mrc:
-            mrc.set_data(self.frames)
+            mrc.set_data(frames_yflipped)
+        
 
     def toMicrograph(self):
         """
