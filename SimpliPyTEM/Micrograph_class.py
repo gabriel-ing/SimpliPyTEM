@@ -126,6 +126,15 @@ class Micrograph:
             self.video = False
             self.nframes = 1
     def copy(self):
+        '''
+        Returns a copy of the object 
+
+        Returns
+        -------
+
+            Micrograph: Micrograph
+                Copy of original Micrograph object
+        '''
         return deepcopy(self)
         
     def open_dm(self, file, video_average=True, pixel_correction=True):
@@ -1110,6 +1119,56 @@ class Micrograph:
         filtered_object.image = filtered_image
 
         filtered_object.log.append("low_pass_filter({})".format(radius))
+        return filtered_object
+
+    def high_pass_filter(self, radius):
+        """
+        This high pass filters the image. High pass filtering can be useful for evening out the contrast in the image. The pixel size is used to scale the radius to whatever the pixel unit is (ie radius 10 is 10nm/10um)
+        If pixelsize is undefined the radius will refer to pixels only
+    
+        Parameters
+        ----------
+            radius : int (or potentially float)
+                The effects of this vary depending on if the pixelsize is defined in self.pixel_size.:
+                     - Assuming your micrograph object has a pixel size defined, the filter works by removing any features larger than the size you input as a parameter (the unit is the same as the pixelsize). A larger number yields a stronger filter.
+                    Effective filter sizes depend on features and magnification, so start with something between 1-5 and tune it to your needs.
+                    - If your micrograph is missing a pixelsize, the size input will be the radius of a circle kept in the power spectrum. Here the input number does the inverse - a smaller number leads to a stronger filter. In this case, much larger numbers will be needed; 50 is a good starting value.
+    
+        Returns
+        -------
+                High_pass_filtered_object : Micrograph
+                    High pass filtered copy of micrograph object.
+    
+        """
+        N = self.image.shape[0]
+        if (
+            type(self.pixel_size) == int
+            or type(self.pixel_size) == float
+            and self.pixel_size != 0
+        ):
+            radius = int((N * self.pixel_size) / radius)
+    
+        fft = np.fft.fft2(self.image)
+        fshift = np.fft.fftshift(fft)
+        magnitude_spectrum = np.log(np.abs(fshift))
+        rows, cols = self.image.shape
+        crow, ccol = int(cols / 2), int(rows / 2)
+        fshift_filtered = np.copy(fshift)
+        mask = np.zeros_like(self.image)
+    
+        mask = cv.circle(cv.UMat(mask), (crow, ccol), radius * 2, 1, -1)
+        mask = mask.get()
+        mask = ~mask.astype(bool)
+        fcomplex = fshift[:, :] * 1j
+        fshift_filtered = mask * fcomplex
+        f_filtered_shifted = np.fft.fftshift(fshift_filtered)
+        inv_image = np.fft.ifft2(f_filtered_shifted)
+        filtered_image = np.abs(inv_image)
+        filtered_image -= filtered_image.min()
+        filtered_object = deepcopy(self)
+        filtered_object.image = filtered_image
+    
+        filtered_object.log.append("high_pass_filter({})".format(radius))
         return filtered_object
 
     def median_filter(self, kernal=3):

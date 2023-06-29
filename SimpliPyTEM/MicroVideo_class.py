@@ -1436,6 +1436,7 @@ class MicroVideo:
             mask = cv.circle(cv.UMat(mask), (crow, ccol), radius * 2, 1, -1)
             # print(fshift_filtered)
             mask = mask.get()
+            mask =~mask.astype(bool)
             fcomplex = fshift[:, :] * 1j
             fshift_filtered = mask * fcomplex
             f_filtered_shifted = np.fft.fftshift(fshift_filtered)
