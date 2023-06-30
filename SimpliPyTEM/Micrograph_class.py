@@ -448,6 +448,8 @@ class Micrograph:
             cv.imwrite(name, self.image)
 
         elif ftype[:3] == "tif":
+            if not hasattr(self, 'metadata_tags'):
+                self.metadata_tags={'Pixel Size':self.pixel_size, 'unit':'Pixel unit'}
             metadata = self.metadata_tags
             metadata["unit"]=pixel_unit
             if ftype=='tif 8-bit' or bit8==True:

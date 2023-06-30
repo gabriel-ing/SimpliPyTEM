@@ -110,6 +110,9 @@ Following this the library should be accessible within python or jupyter-noteboo
 Installation Troubleshooting
 ----------------------------
 
+
+This is a legacy error - it should have hopefully been fixed as of  version 1.0.6 (current version on pyPI)! However I am leaving it in case similar issues arise despite this.
+
 I've come across some errors when installing the package, particularly in linux computers, one in particular relating to `qt.qpa.plugin`, it looks as follows
 :::
 
@@ -136,14 +139,16 @@ If there is still an error but it has changed after doing this, try uninstalling
 
    `pip install pyQT5==5.14`
 
-Unfortunately making pyQT5==5.14 th default leads to the program not running on macs (at least on my computer running python3.10), so I have not made this the default. 
+Unfortunately making pyQT5==5.14 th default leads to the program not running on macs (at least on my computer), so I have not made this the default. 
 
 Alternatively, one user has reported that uninstalling openCV and installing the 'headless' version also works:
 
    `pip uninstall opencv-python`
    `pip install opencv-python-headless`
 
-If this fix still doesn't work, I don't immediately have a solution, try googling parts of the error message,  and raise an issue on the SimpliPyTEM github page and I can you debug. 
+
+
+Please let me know if you do have this or any other issues and I'll add to this! 
 
 Indices
 -------

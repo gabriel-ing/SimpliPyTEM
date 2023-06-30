@@ -4,7 +4,9 @@ import imutils
 from imutils import contours
 from moviepy.editor import ImageSequenceClip
 from skimage import measure
-
+import cv2 as cv
+import numpy as np 
+import pandas as pd 
 from SimpliPyTEM.Micrograph_class import Micrograph
 from SimpliPyTEM.MicroVideo_class import MicroVideo
 
