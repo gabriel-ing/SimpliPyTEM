@@ -4,7 +4,8 @@ import os
 import subprocess as sb
 import time
 from copy import deepcopy
-
+import hyperspy.api as hs
+from cherrypicker import CherryPicker
 import cv2 as cv
 import matplotlib.pyplot as plt
 import mrcfile
@@ -125,6 +126,7 @@ class Micrograph:
             self.log = []
             self.video = False
             self.nframes = 1
+
     def copy(self):
         '''
         Returns a copy of the object 
@@ -219,7 +221,10 @@ class Micrograph:
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
         self.pixel_size = float(str(voxel_size).split(",")[0].strip("("))
-        self.image = mrc.data
+        if len(mrc.data==3):
+            self.image = np.sum(mrc.data, axis=0)
+        else:
+            self.image = mrc.data
         self.image.setflags(write=1)
         self.x = self.image.shape[1]
         self.y = self.image.shape[0]
@@ -236,6 +241,40 @@ class Micrograph:
         self.original_image = self.image
 
     ##write a hyperspy opening function
+    def open_hyperspy(self, filename):
+        '''
+        Opens filetypes with [hyperspy](https://hyperspy.org/) - this is excellent for a range of electron microscope signal types, I recommend checking it out.
+
+        This will allow opening a number of filetypes which will make SimpliPyTEM more accessible for more users, however I cannot verify that this will work with all filetypes and may cause an issue if non-image signals are included. 
+
+        Please report any issues with this on github and I will try to fix them.
+
+        Parameters
+        ----------
+
+            filename: str
+                Name of file to open
+        ''' 
+        s = hs.load(filename)
+        if len(s.data.shape)==3:
+            self.image = np.sum(s.data, axis=0)
+            self.video= True
+        elif len(s.data.shape)==2:
+            self.image = s.data
+        elif len(s.data.shape)==1:
+            print('Error - there is only one dimension, this is not image data')
+            raise Exception
+        else: 
+            print('Error - there are more than 3 dimensions, unclear what these are.')
+            raise Exception
+            
+        self.filename = filename
+        self.pixel_size = s.axes_manager[-1].scale
+        self.pixel_unit = s.axes_manager[-1].units
+        picker = CherryPicker(s.metadata.as_dictionary())
+
+        self.metadata_tags = picker.flatten(delim='.').get()
+        self.reset_xy()
 
     def open_image(self, filename, pixel_size=None, pixel_unit=None):
         """
@@ -332,12 +371,17 @@ class Micrograph:
     def open_file(self, filename):
         if filename[-4:] == ".dm3" or filename[-4:] == ".dm4":
             self.open_dm(filename)
-        elif filename[-4:] == ".mrc":
-            self.open_mrc(filename)
+        #elif filename[-4:] == ".mrc":
+        #    self.open_mrc(filename)
         elif filename[-4:].lower() in [".jpg", ".png", ".tif", "tiff"]:
             self.open_image(filename)
         elif filename[-4:].lower() in [".mp4", ".avi", ".mov"]:
             self.open_video(filename)
+        else:
+            try:
+                self.open_hyperspy(filename)
+            except:
+                print('Error, unknown or unsupported file type - if you think this should be available, please contact developers by raising issue on github')
 
     def open_video(
         self,
@@ -1559,9 +1603,12 @@ class Micrograph:
                 ]
 
             except KeyError:
-                print(
-                    "Sorry, indicated mag cannot be located in tags, please find manually using .show_metadata()"
-                )
+                try:
+                    self.indicated_mag = self.metadata_tags["Acquisition_instrument.TEM.magnification"]
+                except:
+                    print(
+                        "Sorry, indicated mag cannot be located in tags, please find manually using .show_metadata()"
+                    )
 
         try:
             self.actual_mag = self.metadata_tags[
@@ -1582,6 +1629,9 @@ class Micrograph:
             # print('Indicated mag: {}'.format(self.indicated_mag))
             # print('Actual mag: {}'.format(self.actual_mag))
             return self.indicated_mag, self.actual_mag
+        elif hasattr(self, "indicated_mag"):
+            return self.indicated_mag, -1
+
         else:
             return -1, -1
 
@@ -1622,9 +1672,14 @@ class Micrograph:
                 ".ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)"
             ]
             return self.exposure
-        except KeyError:
-            return -1
 
+        except KeyError:
+            try:
+                self.exposure = self.metadata_tags['Acquisition_instrument.TEM.Camera.exposure']
+                return self.exposure
+            except:
+                print('Sorry, exposure cannot be located')
+                return -1
     def get_date_time(self):
         """
         Prints and returns the aquisition date and time for the image.
@@ -1646,7 +1701,17 @@ class Micrograph:
             ]
             return self.AqDate, self.AqTime
         except:
-            return "UNK", "UNK"
+            try:
+                self.AqDate = self.metadata_tags[
+                    "General.date"
+                ]
+                self.AqTime = self.metadata_tags[
+                    "General.time"
+                ]            
+                return self.AqDate, self.AqTime 
+            except:
+
+                return "UNK", "UNK"
         # print('Date: {} '.format(self.AqDate))
         # print('Time {} '.format(self.AqTime))
 

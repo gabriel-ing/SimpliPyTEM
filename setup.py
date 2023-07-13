@@ -31,7 +31,9 @@ setup(
 	 'sphinx_rtd_theme',
 	 'nbsphinx',
 	 'pandas==1.5.3',
-	 'seaborn==0.12.2'],
+	 'seaborn==0.12.2',
+	 'hyperspy==1.7.5',
+	 'cherrypicker==0.4.0'],
 	entry_points={'console_scripts':['SimpliPyTEM-GUI = SimpliPyTEM.SimpliPyTEM_GUI:main']},
 	classifiers=[
 		'Development Status :: 4 - Beta',
