@@ -3,7 +3,8 @@ import os
 import subprocess as sb
 import time
 from copy import deepcopy
-
+import hyperspy.api as hs
+from cherrypicker import CherryPicker
 import cv2 as cv
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
@@ -199,6 +200,46 @@ class MicroVideo:
         print(file + " opened as a MicroVideo object")
 
     #       #return image, x, y, pixel_size, pixel_unit
+    def open_hyperspy(self, filename):
+        '''
+        Opens filetypes with [hyperspy](https://hyperspy.org/) - this is excellent for a range of electron microscope signal types, I recommend checking it out.
+
+        This will allow opening a number of filetypes which will make SimpliPyTEM more accessible for more users, however I cannot verify that this will work with all filetypes and may cause an issue if non-image signals are included. 
+
+        Please report any issues with this on github and I will try to fix them.
+
+        Parameters
+        ----------
+
+            filename: str
+                Name of file to open
+        ''' 
+        s = hs.load(filename)
+
+        if len(s.data.shape)==3:
+            self.frames = s.data
+        elif len(s.data.shape)==2:
+            print('Error - this appears to be an image, thus returning an image')
+            raise Exception
+
+        elif len(s.data.shape)>3: 
+            print('Error - there are more than 3 dimensions, unclear what these are.')
+            raise Exception
+
+            
+        self.filename = filename
+        self.pixel_size = s.axes_manager[-1].scale
+        self.pixel_unit = s.axes_manager[-1].units
+        picker = CherryPicker(s.metadata.as_dictionary())
+
+        self.metadata_tags = picker.flatten(delim='.').get()
+
+        if 'Acquisition_instrument.TEM.Camera.exposure' in self.metadata_tags:
+            self.fps = float(self.metadata_tags['Acquisition_instrument.TEM.Camera.exposure'])/s.data.shape[0]
+        else:
+            self.fps= -1
+        self.reset_xy()
+
 
     def open_mrc(self, file):
         mrc = mrcfile.open(file)
@@ -304,7 +345,14 @@ class MicroVideo:
         elif filename[-4:] == ".mrc":
             self.open_mrc(filename)
         else:
-            self.open_video(filename)
+            try:
+                self.open_hyperspy()
+            except:
+                try:
+                    self.open_video(filename)
+                except:
+                    print("Error - unknown or unsupported filetype, if you think this should be supported please raise an issue on github")
+                    raise Exception
 
     def reset_xy(self):
         """
@@ -984,9 +1032,12 @@ class MicroVideo:
                     ".ImageList.2.ImageTags.Microscope Info.Formatted Indicated Mag"
                 ]
             except KeyError:
-                print(
-                    "Sorry, indicated mag could not be found, try searching for it manually with the show_metadata method"
-                )
+                try:
+                    self.indicated_mag = self.metadata_tags["Acquisition_instrument.TEM.magnification"]
+                except:
+                    print(
+                        "Sorry, indicated mag cannot be located in tags, please find manually using .show_metadata()"
+                    )
         try:
             self.actual_mag = self.metadata_tags[
                 ".ImageList.2.ImageTags.Microscope Info.Actual Magnification"
@@ -1005,6 +1056,10 @@ class MicroVideo:
             # print('Indicated mag: {}'.format(self.indicated_mag))
             # print('Actual mag: {}'.format(self.actual_mag))
             return self.indicated_mag, self.actual_mag
+        elif hasattr(self, "indicated_mag"):
+            return self.indicated_mag, -1
+        else:
+            return -1, -1
 
     def get_voltage(self):
         """
@@ -1016,10 +1071,18 @@ class MicroVideo:
             Voltage:int
                 Microscope voltage for the image
         """
-        self.voltage = self.metadata_tags[
-            ".ImageList.2.ImageTags.Microscope Info.Voltage"
-        ]
-        return self.voltage
+        try:
+            self.voltage = self.metadata_tags[
+                ".ImageList.2.ImageTags.Microscope Info.Voltage"
+            ]
+            return self.voltage
+        except:
+            try: 
+                self.voltage = self.metadata_tags['Acquisition_instrument.TEM.beam_energy']
+                return self.voltage
+            except KeyError:
+                print("Voltage was not found")
+                return -1
 
     def get_exposure(self, print_values=True):
         """
@@ -1034,24 +1097,18 @@ class MicroVideo:
             Imaging_time:int
                 The total imaging time for the video. s
         """
-        # print('Frame rate : {}fps'.format(self.fps))
-        # print('Exposure time per frame: {}s '.format(1/self.fps))
-        if print_values == True:
-            print("Frame rate : {}fps".format(self.fps))
-            print("Exposure time per frame: {}s ".format(1 / self.fps))
-            print(
-                "Imaging time: {}s".format(
-                    self.metadata_tags[
-                        ".ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)"
-                    ]
-                )
-            )
-            print("Number of frames: {}".format(self.frames.shape[0]))
+        try:
+            self.exposure = self.metadata_tags[
+                ".ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)"
+            ]
+        except: 
+            try:
+                self.exposure = self.metadata_tags['Acquisition_instrument.TEM.Camera.exposure']
+            except:
+                self.exposure = -1
         return (
             self.fps,
-            self.metadata_tags[
-                ".ImageList.2.ImageTags.Acquisition.Parameters.High Level.Exposure (s)"
-            ],
+            self.exposure
         )
 
     def get_date_time(self):
@@ -1066,17 +1123,30 @@ class MicroVideo:
             AqTime:str
                 Time at which the micrograph was captured
         """
-        self.AqDate = self.metadata_tags[
-            ".ImageList.2.ImageTags.DataBar.Acquisition Date"
-        ]
-        self.AqTime = self.metadata_tags[
-            ".ImageList.2.ImageTags.DataBar.Acquisition Time"
-        ]
+        try:
+            self.AqDate = self.metadata_tags[
+                ".ImageList.2.ImageTags.DataBar.Acquisition Date"
+            ]
+            self.AqTime = self.metadata_tags[
+                ".ImageList.2.ImageTags.DataBar.Acquisition Time"
+            ]
         # print('Date: {} '.format(self.AqDate))
         # print('Time {} '.format(self.AqTime))
-        return self.AqDate, self.AqTime
+            return self.AqDate, self.AqTime
+        except:
+            try:
+                self.AqDate = self.metadata_tags[
+                    "General.date"
+                ]
+                self.AqTime = self.metadata_tags[
+                    "General.time"
+                ]            
+                return self.AqDate, self.AqTime 
+            except:
 
-    def export_metadata(self, name=None, outdir="."):
+                return "UNK", "UNK"
+
+    def export_metadata(self, name='metadata.csv', outdir="."):
         """ """
         make_outdir(outdir)
 
