@@ -62,12 +62,14 @@ Imports:
     * open_dm - Opening digital micrograph files
     * open_video - Opening a .mp4 or .avi video files
     * open_array - Loading a numpy array 
+    * open_hyperspy 
 
 Saving: 
     * save_tif_stack
     * save_tif_sequence
     * write_video - save .mp4 or .avi version of the video
     * write_image - save video frame or video average as an image
+    * write_mrc
 
 Basic functions: 
     * bin - reduce size of xy axis by binning pixels, factor is specified in call
@@ -89,6 +91,7 @@ Metadata (currently relies on dm3/dm4 metadata):
     * get_voltage - prints and returns voltage
     * get_exposure - prints and returns frame rate, exposure time
     * get_date_time - prints aquisition date and time 
+    * export_metadata - saves metadata into a .csv file
 
 Image filters:
     * gaussian_filter
@@ -97,6 +100,8 @@ Image filters:
     * weiner_filter
     * non_local_means_filter
     * topaz_denoise - Denoise with topaz, run `pip install topaz-em` before use. 
+    * high_pass_filter
+
 Plotting:
     * imshow - plots still image (either single frame or average) of video
     * plot_histogram - plots the histogram of the video 

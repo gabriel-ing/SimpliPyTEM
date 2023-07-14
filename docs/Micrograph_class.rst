@@ -42,12 +42,13 @@ Here is a basic example showing a micrograph being opened, gaussian filtered, co
 List of functions in Micrograph
 -------------------------------
 
-Imports:
+Imports - please note, these imports will be called if a filename is included when the object is initialised:
     * open_dm - Opening digital micrograph files
     * open_mrc - Opening an mrc file
     * open_image - Opening .tif, .jpg, .png
     * open_video - Open .mp4 or .avi as an all-frame average
     * open_file - Opening any image/video file (using other functions)
+    * open_hyperspy - opening an EM image file with hyperspy 
 
 Saving: 
     * write_image - save video frame or video average as an image
@@ -72,6 +73,7 @@ Metadata (currently relies on dm3/dm4 metadata):
     * get_voltage - prints and returns voltage
     * get_exposure - prints and returns frame rate, exposure time
     * get_date_time - prints aquisition date and time 
+    * export_metadata - saves metadata into a csv file
 
 Image filters:
     * gaussian_filter
@@ -80,6 +82,7 @@ Image filters:
     * weiner_filter
     * non_local_means_filter
     * denoise_with_topaz - denoises with topaz (https://doi.org/10.1038/s41467-020-18952-1), run `pip install topaz-em` before use.
+    * high_pass_filter
 
 Plotting:
     * imshow - plots image

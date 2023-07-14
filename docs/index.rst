@@ -15,9 +15,10 @@ This project aims to make use of the rapid automation of image analysis methods 
 
 Functions to generate pdf and html files containing images and videos are also included in this package. This allows easy viewing and sharing of all the images/videos taken in an imaging session, making experiment evaluation significantly easier. 
 
- 
+SimpliPyTEM was mainly built for Gatan's DM4 files, however many other filetypes are now supported for basic functionality, this is known to include TIFs, MRCs, MP4s, AVIs. In addition, Hyperspy is  (as of July 2023) used for any unknown filetypes, this supports numerous different electron microscopy filetypes so feel free to try your files and see if it works. If the library would be useful to you but you cannot open your files, please open an issue on the github and I can discuss it further with you.
 
 
+Any issues? Please report on the issues page on github.
 
 SimpliPyTEM-GUI
 ---------------
