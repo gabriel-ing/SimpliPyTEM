@@ -69,7 +69,7 @@ Saving:
     * save_tif_sequence
     * write_video - save .mp4 or .avi version of the video
     * write_image - save video frame or video average as an image
-    * write_mrc
+    * write_mrc - saves file as .mrc file
 
 Basic functions: 
     * bin - reduce size of xy axis by binning pixels, factor is specified in call
@@ -118,3 +118,4 @@ Documentation
         :members:
         :undoc-members:
         :show-inheritance:
+
