@@ -20,4 +20,4 @@ sphinx_rtd_theme
 SimpliPyTEM
 seaborn
 pandas
-
+hyperspy

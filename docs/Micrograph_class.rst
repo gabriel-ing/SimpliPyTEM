@@ -97,9 +97,7 @@ Others:
 
 Documentation 
 -------------
-
 .. automodule:: Micrograph_class
-        :members:
-        :undoc-members:
-        :show-inheritance:
-
+    :members:
+    :undoc-members:
+    :show-inheritance:

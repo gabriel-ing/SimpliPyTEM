@@ -15,8 +15,8 @@ The basic method is:
 This can be done as follows::
       
       #import module 
-      from simpliPyTEM.Particle_analysis import * 
-      from simpliPyTEM.Micrograph_class import *
+      from SimpliPyTEM.Particle_analysis import * 
+      from SimpliPyTEM.Micrograph_class import *
 
       micrograph = Micrograph()
       micrograph.open_dm('My_micrograph.dm3')

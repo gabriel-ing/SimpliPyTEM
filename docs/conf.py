@@ -22,7 +22,7 @@ copyright = '2022, Gabriel Ing'
 author = 'Gabriel Ing'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.5'
+release = '1.0.7'
 
 
 # -- General configuration ---------------------------------------------------

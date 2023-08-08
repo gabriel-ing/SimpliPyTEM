@@ -115,7 +115,7 @@ Documentation
 -------------
 
 .. automodule:: MicroVideo_class
-        :members:
-        :undoc-members:
-        :show-inheritance:
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
