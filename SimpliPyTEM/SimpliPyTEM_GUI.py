@@ -202,16 +202,16 @@ class MainApplication(QWidget):
         app.setStyleSheet(
             """*{font-family:"helvetica", serif; font-weight:200} QWidget{background-color:#C2E4E9;} \
             QPushButton:hover{background-color: #D8BBEA; color:black;} \
-            QPushButton{background-color:white;font-size:16pt;font-weight:500;}  \
+            QPushButton{background-color:white;font-size:16pt;font-weight:500; color:black;}  \
             QPushButton.active{background-color:#502673}
-            QCheckBox{background-color:white;font-size: 11pt; } \
-            QLabel{font-size:12pt;font-weight:400;}\
-            QComboBox{background-color:white;font-size:10px;vertical-align:text-top;}\
-            QTextEdit{background-color:white;} \
-            QLineEdit{background-color:white}\
-            #stopButton:hover{background-color:#F2B8D5}\
-            QLabel#title{font-size:18pt; font-weight:700;}
-            QLabel#doc_label{font-size:15pt; font-weight:600;}
+            QCheckBox{background-color:white;font-size: 11pt; color:black; } \
+            QLabel{font-size:12pt;font-weight:400; color:black; }\
+            QComboBox{background-color:white;font-size:10px;vertical-align:text-top; color:black;}\
+            QTextEdit{background-color:white; color:black;} \
+            QLineEdit{background-color:white; color:black;}\
+            #stopButton:hover{background-color:#F2B8D5; color:black;}\
+            QLabel#title{font-size:18pt; font-weight:700; color:black;}\
+            QLabel#doc_label{font-size:15pt; font-weight:600; color:black;}
             """
         )
 
