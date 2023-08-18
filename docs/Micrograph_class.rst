@@ -11,6 +11,7 @@ There is too much to write detailed documentation alongside the autodoc document
 
    Tutorials/MicrographAnalysisTutorial
 
+
 Example
 -------
 Here is a basic example showing a micrograph being opened, gaussian filtered, converted to 8bit, contrast enhanced, scalebar added, plotted and saved as a jpg::
@@ -38,6 +39,7 @@ Here is a basic example showing a micrograph being opened, gaussian filtered, co
 
         #save image
         im_contrast_enhanced.write_image('output.jpg')
+
 
 List of functions in Micrograph
 -------------------------------
@@ -101,3 +103,4 @@ Documentation
     :members:
     :undoc-members:
     :show-inheritance:
+

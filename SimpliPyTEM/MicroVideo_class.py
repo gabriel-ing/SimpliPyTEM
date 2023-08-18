@@ -1572,13 +1572,13 @@ class MicroVideo:
         """
         Returns a median filtered copy of the Microvideo object, kernal size defined in the call (default is 3)
 
-            Parameters
-            ----------
+        Parameters
+        ----------
                 kernal:int
                     The n x n kernal for median filter is defined here, must be an odd integer
 
-            Returns
-            -------
+        Returns
+        -------
                 Median_filtered_object :Microvideo
                     Median filtered copy of Microvideo object with median filtered image
         """
@@ -1592,14 +1592,14 @@ class MicroVideo:
         """
         Returns a Weiner filtered copy of the Microvideo object, kernal size defined in the call (default is 5)
 
-            Parameters
-            ----------
+        Parameters
+        ----------
 
                 n :int
                     The n x n kernal for Weiner filter is defined here, must be an odd integer
 
-            Returns
-            -------
+        Returns
+        -------
 
                 Weiner_filtered_object : Microvideo
                     Weiner filtered copy of Microvideo object
@@ -1620,12 +1620,12 @@ class MicroVideo:
         Returns a non-local means filtered copy of the Microvideo, filter strength is defined in the call.
         More information on non-local means filtering can be found here: https://docs.opencv.org/3.4/d5/d69/tutorial_py_non_local_means.html
 
-            Parameters
-            ----------
+        Parameters
+        ----------
                 h:int
                     Defines the strength of the Non-local means filter, default is 5
-            Returns
-            -------
+        Returns
+        -------
                 nlm_filtered_object : Microvideo
                     Non-local means filtered copy of the Microvideo object
         """
@@ -1643,13 +1643,13 @@ class MicroVideo:
         """
         Returns a Gaussian filtered copy of the micrograph object, kernal size defined in the call (default is 3)
 
-            Parameters
-            ----------
+        Parameters
+        ----------
                 n:int
                     The n x n kernal for median filter is defined here, *must be an odd integer*
 
-            Returns
-            -------
+        Returns
+        -------
                 Gaussian_filtered_object :Micrograph
                     Gaussian filtered copy of micrograph object with gaussian filtered image
         """
