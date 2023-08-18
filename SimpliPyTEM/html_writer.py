@@ -13,10 +13,10 @@ def write_html(
     Parameters
     ----------
         Images:list
-            List of images (including their path from the current directory), can be made with get_files()
+            List of images (including their path from the current directory), can be made with get_files_html()
 
         Videos: list
-            List of videos (including their path from the current directory), can be made with get_files()
+            List of videos (including their path from the current directory), can be made with get_files_html()
 
         title:str
             The title for the experiment (name of html doc and title of the resulting page)
@@ -300,7 +300,7 @@ if __name__ == "__main__":
     directory = os.getcwd()
     title = input("Give a title for the experiment: ")
     title = title.replace(" ", "_")
-    images, videos = get_files("Images", "Videos")
+    images, videos = get_files_html("Images", "Videos")
     print(images)
     write_html(images, videos, title=title)
     write_css()
