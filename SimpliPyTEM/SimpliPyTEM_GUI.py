@@ -721,7 +721,7 @@ class MainApplication(QWidget):
 
     def process_file(
         self,
-        folderpath,
+        file,
         outdir,
         output_type,
         contrast_state,
@@ -730,10 +730,15 @@ class MainApplication(QWidget):
         gauss_filter_value,
         scalebar_on,
         video_status,
+        topaz_on, 
+        cuda_on
     ):
+        cwd = os.getcwd()
+        wd = '/'.join(file.split('/')[:-1])
+        os.chdir(wd)
         if isvideo(file):
             video_processing(
-                folderpath,
+                file,
                 outdir,
                 output_type,
                 contrast_state,
@@ -742,10 +747,12 @@ class MainApplication(QWidget):
                 gaussian_filter=gauss_filter_value,
                 scalebar_on=scalebar_on,
                 video_status=video_status,
+                topaz_denoise=topaz_on,
+                denoise_with_cuda=cuda_on,
             )
         else:
             default_image_pipeline(
-                filename,
+                file,
                 output_type=output_type,
                 contrast_enhance=contrast_state,
                 xybin=bin_value,
@@ -753,7 +760,10 @@ class MainApplication(QWidget):
                 gaussfilter=gauss_filter_value,
                 scalebar=scalebar_on,
                 outdir=outdir,
+                topaz_denoise=topaz_on,
+                denoise_with_cuda=cuda_on
             )
+        os.chdir(cwd)
 
 
 
