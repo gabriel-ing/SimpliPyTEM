@@ -13,7 +13,7 @@ tifffile
 notebook
 scikit-image
 imutils
-fpdf
+fpdf2
 PyQt5
 sphinx
 sphinx_rtd_theme

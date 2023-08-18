@@ -25,7 +25,7 @@ setup(
 	 'notebook==7.0.0b2',
 	 'scikit-image==0.20.0',
 	 'imutils==0.5.4',
-	 'fpdf==1.7.2',
+	 'fpdf2==2.7.5',
 	 'PyQt6==6.5.0',
 	 'sphinx',
 	 'sphinx_rtd_theme',
