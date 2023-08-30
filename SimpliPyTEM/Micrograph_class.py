@@ -1040,7 +1040,7 @@ class Micrograph:
             height,
             scalebar_size,
         ) = self.choose_scalebar_size()
-
+        micrograph_SB.reset_xy()
         pixvalue, textcolor = self.choose_scalebar_color(
             color, scalebar_x, scalebar_y, width, height
         )

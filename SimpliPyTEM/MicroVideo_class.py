@@ -1380,6 +1380,8 @@ class MicroVideo:
         """
         # print(pixvalue, textcolor)
         vidSB = deepcopy(self)
+        vidSB.reset_xy()
+
         (
             scalebar_x,
             scalebar_y,
