@@ -14,6 +14,8 @@ Combined with this, there are options to create html or pdf documentss containin
 Usage - Section 1: Image generation
 -----------------------------------
 
+**Before starting, please follow the installation instructions on on the homepage of the documentation**
+
 App usage is fairly simple, and is presented in a stepwise fashion here;
 
 Open terminal and first call: 

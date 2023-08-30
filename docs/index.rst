@@ -18,7 +18,53 @@ Functions to generate pdf and html files containing images and videos are also i
 SimpliPyTEM was mainly built for Gatan's DM4 files, however many other filetypes are now supported for basic functionality, this is known to include TIFs, MRCs, MP4s, AVIs. In addition, Hyperspy is  (as of July 2023) used for any unknown filetypes, this supports numerous different electron microscopy filetypes so feel free to try your files and see if it works. If the library would be useful to you but you cannot open your files, please open an issue on the github and I can discuss it further with you.
 
 
+**Please note, software was developed on MacOS and Ubuntu linux, I do not know if there are any issues with Windows compatibility, I suspect there may be issues with file systems but I cannot confirm this. If anyone who has issues with this or other issues please raise an issue on the github page**
+
 Any issues? Please report on the issues page on github.
+
+Installation
+------------
+Please note, I have tested the package on Mac and Linux only, not Windows. Feel free to try using Windows, I imagine the python-library will be fine, however I don't have a windows computer to test the system on so am unsure if there will be issues.
+
+To install, I recommend using miniconda, see here: https://docs.conda.io/en/latest/miniconda.html
+
+Install miniconda and create a new environment, although it isn't strictly necessary to create a new environment this ensure the install doesn't create versions of libraries which conflict with the requirements of other installed libraries. 
+
+``conda create --name SimpliPyTEM python=3.8``
+
+After that you need to activate the environment, this needs to be done before every use.
+
+``conda activate SimpliPyTEM``
+
+Then you can download SimpliPyTEM using pip (firstly, update pip): 
+
+``pip install --upgrade pip``
+
+``pip install SimpliPyTEM``
+
+If you have any issues with the installation, there is a short Troubleshooting section below with known errors, or feel free to open a issue on the github repository: https://github.com/gabriel-ing/SimpliPyTEM and I can try to help. 
+
+Following this the library should be accessible within python or jupyter-notebook scripts with: 
+
+``from SimpliPyTEM.Micrograph_class import * #For example``
+
+and the GUI can be opened by typing into the command-line
+
+``SimpliPyTEM-GUI``
+
+
+**Developer mode installation** 
+
+If you wish to be able to edit the code after installation (maybe you want to add a feature or fix a bug, if so please share!), install from GitHub: 
+```
+git clone https://github.com/gabriel-ing/SimpliPyTEM.git
+
+cd SimpliPyTEM
+
+##(I recommend making a clean conda environment here, as above)
+
+pip install -e . 
+```
 
 SimpliPyTEM-GUI
 ---------------
@@ -84,29 +130,7 @@ Here are tutorials on how the python library can be used to process images and v
    Tutorials/MicroVideoAnalysisTutorial
    Tutorials/Particle_analysis_tutorial
 
-Installation
-------------
-Please note, I have tested the package on Mac and Linux only, not Windows. Feel free to try using Windows, I imagine the python-library will be fine, however I don't have a windows computer to test the system on so am unsure if there will be issues.
 
-To install, I recommend using miniconda, see here: https://docs.conda.io/en/latest/miniconda.html
-
-Install miniconda and create a new environment, although it isn't strictly necessary to create a new environment this ensure the install doesn't create versions of libraries which conflict with the requirements of other installed libraries. 
-
-``conda create --name SimpliPyTEM python=3.8``
-
-After that you need to activate the environment, this needs to be done before every use.
-
-``conda activate SimpliPyTEM``
-
-Then you can download SimpliPyTEM using pip: 
-
-``pip install SimpliPyTEM``
-
-If you have any issues with the installation, there is a short Troubleshooting section below with known errors, or feel free to open a issue on the github repository: https://github.com/gabriel-ing/SimpliPyTEM and I can try to help. 
-
-Following this the library should be accessible within python or jupyter-notebook scripts with: 
-
-``from SimpliPyTEM.Micrograph_class import * #For example``
 
 Installation Troubleshooting
 ----------------------------
