@@ -34,7 +34,7 @@ To install from github, first download the repository, either using the *Downloa
 
 Then, in the command line enter the SimpliPyTEM folder (if the zip folder was downloaded, this needs to be unzipped first) and use the command:
 
-`pip install .`
+`pip install -e .`
 
 pip is used again here as it will ensure that all the dependencies are installed.
 
