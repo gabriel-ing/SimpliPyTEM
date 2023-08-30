@@ -18,11 +18,11 @@ sys.path.insert(0, os.path.abspath('../SimpliPyTEM'))
 # -- Project information -----------------------------------------------------
 
 project = 'SimpliPyTEM'
-copyright = '2022, Gabriel Ing'
+copyright = '2023, Gabriel Ing'
 author = 'Gabriel Ing'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0.7'
+release = '1.0.8'
 
 
 # -- General configuration ---------------------------------------------------
