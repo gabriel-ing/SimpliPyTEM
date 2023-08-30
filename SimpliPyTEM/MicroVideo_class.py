@@ -344,15 +344,85 @@ class MicroVideo:
             self.open_dm(filename)
         elif filename[-4:] == ".mrc":
             self.open_mrc(filename)
+        elif filename[-4:].lower() in ['.tif', 'tiff']:
+            self.open_tif(filename)
         else:
             try:
-                self.open_hyperspy()
+                self.open_hyperspy(filename)
             except:
                 try:
                     self.open_video(filename)
                 except:
                     print("Error - unknown or unsupported filetype, if you think this should be supported please raise an issue on github")
                     raise Exception
+
+
+    def open_tif(self, filename, pixel_size=None, pixel_unit=None):
+        """
+        Open a tif file into the microvideo object. If the tif has any metadata tags, these should be saved into the metadata_tags and will then be accessible with .show_metadata()
+        The pixel size is likely to be included somewhere within the metadata and may be loaded, but the name of the tags are not always constant, and so this may need to be searched in  the .show_metadata output.
+
+        Parameters
+        ----------
+
+            filename: str
+                Name of image file to load into the object
+            pixel_size: float
+                The pixel size in the image, not necessary but can be included here, can also be loaded with set_scale()
+            pixel_unit: str
+                The unit for the pixel size included.
+        """
+        if pixel_size:
+            self.pixel_size = pixel_size
+        else:
+            self.pixel_size = 1
+        if pixel_unit:
+            self.pixel_unit = pixel_unit
+        else:
+            self.pixel_unit = "pixels"
+
+        if filename[-3:] in ["tiff", "tif", "TIF", "TIFF"]:
+            with tifffile.TiffFile(filename) as tif:
+                self.metadata_tags = {}
+                self.frames = tif.asarray()
+                if len(self.frames.shape)!=3:
+                    print('Wrong number of dimensions, if this is an image, please use Micrograph({})'.format(filename))
+                    raise Exception
+
+                for page in tif.pages:
+                    for tag in page.tags:
+                        self.metadata_tags[tag.name] = tag.value
+            if '65009' in self.metadata_tags: #for some reason this is the code for pixel_size in digital micrograph saved tifs
+                self.pixel_size = self.metadata_tags['65009']
+                self.pixel_unit = self.metadata_tags['65003']
+            elif "XResolution" in self.metadata_tags: #this is standard = labelling for tif resolution. This requires a calculation (see below)
+                #print(self.metadata_tags['XResolution'])
+                #print(self.metadata_tags['YResolution'])
+                if (
+                    self.metadata_tags["XResolution"]
+                    == self.metadata_tags["YResolution"]
+                ):
+                    try:
+                        self.pixel_size = 1 / (
+                            self.metadata_tags["XResolution"][0]
+                            / self.metadata_tags["XResolution"][1]
+                        )
+
+                    except:
+                        pass
+
+
+            if "unit" in self.metadata_tags:
+                self.pixel_unit = self.metadata_tags['unit']
+            elif "ResolutionUnit" in self.metadata_tags:
+                if self.metadata_tags["ResolutionUnit"]=='INCH' or self.metadata_tags['ResolutionUnit']==2: #Resolution is commonly in inches (resolutionunit =2 also means inches), this is then converted into nm.
+                    self.pixel_unit = 'nm'
+                    self.pixel_size = self.pixel_size*0.0254*1e9
+            if self.pixel_unit == "micron":
+                    self.pixel_unit = "µm"
+           
+        self.filename = filename
+        self.reset_xy()
 
     def reset_xy(self):
         """
@@ -481,7 +551,7 @@ class MicroVideo:
 
         arr = video.frames
         arr = np.expand_dims(arr, 3)
-        clip = ImageSequenceClip(list(arrex), fps=fps)
+        clip = ImageSequenceClip(list(arr), fps=fps)
         clip.to_videofile(name, fps)
 
     def write_video(self, name=None, outdir=None, fps=None):
