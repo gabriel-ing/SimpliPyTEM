@@ -1092,7 +1092,7 @@ class Micrograph:
 
             # fontsize=int(scalebar_x/(25))
             try:
-                file = font_manager.findfont("Helvetica")
+                file = font_manager.findfont("DejaVu Sans")
                 font = ImageFont.truetype(file, fontsize)
             except:
                 font_search = font_manager.FontProperties(
