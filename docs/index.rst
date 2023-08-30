@@ -56,15 +56,17 @@ and the GUI can be opened by typing into the command-line
 **Developer mode installation** 
 
 If you wish to be able to edit the code after installation (maybe you want to add a feature or fix a bug, if so please share!), install from GitHub: 
-```
-git clone https://github.com/gabriel-ing/SimpliPyTEM.git
+:::
 
-cd SimpliPyTEM
+   git clone https://github.com/gabriel-ing/SimpliPyTEM.git
 
-##(I recommend making a clean conda environment here, as above)
+   cd SimpliPyTEM
 
-pip install -e . 
-```
+   ##(I recommend making a clean conda environment here, as above)
+
+   pip install -e . 
+
+:::
 
 SimpliPyTEM-GUI
 ---------------
@@ -195,9 +197,11 @@ Citing
 If SimpliPyTEM is useful for your projects, please cite our manuscript at: 
 
 :::
+
    SimpliPyTEM: An open-source Python library and app to simplify Transmission Electron Microscopy and in situ-TEM image analysis;
 
    *Gabriel Ing, Andrew Stewart, Guiseppe Battaglia, Lorena Ruiz-Perez;*
 
    bioRxiv; doi: /10.1101/2023.04.28.538777 
+   
 :::
