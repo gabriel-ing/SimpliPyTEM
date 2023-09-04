@@ -497,7 +497,7 @@ class Micrograph:
             # print('else_name = ',name)
 
         name += "." + ftype[:3]
-        if hasattr(self, pixel_unit):
+        if hasattr(self, 'pixel_unit'):
             if self.pixel_unit == "µm":
                 pixel_unit = "um"
             else:
