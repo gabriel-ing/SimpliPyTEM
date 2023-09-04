@@ -497,10 +497,13 @@ class Micrograph:
             # print('else_name = ',name)
 
         name += "." + ftype[:3]
-        if self.pixel_unit == "µm":
-            pixel_unit = "um"
-        else:
-            pixel_unit = self.pixel_unit
+        if hasattr(self, pixel_unit):
+            if self.pixel_unit == "µm":
+                pixel_unit = "um"
+            else:
+                pixel_unit = self.pixel_unit
+        else: 
+            self.pixel_unit = 'Pixels'
 
         if ftype == "jpg":
             if self.image.max() != 255 or self.image.min() != 0:
@@ -512,8 +515,9 @@ class Micrograph:
         elif ftype[:3] == "tif":
             if not hasattr(self, 'metadata_tags'):
                 self.metadata_tags={'Pixel Size':self.pixel_size, 'unit':'Pixel unit'}
-            metadata = self.metadata_tags
-            metadata["unit"]=pixel_unit
+            else:
+                metadata = self.metadata_tags
+                metadata["unit"]=pixel_unit
             if ftype=='tif 8-bit' or bit8==True:
                 self = self.convert_to_8bit()
             delkeys = []
@@ -1562,6 +1566,8 @@ class Micrograph:
         if ret == True:
             fft_ob = Micrograph()
             fft_ob.image = magnitude_spectrum
+            fft_ob.pixel_size = 1/self.pixel_size
+            fft_ob.pixel_unit = '1/{}'.format(self.pixel_unit)
             filename = self.filename.split(".")[:-1]
             filename.append("_FFT")
             fft_ob.filename = filename
