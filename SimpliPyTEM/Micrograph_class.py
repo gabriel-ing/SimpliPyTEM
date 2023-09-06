@@ -515,9 +515,9 @@ class Micrograph:
         elif ftype[:3] == "tif":
             if not hasattr(self, 'metadata_tags'):
                 self.metadata_tags={'Pixel Size':self.pixel_size, 'unit':'Pixel unit'}
-            else:
-                metadata = self.metadata_tags
-                metadata["unit"]=pixel_unit
+            
+            metadata = self.metadata_tags
+            metadata["unit"]=pixel_unit
             if ftype=='tif 8-bit' or bit8==True:
                 self = self.convert_to_8bit()
             delkeys = []

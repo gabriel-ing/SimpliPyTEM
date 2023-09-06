@@ -53,6 +53,10 @@ and the GUI can be opened by typing into the command-line
 ``SimpliPyTEM-GUI``
 
 
+*There is a common issue on linux machines with a QT plugin 'xcb', if you see this issue, there is a troubleshooting section at the bottom of the page, and further details on the `github issues page <https://github.com/gabriel-ing/SimpliPyTEM/issues/24>`_. Please try these and if you are still having issues report it on github. *
+
+
+
 **Developer mode installation** 
 
 If you wish to be able to edit the code after installation (maybe you want to add a feature or fix a bug, if so please share!), install from GitHub: 
