@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
 	name='SimpliPyTEM',
-	version='1.0.8',
+	version='1.0.9',
 	description='A python package to simplify the processing and analysis of TEM and in situ TEM images and videos',
 	long_description='''SimpliPyTEM is a python package to make python-based analysis of Transmission electron microscopy images easier and more approachable. Although TEM is the focus, this could also easily be adapted to other microscopy images. Importantly, SimpliPyTEM is designed to make automated, basic work accessible for beginners (through a simple GUI), while more complicated methods can be accessed through simple python code. This package centers around the image data being held in a Numpy array which makes the image data easy to access for further analysis.
 	This project aims to make use of the rapid automation of image analysis methods available through python while making it approachable for the user.
