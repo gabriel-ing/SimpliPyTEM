@@ -9,7 +9,9 @@ import numpy as np
 import pandas as pd 
 from SimpliPyTEM.Micrograph_class import Micrograph
 from SimpliPyTEM.MicroVideo_class import MicroVideo
-
+import time
+import concurrent.futures
+from functools import partial
 """
 MAIN FUNCTIONS
 """
@@ -46,7 +48,7 @@ def Threshold(image, threshold, brightfield=True):
     return thresh  # ,res
 
 
-def Find_contours(
+'''def Find_contours(
     thresh,
     minsize=200,
     complex_coords=False,
@@ -86,9 +88,6 @@ def Find_contours(
 
     """
 
-    # plt.imshow(thresh)
-    # plt.show()
-    # labels =measure.label(thresh, neighbors=8, background=0)
     if labelled != True:
         cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
         for cnt in cnts:
@@ -96,40 +95,20 @@ def Find_contours(
         labels = measure.label(thresh, background=0)
     else:
         labels = thresh
+    
     mask = np.zeros(thresh.shape, dtype="uint8")
 
     for label in np.unique(labels):
-        if label == 0:
-            continue
         label_mask = np.zeros(thresh.shape, dtype="uint8")
         label_mask[labels == label] = 255
-        # particle_data['Radius']=255
+        
         num_pixels = cv.countNonZero(label_mask)
-        # if num_pixels>min_size:
-        #    mask = cv.add(mask, label_mas
-        coords = np.where(label_mask > 0)
-
-        # Filter out anything touching the edges
-        # if remove_edges and not any([0 in coords[0], thresh.shape[0]-1 in coords[0],thresh.shape[1]-1 in coords[1], 0 in coords[1]]):
-
-        if (
-            not any(
-                [
-                    0 in coords[0],
-                    thresh.shape[0] - 1 in coords[0],
-                    thresh.shape[1] - 1 in coords[1],
-                    0 in coords[1],
-                    num_pixels < minsize,
-                    num_pixels > maxsize,
-                ]
-            )
-            and remove_edges
-        ):
+    
+        if not any([num_pixels < minsize,num_pixels > maxsize]):
             # print(coords)
             mask = cv.add(mask, label_mask)
-        elif remove_edges == False and num_pixels > minsize and num_pixels < maxsize:
-            # print(coords)
-            mask = cv.add(mask, label_mask)
+            
+    # Get the coordinates, this step chooses which types of coordinates are used.
     if complex_coords:
         contours_im = cv.findContours(
             mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE
@@ -138,20 +117,40 @@ def Find_contours(
         contours_im = cv.findContours(
             mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE
         )
-    # for cnt in contours_im:
-    # print(contours_im)
+
     contours_im = imutils.grab_contours(contours_im)
+    
     try:
         contours_im = contours.sort_contours(contours_im)[0]
     except ValueError:
         print(
-            "Theres a ValueError! This is commonly because no particles are selected in the video.  Try raising the threshold value, or "
+            "Theres a ValueError! This is commonly because no particles are selected in the video.  Try raising the threshold value, or changing the minimum/maximum particle sizes"
         )
-    # print(contours_im)
-    # plt.imshow(labels)
-    # for labell in np.unique(labels)
-    return contours_im, mask
 
+    
+    #This bit filters particles on the edge of the image
+    if remove_edges==True:
+        contours_im_filtered=[]
+        edge_threshold=5
+
+        for contour in contours_im:
+            is_touching_edge = False
+            for point in contour:
+                x, y = point[0]  # Extract x and y coordinates
+                # Check if the point is within the edge_threshold distance from the image boundary
+                if x < edge_threshold or x >= (thresh.shape[1] - edge_threshold) or \
+                y < edge_threshold or y >= (thresh.shape[0] - edge_threshold):
+                    is_touching_edge = True
+                    break  # No need to check other points in this contour
+            if not is_touching_edge:
+                contours_im_filtered.append(contour)
+
+        mask = np.zeros(thresh.shape, dtype=np.uint8)
+
+        # Draw filled contours on the mask
+        cv.drawContours(mask, contours_im_filtered, -1, (255), thickness=cv.FILLED)
+    return contours_im_filtered, mask
+'''
 
 def Collect_particle_data(contours_im, pixel_size, multimeasure=False):
     """
@@ -524,3 +523,91 @@ def multiMeasure_particle(particle_contours, centroid):
                 coords.append((P1[0], c, P2[0]))
                 distances.append(d)
     return distances, coords
+
+
+
+
+def Find_contours(
+    thresh,
+    minsize=200,
+    complex_coords=False,
+    maxsize=100000,
+    remove_edges=True,
+    labelled=False,
+    threads=5
+):
+
+
+    #this part is filling in the particles
+    if labelled != True:
+        cnts, hier = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        for cnt in cnts:
+            cv.drawContours(thresh, [cnt], 0, 255, -1)
+        labels = measure.label(thresh, background=0)
+    else:
+        labels = thresh
+
+    
+    
+    #Filter each particle by size. This step uses multiple threads to speed it up.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+        partial_process_label = partial(process_label, maxsize=maxsize, minsize=minsize, shape=thresh.shape, labels=labels)
+        label_masks = list(executor.map(partial_process_label, np.unique(labels)))
+
+    # Add each of the label masks to a single file
+    mask = np.zeros(thresh.shape, dtype="uint8")
+    for label_mask in label_masks:
+        if label_mask is not None:
+            mask = cv.add(mask, label_mask)
+
+    # Get the coordinates, this step chooses which types of coordinate systems are used.
+    if complex_coords:
+        contours_im = cv.findContours(
+            mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE
+        )
+    else:
+        contours_im = cv.findContours(
+            mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE
+        )
+
+    
+    contours_im = imutils.grab_contours(contours_im)
+    try:
+        contours_im = contours.sort_contours(contours_im)[0]
+    except ValueError:
+        print(
+            "Theres a ValueError! This is commonly because no particles are selected in the video.  Try raising the threshold value, or changing the minimum/maximum particle sizes"
+        )
+
+    #This bit filters particles on the edge of the image
+    if remove_edges==True:
+        contours_im_filtered=[]
+        edge_threshold=5
+
+        for contour in contours_im:
+            is_touching_edge = False
+            for point in contour:
+                x, y = point[0]  # Extract x and y coordinates
+                # Check if the point is within the edge_threshold distance from the image boundary
+                if x < edge_threshold or x >= (thresh.shape[1] - edge_threshold) or \
+                y < edge_threshold or y >= (thresh.shape[0] - edge_threshold):
+                    is_touching_edge = True
+                    break  # No need to check other points in this contour
+            if not is_touching_edge:
+                contours_im_filtered.append(contour)
+
+        mask = np.zeros(thresh.shape, dtype=np.uint8)
+
+        # Draw filled contours on the mask
+        cv.drawContours(mask, contours_im_filtered, -1, (255), thickness=cv.FILLED)
+    
+    return contours_im_filtered, mask
+
+def process_label(label, maxsize, minsize, shape,labels):
+        #print(label)
+        label_mask = np.zeros(shape, dtype="uint8")
+        label_mask[labels == label] = 255
+        num_pixels = cv.countNonZero(label_mask)
+        if not any([num_pixels < minsize,num_pixels > maxsize]):
+            return(label_mask)
+
