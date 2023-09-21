@@ -928,7 +928,7 @@ class Micrograph:
         self.pixel_unit = unit
         self.log.append("set_scale({},{},{})".format(pixels, dist, unit))
 
-    def choose_scalebar_size(self):
+    def choose_scalebar_size(self, pos='br'):
         """
         Function for choosing scalebar size, called through make_scalebar(), not a standalone function.
 
@@ -949,8 +949,12 @@ class Micrograph:
 
         # make coordinates for the scalebar, currently set to y-12.5%,x-5% of image size from the bottom right corner
         # of the image to bottom left of the scalebar - change this by editing /20 and /7.5 values (this just looked good to me)
-        scalebar_y = y - int(y / 25)
-        scalebar_x = x - int(x / 6.5)
+        if pos=='br':
+            scalebar_y = y - int(y / 25)
+            scalebar_x = x - int(x / 6.5)
+        else:
+            scalebar_x = int(x/15)
+            scalebar_y = y-int(y/25)
         # print(x,scalebar_x)
 
         # possible scalebar sizes are given here, if its >500nm it should be in unit micron
@@ -1032,7 +1036,7 @@ class Micrograph:
 
         return pixvalue, textcolor
 
-    def make_scalebar(self, texton=True, color="Auto", fontsize="M"):
+    def make_scalebar(self, texton=True, color="Auto", fontsize="M", pos='br'):
         """
         Automated method to create a scalebar of a suitable size, shape and color. Returns a new object with a scalebar.
         The color will be selected between black and white based on mean value of the region of the scalebar compared to the mean value of the whole video. To override this the color can be defined as black white or grey.
@@ -1061,7 +1065,7 @@ class Micrograph:
             width,
             height,
             scalebar_size,
-        ) = self.choose_scalebar_size()
+        ) = self.choose_scalebar_size(pos=pos)
         micrograph_SB.reset_xy()
         pixvalue, textcolor = self.choose_scalebar_color(
             color, scalebar_x, scalebar_y, width, height
@@ -1084,13 +1088,13 @@ class Micrograph:
         if texton == True:
             # print('textoff')
             if fontsize == "M":
-                fontsize = int(scalebar_x / (25))
+                fontsize = int(self.shape[0] / (25))
             elif fontsize == "L":
-                fontsize = int(scalebar_x / (20))
+                fontsize = int(self.shape[0] / (20))
             elif fontsize == "XL":
-                fontsize = int(scalebar_x / (17))
+                fontsize = int(self.shape[0] / (17))
             elif fontsize == "S":
-                fontsize = int(scalebar_x / (30))
+                fontsize = int(self.shape[0] / (30))
             print(fontsize)
             draw = ImageDraw.Draw(pil_image)
 
