@@ -15,7 +15,7 @@ setup(
 	packages =['SimpliPyTEM'],
 	install_requires=['numpy',
 	 'ncempy==1.10.0',
-	 'Pillow==9.4.0',
+	 'Pillow==10.0.1',
 	 'mrcfile==1.4.3',
 	 'moviepy==1.0.3',
 	 'airium==0.2.5',
