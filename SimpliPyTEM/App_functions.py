@@ -55,8 +55,8 @@ def isvideo(dmfile):
             return True
         else:
             return False
-    except OSError as e:
-        print(e)
+    except:
+        pass
 
 
 def frames_processing(

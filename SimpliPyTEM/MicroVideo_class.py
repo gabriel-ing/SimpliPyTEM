@@ -780,7 +780,7 @@ class MicroVideo:
             frame = cv.resize(
                 frame,
                 (int(frame.shape[1] / value), int(frame.shape[0] / value)),
-                interpolation=cv.INTER_CUBIC,
+                interpolation=cv.INTER_AREA,
             )
             frames.append(frame)
             i += 1
@@ -2173,13 +2173,13 @@ class MicroVideo:
         MCor_path = os.environ.get("MOTIONCOR2_PATH")
         if MCor_path:
             if vid_output:
-                command = "{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {} -OutStack 1".format(
+                command = "{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Kv 200 -PixlSize {} -OutStack 1".format(
                     MCor_path, tifname, outname, self.pixel_size * 10
                 )
                 MC_vid = deepcopy(self)
                 inname = ".".join(outname.split(".")[:-1]) + "_Stk.mrc"
             else:
-                command = "{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Throw 1 -Kv 200 -PixlSize {}".format(
+                command = "{} -InMrc {} -OutMrc {} -Iter 10 -Tol 0.5 -Kv 200 -PixlSize {}".format(
                     MCor_path, tifname, outname, self.pixel_size * 10
                 )
                 MC_vid = Micrograph()

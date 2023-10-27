@@ -628,7 +628,7 @@ class Micrograph:
         binned_image.image = cv.resize(
             self.image,
             (int(self.image.shape[1] / value), int(self.image.shape[0] / value)),
-            interpolation=cv.INTER_CUBIC,
+            interpolation=cv.INTER_AREA,
         )
         binned_image.pixel_size = binned_image.pixel_size * value
         binned_image.reset_xy()
