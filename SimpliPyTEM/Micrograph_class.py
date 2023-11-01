@@ -221,7 +221,7 @@ class Micrograph:
         print(mrc.voxel_size)
         voxel_size = mrc.voxel_size
         self.pixel_size = float(str(voxel_size).split(",")[0].strip("("))
-        if len(mrc.data==3):
+        if len(mrc.data.shape)==3:
             self.image = np.sum(mrc.data, axis=0)
         else:
             self.image = mrc.data
