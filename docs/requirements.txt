@@ -3,7 +3,7 @@ ipykernel
 nbsphinx
 numpy
 ncempy==1.9.0
-Pillow
+Pillow==10.2.0
 mrcfile
 moviepy
 airium

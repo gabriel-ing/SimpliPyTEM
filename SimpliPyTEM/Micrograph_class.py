@@ -1059,6 +1059,7 @@ class Micrograph:
         """
 
         micrograph_SB = deepcopy(self)
+        micrograph_SB.reset_xy()
         (
             scalebar_x,
             scalebar_y,
@@ -1066,7 +1067,7 @@ class Micrograph:
             height,
             scalebar_size,
         ) = self.choose_scalebar_size(pos=pos)
-        micrograph_SB.reset_xy()
+        
         pixvalue, textcolor = self.choose_scalebar_color(
             color, scalebar_x, scalebar_y, width, height
         )
