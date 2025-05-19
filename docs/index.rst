@@ -202,10 +202,9 @@ If SimpliPyTEM is useful for your projects, please cite our manuscript at:
 
 :::
 
-   SimpliPyTEM: An open-source Python library and app to simplify Transmission Electron Microscopy and in situ-TEM image analysis;
-
-   *Gabriel Ing, Andrew Stewart, Guiseppe Battaglia, Lorena Ruiz-Perez;*
-
-   bioRxiv; doi: /10.1101/2023.04.28.538777 
+Ing G, Stewart A, Battaglia G, Ruiz-Perez L (2023) 
+SimpliPyTEM: An open-source Python library and app to simplify transmission electron microscopy and in situ-TEM image analysis. 
+PLoS ONE 18(10): e0285691. 
+https://doi.org/10.1371/journal.pone.0285691
    
 :::
