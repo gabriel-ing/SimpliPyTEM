@@ -20,7 +20,7 @@ setup(
 	 'moviepy==1.0.3',
 	 'airium==0.2.5',
 	 'matplotlib',
-	 'opencv-python==4.7.0.72',
+	 'opencv-python==4.8.1.78',
 	 'tifffile==2023.3.21',
 	 'notebook==7.0.0b2',
 	 'scikit-image==0.20.0',
